@@ -1,0 +1,31 @@
+@import '../../../../../global';
+@import '../../operator-page.component';
+
+//.mat-form-field-operator {
+//  width: 100%;
+//}
+
+h1 {
+  font-size: 35px;
+  text-align: justify;
+}
+
+h2 {
+  font-size: 32px;
+  text-align: justify;
+}
+
+h3, h4 {
+  font-size: 30px;
+  text-align: justify;
+}
+
+.text-menu {
+  padding-right: 1em;
+}
+
+ion-toolbar {
+  --background: #277aa2 !important;
+  --color: white;
+}
+

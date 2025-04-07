@@ -1,0 +1,21 @@
+@import '../../../../../global';
+@import '../../operator-page.component';
+
+
+
+ion-toolbar {
+    --background: #277aa2 !important;
+    --color: white;
+}
+
+.background_image{
+    background-image: url("../../../../../assets/background/main_background_tablet.png");
+    --background: none;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .plaque-field{
+    width: 250px;
+  }

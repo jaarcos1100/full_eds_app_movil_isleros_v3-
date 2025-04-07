@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"
+                 class="button-back"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title (click)="this.modalController.dismiss();">
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-col class="center-element">
+    <ion-col size="12" class="ion-text-center">
+      <div *ngIf="preload" class="display-flex-center-h-v  full-height full-width">
+        <img src="./assets/gifs/loading.gif" height="200px" alt="">
+      </div>
+      <h1>
+        Ingresa la cantidad del productos
+      </h1>
+      <div *ngIf="!preload" class="mt-5">
+        <h4>Cantidad máxima disponible: {{data.stock}}</h4>
+        <div class="mb-2 div-form">
+          <mat-form-field class="mat-form-field-operator quantity">
+            <input placeholder="Cantidad" class="quantity" matInput [formControl]="formControlQuantity">
+            <mat-error class="mt-4">{{getErrorMessageQuantity()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="center-horizontal mt-5">
+          <ion-button class="ion-button-width-1-8em main-button" (click)="addProduct()">Continuar</ion-button>
+        </div>
+      </div>
+    </ion-col>
+  </ion-col>
+</ion-content>

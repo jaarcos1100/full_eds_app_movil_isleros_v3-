@@ -1,0 +1,180 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"
+                 class="button-back"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title (click)="this.modalController.dismiss();">
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="px-5">
+    <div *ngIf="router.url.endsWith('lobby')">
+      <h4 class="color-darkslategrey">
+        Opciones del Menú
+      </h4>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <h5 class="color-blue">
+              Tanqueos
+            </h5>
+            <label class="text-menu">
+              Aquí se realizan las Ventas de Combustible.
+            </label>
+          </ion-col>
+          <ion-col>
+            <h5 class="color-blue">
+              Histórico de Tanqueos
+            </h5>
+            <label>
+              Aquí se ven las últimas Ventas de Combustible o Canastilla y se pude convertir Ventas POS a Factura Electrónica, o imprimir alguna venta pendiente.
+            </label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <h5 class="color-blue">
+              POS
+            </h5>
+            <label class="text-menu">
+              Aquí se Realizan Ventas de Canastilla.
+            </label>
+          </ion-col>
+          <ion-col>
+            <h5 class="color-blue ion-text-left">
+              Resumen de Cantidades
+            </h5>
+            <label>
+              Aquí se pueden observar los volumenes actuales de cada una de las mangueras y el tipo de Combustible que contiene cada una.
+            </label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div *ngIf="router.url.endsWith('pos')">
+      <h4 class="color-darkslategrey">
+        Ventas de Canastilla
+      </h4>
+      <h5 class="color-blue">
+        Para realizar una venta de Canastilla debe seguir estos pasos:
+      </h5>
+  
+        <ol>
+          <li>
+            Oprimir sobre cada uno de los productos que desee agregar a la venta.
+          </li>
+          <li>
+            Seleccionar la cantidad del producto que desea vender.
+          </li>
+          <li>
+            Cuando ya tengo los productos agregados puede observar el precio en la sección que se llama Productos Seleccionados, aparece tanto el su total, el valor de impuestos o retenciones asociadas a la venta que inteta realizar y el valor total que se cobrará, tenga en cuenta que el precio mostratdo no incluye descuentos que peuda tener un cliente, si hay descuentos, el valor total de la venta se verá al imprimir el recibo.
+          </li>
+          <li>
+            Con los botones - y + puede retirar o agregar unidades del producto o puede eliminar un producto de la venta actual usando el boton con el símbolo x.
+          </li>
+          <li>
+            Por último para Facturar la venta debe oprimir sobre el botón Continuar en la parte inferior de la pantalla.
+          </li>
+        </ol>
+   
+    </div>
+    <div *ngIf="router.url.endsWith('tankers')">
+      <h4 class="color-darkslategrey">
+        Ventas de Combustible
+      </h4>
+      <h5 class="color-blue">
+        Para realizar una venta de Combustible debe seguir estos pasos:
+      </h5>
+      
+        <ol>
+          <li>
+            Oprimir sobre la manguera en la que desea vender Combustible.
+          </li>
+          <li>
+            En el surtidor descuelgue la manguera y realice la venta.
+          </li>
+          <li>
+            Vuelva a la aplicación y prima nuevamente sobre la manguera en la que realizó la venta para observar la cantidad vendida.
+          </li>
+        </ol>
+      
+    </div>
+    <div *ngIf="router.url.endsWith('info-sale')">
+      <h5 class="color-darkslategrey">
+        Información de la Venta
+      </h5>
+      <label>
+        Aquí se Observa la cantidad de Combustible vendido así como el precio, Oprima el Botón Continuar para Facturar.
+      </label>
+    </div>
+    <div *ngIf="router.url.endsWith('basket-plaque')">
+      <h5 class="color-darkslategrey">
+        Vehículo que realiza la Compra
+      </h5>
+      <label class="color-blue">
+        Escriba la placa del vehículo que está realizando la compra y oprima Continuar.
+      </label>
+    </div>
+    <div *ngIf="router.url.endsWith('history-sales')">
+      <h5 class="color-darkslategrey">
+        Histórico de Ventas
+      </h5>
+      <label class="color-blue">
+        Puede oprimir sobre los botones Combustible o Canastilla para ver las últimas ventas realizadas.
+      </label>
+      <label>
+        Si la Venta fue Facturada como POS le aparecerá un botón por si desea convertirla a Factura Electrónica.
+      </label>
+      <label>
+        Si la Venta aún no ha sido facturada, le aparecerá un botón para dirigirse a la información de la venta y continuar con el proceso.
+      </label>
+    </div>
+    <div *ngIf="router.url.endsWith('invoice')">
+      <h4 class="color-darkslategrey">
+        Facturación
+      </h4>
+      <h5 class="color-blue">
+        Aquí le aparecen los clientes asociados a la placa con la que registró la venta.
+      </h5>
+      <h5 class="color-blue">
+        Para finalizar la venta debe seguir estos pasos:
+      </h5>
+      
+        <ol>
+          <li>
+            Elegir el cliente al que se va a registrar la venta o Cree uno Nuevo o seleccionar Sin Usuario en el caso que quiera imprimir un Recibo POS sin asociar la venta a ninguna Persona o Empresa.
+          </li>
+          <li>
+            Seleccione el tipo de venta: POS, Factura Elctrónica, Cupo o Cupo Libre (esta dos últimas solo están disponibles en algunas empresas si el sistema administrador tienen registrado cupo para este usuario o está seleccionada la opción Venta Cupo Libre).
+            <strong>En las ventas Cupo o Cupo Libre, la Empresa puede realizar las compras que desee sin que deba pagar Físicamente o Con Tarjeta.</strong>
+          </li>
+          <li>
+            Seleccione el Medio de Pago.
+          </li>
+          <li>
+            Oprima sobre el botón Facturar para imprimir el recibo.
+          </li>
+          <li>
+            Oprima sobre el botón Imprimir Cópia si desea imprimir el recibo nuevamente.
+          </li>
+          <li>
+            Oprima sobre el botón Finalizar Venta para Realizar una venta Nueva.
+          </li>
+        </ol>
+      
+    </div>
+    <div *ngIf="router.url.includes('summary-current')">
+      <h5 class="color-darkslategrey">
+        Resumen de Mangueras
+      </h5>
+      <label class="color-blue">
+        En esta sección puede observar las distintas mangueras que hay en la isla, el tipo de combustible que contiene cada una y el volumen de combustible que tienen actualmente.
+      </label>
+    </div>
+  </div>
+</ion-content>

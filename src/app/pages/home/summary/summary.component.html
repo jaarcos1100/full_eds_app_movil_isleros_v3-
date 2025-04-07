@@ -1,0 +1,120 @@
+<app-toolbar-custom *ngIf="isAccessAfterLogin"></app-toolbar-custom>
+<div style="position: absolute; width: 100% !important; overflow-y: auto; height: 100%;">
+
+    <div *ngIf="errorMessage" class="background-red ion-text-center">
+      <!--      <h5><strong>ERROR: </strong><span>{{errorMessage}}</span></h5>-->
+      <div class="ion-text-center">
+        <ion-button class="next-button ion-button-width-1-5em color-black" (click)="getSummary()">Recargar</ion-button>
+      </div>
+    </div>
+    <ion-col style="overflow-y: auto" *ngIf="!preload && isleSummary">
+      <!--  <div *ngIf="preload" class="display-flex-center-h-v  full-height full-width">-->
+      <!--    <img src="./assets/gifs/loading.gif" height="200px" alt="">-->
+      <!--  </div>-->
+      <!--  <div *ngIf="errorMessage" class=" col-12 alert alert-danger widthbox div-error" role="alert">-->
+      <!--    <strong>ERROR: </strong><span>{{errorMessage}}</span>-->
+      <!--    <div *ngIf="!isleSummary" class="text-center mt-3">-->
+      <!--      <ion-button (click)="getSummary()">Recargar</ion-button>-->
+      <!--    </div>-->
+      <!--  </div>-->
+
+      <ion-grid class="mt-5">
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col size="auto">
+            <ion-row class="row-info">
+              <ion-col>
+                <div class="background-white infographic">
+                  <div class="gasoline"></div>
+                  <div class="distance-lineheight"></div>
+                  <span class="w-100 label-fuel" style="color: #bd27d4">Gasolina</span>
+                </div>
+                
+  
+              </ion-col>
+              <ion-col>
+  
+                <div class="background-white infographic">
+                  <div class="diesel"></div>
+                  <div class="distance-lineheight"></div>
+                  <span class="w-100 label-fuel" style="color: #b5d62e">Diesel</span>
+                </div>
+  
+                
+              </ion-col>
+              <ion-col>
+  
+                <div class="background-white infographic">
+                  <div class="urea"></div>
+                  <div class="distance-lineheight"></div>
+                  <span class="w-100 label-fuel" style="color: #043cff">Urea</span>
+                </div>
+  
+                
+              </ion-col>
+            </ion-row>
+  
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <div>
+        <div *ngIf="volumes">
+          <!--    <div> -->
+          <ion-grid class="flexbox-middle py-0">
+            <ion-row class="flexbox-middle">
+              <ion-col style="max-width: max-content" class="column-pump my-0"
+                       *ngFor="let pump of isleSummary.pumps; let i = index;">
+                <h3 class="color-dark-blue ion-text-center h2-pump-name color-white flexbox-middle">
+                  <img src="./assets/summary/pump.svg" alt="" width="40" class="mr-3">
+                  Surtidor {{pump.id_pump}}
+                </h3>
+                <ion-row class="row-pump">
+
+                  <ion-col class="background-green col-side-one">
+                    <h4 class="ion-text-center pr-3 color-white">Lado 1</h4>
+                    <ion-row class="background-white card-hose mb-3 ml-3 mr-1 mat-elevation-z15 p-0"
+                             [style]="hose?.product?.name?.toUpperCase()?.startsWith('GASOLINA') ? {color: '#bd27d4'} : hose?.product?.name?.toUpperCase()?.startsWith('UREA') ? {color: '#043cf'} : {color: '#b5d62e'}"
+                             *ngFor="let hose of getHosesOfPumpAndSide(pump, 0); let i = index;">
+                      <div class="py-1 pl-4 ion-text-left">
+                        <h6 class="h6-title-hose">
+                          <span class="number-id-sale">{{hose.id_hose}}</span>
+                          {{hose.product?.name}}
+                        </h6>
+                        <h6 class="h6-sub-title-hose">{{hose?.volume}} GAL</h6>
+                      </div>
+                    </ion-row>
+                  </ion-col>
+
+                  <ion-col class="background-blue col-side-two">
+                    <h4 class="ion-text-center pl-3 color-white">Lado 2</h4>
+                    <ion-row class="background-white card-hose mb-3 mr-3 ml-1 mat-elevation-z15 p-0"
+                             [style]="hose?.product?.name?.toUpperCase()?.startsWith('GASOLINA') ? {color: '#bd27d4'} : hose?.product?.name?.toUpperCase()?.startsWith('UREA') ? {color: '#043cf'} : {color: '#b5d62e'}"
+                             *ngFor="let hose of getHosesOfPumpAndSide(pump, 1); let i = index;">
+                      <div class="py-1 pl-4 ion-text-left">
+                        <h6 class="h6-title-hose">
+                          <span class="number-id-sale">{{hose.id_hose}}</span>
+                          {{hose.product?.name}}
+                        </h6>
+                        <h6 class="h6-sub-title-hose">{{hose?.volume}} GAL</h6>
+                      </div>
+                    </ion-row>
+                  </ion-col>
+
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div *ngIf="!isAccessAfterLogin">
+            <div class="center-horizontal">
+              <ion-button class="main-button ion-button-width-1-5em my-5" (click)="next()">
+                Continuar
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </ion-col>
+</div>

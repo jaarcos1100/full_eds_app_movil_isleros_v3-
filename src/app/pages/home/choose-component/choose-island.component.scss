@@ -1,0 +1,41 @@
+@import './src/global';
+@import '../operator-page.component';
+
+.row-content {
+  width: 35em !important;
+}
+
+.size-card-isles {
+  width: 10em;
+  height: 10em;
+}
+
+.selected-isle {
+  background-color: $blue;
+  color: black;
+}
+
+.default-card-isle {
+  background-color: white;
+  color: black;
+}
+
+.button-settings {
+  --background: #28a4ad;
+  width: 4em;
+  height: 4em;
+}
+
+.button-help-and-about-of {
+  --background: #28a4ad;
+  width: 4em;
+  height: 4em;
+}
+
+.islan-list{
+  font-size: 12px;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: #fff !important;
+}

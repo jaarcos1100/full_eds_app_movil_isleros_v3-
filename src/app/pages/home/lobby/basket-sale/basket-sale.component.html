@@ -1,0 +1,161 @@
+<!--<div *ngIf="preload" class="display-flex-center-h-v  full-height full-width">-->
+<!--  <img src="./assets/gifs/loading.gif" height="200px" alt="">-->
+<!--</div>-->
+<!--<div mat-dialog-content *ngIf="!preload && !errorMessage">-->
+<app-toolbar-custom></app-toolbar-custom>
+<div *ngIf="!preload && !showInvoice" style="position: absolute; width: 100%; padding-top: 20px;">
+  <div *ngIf="errorMessage" class="background-red ion-text-center">
+    <h3 class="color-white"><strong>ERROR: </strong><span>{{errorMessage}}</span></h3>
+    <div class="ion-text-center">
+      <ion-button class="next-button ion-button-width-1-5em" (click)="getInfoBasket()">Recargar</ion-button>
+    </div>
+  </div>
+  <div *ngIf="listDependencyFilterProducts" style="min-height: 100vh; overflow-y: auto">
+    <div class="div-form-10px ml-3">
+      <mat-form-field class="form-field-search-product border-10px">
+        <input placeholder="Buscar Producto" (keyup)="filterProducts()" matInput [formControl]="formControlNameOrCode">
+        <img matSuffix src="./assets/basket/search.svg" alt="" width="30" height="30">
+        <mat-error>{{getErrorMessagePlate()}}</mat-error>
+      </mat-form-field>
+    </div>
+    <ion-row>
+      <ion-col class="col-products" sizeXs="12" sizeLg="7">
+        <!--      <ion-col size="12">-->
+        <div *ngIf="!listDependencyFilterProducts?.length">
+          <h2 class="ion-text-center color-red" *ngIf="!listDependencyFilterProducts?.length">No se encontraron Productos</h2>
+        </div>
+        <ion-row>
+          <ion-col class="mb-2" size="12" size-sm="2" *ngFor="let dependencyProduct of listDependencyFilterProducts; let i = index;">
+            <div (click)="openModalQuantityProduct(dependencyProduct)"
+                 class="card-product mat-elevation-z15">
+              <ion-row style="height: 80px !important;">
+                <ion-col size="5" class="flexbox-middle">
+                  <!--                  <img src="./assets/basket/parked-car.svg" alt="" width="100" height="60">-->
+                  <div [ngStyle]="{'mask': 'url(' + (getProductImage(dependencyProduct.product)) + ') no-repeat center',
+                                  '-webkit-mask': 'url(' + (getProductImage(dependencyProduct.product)) + ') no-repeat center'}"
+                       [style]="{backgroundColor: '#1b74a0', width: '35px', height: '35px'}"
+                       class="icon">
+                  </div>
+                </ion-col>
+                <ion-col size="7" class="flexbox-middle">
+                  <label *ngIf="dependencyProduct.product?.name?.length > 25" class="flexbox-middle card-header m-0 color-blue">
+                    {{dependencyProduct.product?.name.substring(0, 40) | titlecase}}
+                    <ng-container *ngIf="dependencyProduct.product?.name?.length >= 40">
+                      ...
+                    </ng-container>
+                  </label>
+                  <h5 *ngIf="dependencyProduct.product?.name?.length <= 25" class="flexbox-middle card-header m-0 color-blue">
+                    {{dependencyProduct.product?.name | titlecase}}
+                  </h5>
+                </ion-col>
+              </ion-row>
+              <div class="w-100" style="position: relative; bottom: 1em;">
+                <div style="position: absolute; text-align: center; width: 100%;">
+                  <div style="width: 70%; height: 1.6em; font-size: 1em;"
+                       class="background-blue m-auto color-white border-oval flexbox-middle">
+                    {{util.formatMoney(getPriceTotalOfProduct(dependencyProduct.product))}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col style="position: relative; height: 200px;" sizeXs="12" sizeLg="5">
+        <!--      <ion-col style="position: relative; height: 200px;" size="11" class="m-auto">-->
+        <hr *ngIf="screenTablet()">
+        <!--        <div>-->
+        <!--          <button mat-raised-button (click)="clearBasket()">Limpiar Canastilla</button>-->
+        <!--        </div>-->
+        <ion-row class="background-blue" style="height: 50px !important;">
+          <ion-col size="12" class="flexbox-middle">
+            <h5 class="h2-title-products color-white ion-text-center">Productos seleccionados</h5>
+          </ion-col>
+        </ion-row>
+        <ion-list class="ion-list-products-for-buy" >  
+          <div>
+            <ion-item lines="none" class="border-top-grey-2px pr-0 items-products" *ngFor="let product of listProductsForBuy">
+              <ion-row class="all">
+                      <ion-col size="4" size-sm="4" class="flexbox-middle">
+                        <label class="label">{{product.name}}</label>
+                      </ion-col>
+          
+                      <ion-col size="0" size-sm="1">
+                        <ion-fab-button (click)="subtractQuantityProduct(product)" class="button-subtract button-hiden">
+                          <ion-icon name="remove-outline"></ion-icon>
+                        </ion-fab-button>
+                      </ion-col>
+                      
+                      <ion-col size="1" size-sm="1" class="flexbox-middle">
+                        <label class="label"><strong>{{product.quantity}}</strong></label>
+                      </ion-col>
+
+                      <ion-col size="0" size-sm="1">
+                        <ion-fab-button (click)="addQuantityProduct(product)" class="button-add button-hiden">
+                          <ion-icon name="add"></ion-icon>
+                        </ion-fab-button>
+                      </ion-col>
+
+                      <ion-col size="4" size-sm="4" class="flexbox-middle">
+                        <label>{{util.formatMoney(getPriceProduct(product))}}</label>
+                      </ion-col>
+                      
+                      <ion-col size="2" size-sm="1">
+                        <ion-fab-button (click)="openAlertRemoveProduct(product)" class="button-remove ion-float-right">
+                          <ion-icon name="close"></ion-icon>
+                        </ion-fab-button>
+                      </ion-col>
+
+                </ion-row>
+            </ion-item>
+          </div>
+          <div style="position: absolute; bottom: 10px; width: 100%;">
+            <mat-divider></mat-divider>
+            <ion-row>
+              <ion-col size="7">
+                <label class="text-blue ml-3 my-0">SUB TOTAL: </label>
+              </ion-col>
+              <ion-col size="5" class="ion-text-right">
+                <label class="my-0"><strong class="text-blue mr-3" style="font-size: 1.2em">{{util.formatMoney(getSubTotalPrice())}}</strong></label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="7">
+                <h5 class="ml-3 my-0">IMPUESTOS: </h5>
+              </ion-col>
+              <ion-col size="5" class="ion-text-right">
+                <label class="my-0"><strong class="mr-3" style="font-size: 1.2em">{{util.formatMoney(getTaxPrice())}}</strong></label>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="getWithholdingsPrice() > 0">
+              <ion-col size="7">
+                <label class="ml-3 my-0">RETENCIONES: </label>
+              </ion-col>
+              <ion-col size="5" class="ion-text-right">
+                <label class="my-0"><strong class="mr-3" style="font-size: 1.2em">{{util.formatMoney(getWithholdingsPrice())}}</strong></label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="8">
+                <label class="text-blue ml-3 my-0">PRECIO TOTAL: </label>
+              </ion-col>
+              <ion-col size="4" class="ion-text-right">
+                <label class="my-0"><strong class="text-blue mr-3" style="font-size: 1.2em">${{getTotalPrice() | number | replaceText:',':'.' }}</strong></label>
+              </ion-col>
+            </ion-row>
+            <mat-divider style="margin: 0"></mat-divider>
+            <div class="text-center mt-3 ion-text-center">
+              <ion-button class="w-100 main-button ion-button-width-1-8em" (click)="openModalWritePlaque()">Continuar</ion-button>
+            </div>
+          </div>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <!--    <div *ngIf="errorMessageProduct && (listProductsForBuy.length === 0 || this.formControlNameOrCode.invalid)" class=" col-12 alert alert-danger widthbox" role="alert">-->
+    <!--      <strong>ERROR: </strong>{{errorMessageProduct}}-->
+    <!--      <br>-->
+    <!--    </div>-->
+  </div>
+</div>
+
+<!--currency:' ':false : '1.0-0'-->

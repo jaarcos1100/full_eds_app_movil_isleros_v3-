@@ -1,0 +1,189 @@
+@import '../../../../../global';
+@import '../../operator-page.component';
+
+.primary-color{
+  color: #1b73a0;
+}
+
+.secondary-color{
+  color: #fff;
+}
+.label-progress{
+  font-size: 14px;
+}
+.title{
+  font-weight: bold !important;
+}
+
+.content-main, .step{
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  
+}
+.content-main{
+  overflow-y: scroll;
+}
+#header{
+  margin-top: 40px;
+}
+.circle_progress_steeper{
+    border: 3px solid #fff; /* Borde negro de 5px de grosor */
+    border-radius: 100%;
+    background-color: transparent; /* Fondo transparente */
+    width: 70px; /* Ancho de ejemplo, ajústalo según tus necesidades */
+    height: 70px; /* Altura de ejemplo, ajústalo según tus necesidades */
+    display: grid;
+    place-items: center; 
+}
+
+.mat-form-field{
+  font-size: 12px;
+  width: 90vw;
+}
+
+#search-client, #btns{
+  width: 100vw;
+  text-align: center;
+}
+.client{
+  height: 60px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+  
+}
+.client-selected{
+  background-color: #fff;
+  color: #1b73a0;
+  width: 93vw;
+  margin-left: 3.5vw;
+}
+.client-default{
+  background-color: #fff;
+  color: #1b73a0;
+  opacity: 70%;
+}
+.client-content{
+  padding: 15px !important;
+  font-size: 12px;
+}
+.btn-new-client{
+  text-align: center;
+}
+
+.btn-next {
+  --background: #3ae6c0;
+  --border-radius: 10px !important;
+  width: 90vw;
+  color: #1b73a0;
+  font-size: 13px;
+}
+
+.btn-option {
+  --background: #3ae6c0;
+  --border-radius: 10px !important;
+  width: 42vw;
+  color: #1b73a0;
+  font-size: 13px;
+}
+
+
+.icon {
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  color: #1b74a0;
+}
+
+
+
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
+display: none;
+}
+
+ion-content {
+ --offset-bottom: auto!important;
+ --overflow: hidden;
+ overflow: auto;
+ &::-webkit-scrollbar {
+   display: none;
+ }
+ }
+
+ .card-invoice-content{
+  height: 60px;
+  padding:10px !important;
+}
+
+.name-invoice{
+  padding-top: 10px;
+}
+
+.back{
+  padding: 20px;
+  font-size: 40px;
+  color: #fff;
+}
+
+.container-toggle{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 20px;
+  color: #fff;
+}
+
+.container-toggle-credit{
+  margin-bottom: 20px;
+}
+
+.label-toggle{
+  margin-right: 10px;
+}
+
+#kilometers{
+  text-align: center;
+}
+
+#anticipate{
+  text-align: center;
+  margin-top: -15px;
+}
+
+#btns{
+  margin-top: 20px;
+}
+
+#number_copies{
+  color: #fff;
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.restriction{
+  width: 90vw;
+  text-align: left;
+  color: #fff;
+  margin-left: 5vw;
+}
+#btn-finish{
+  margin-top: 20px;
+  text-align: center;
+  width: 100vw;
+}
+#dummie-space{
+  height: 100px;
+}
+
+.label-anticipate-value{
+  color: #fff;
+  font-size: 14px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.text_dataphone_payment{
+  color: #fff;
+}
+

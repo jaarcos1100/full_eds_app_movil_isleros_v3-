@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"
+                 class="button-back"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title (click)="this.modalController.dismiss();">
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="background_image">
+  <ion-col class="center-element">
+
+    <ion-col size="12" class="ion-text-center">
+      <h1 class="color-white">
+        Ingresa la nueva placa del vehículo
+      </h1>
+
+      <div>
+        <div class="my-4 div-form">
+          <mat-form-field class="mat-form-field-operator plaque-field">
+            <input placeholder="Placa" matInput [formControl]="formControlPlaque">
+            <mat-error>{{getErrorMessagePlate()}}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="center-horizontal">
+        <ion-button class="ion-button-width-1-5em main-button" (click)="changePlaque()">Cambiar</ion-button>
+      </div>
+
+    </ion-col>
+
+  </ion-col>
+</ion-content>

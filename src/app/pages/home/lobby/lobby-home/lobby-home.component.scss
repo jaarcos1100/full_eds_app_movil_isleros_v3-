@@ -1,0 +1,141 @@
+@import '../../../../../global';
+@import '../../operator-page.component';
+
+.option-menu {
+  background-color: white;
+  border-radius: 20px !important;
+}
+
+.option-menu-icon{
+  width: 100px;
+  height: 100px;
+  object-fit: contain;  
+  background-repeat: no-repeat;
+  background-position: center;  
+  background-size: 100% auto;
+  margin: 0 auto;
+}
+
+.option-menu-content {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+
+.h2-title {
+  width: 75vw;
+}
+
+mat-card {
+  border: 1px solid black;
+}
+
+mat-icon {
+  font-size: 4em;
+}
+
+ion-fab-button {
+  width: 5em;
+  height: 5em;
+}
+
+.h2-pump-name {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.col-sm-intermediate {
+  -ms-flex: 0 0 48%;
+  flex: 0 0 48%;
+  max-width: 48%;
+}
+
+.mat-list-item-sale {
+  padding-top: 1em !important;
+  height: max-content !important;
+  padding-bottom: 1em !important;
+}
+
+mat-card, .mat-list-item-sale {
+  cursor: pointer;
+}
+
+mat-toolbar {
+  position: sticky;
+  right: 0;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  //background-color: red;
+}
+
+.div-main {
+  width: 100vw !important;
+}
+.container-flexbox{
+  height: 100px;
+}
+
+@media screen and (min-width: 520px) {
+  .col-md-intermediate {
+    ms-flex: 0 0 32.333333%;
+    flex: 0 0 32.333333%;
+    max-width: 32.333333%;
+  }
+}
+@media screen and (min-width: 900px) {
+  .col-lg-intermediate {
+    -ms-flex: 0 0 24%;
+    flex: 0 0 24%;
+    max-width: 24%;
+  }
+}
+
+@media (max-width: 700px) {
+  .h2-title {
+    width: 90vw;
+  }
+  .option-menu {
+   width: 75vw !important;
+   height: 20vw !important;
+   border-radius: 5px !important;
+  }
+  .option-menu-icon{
+    width:50px;
+    height:50px;
+    margin: initial;
+  }
+  .option-menu-content {
+    display: initial !important;
+    justify-content: initial !important;
+    align-items: initial !important;
+  }
+  .font-size-normal {
+    font-size: 1em !important;
+  }
+}
+
+span, mat-label, p, strong, h6, h5, button, mat-option {
+  font-size: 1.1em;
+}
+
+mat-list-item h6 {
+  font-size: 1.3em;
+}
+
+.img-close-shift {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.img-menu {
+  position: absolute !important;;
+  top: 0px !important;
+  right: 0px !important;;
+}
+
+.div-side {
+  border: 1px solid black;
+}

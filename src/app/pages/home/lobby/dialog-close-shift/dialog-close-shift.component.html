@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"
+                 class="button-back"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title (click)="this.modalController.dismiss();" >
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!--<div *ngIf="preload" class="display-flex-center-h-v  full-height full-width">-->
+<!--  <img src="./assets/gifs/loading.gif" height="200px" alt="">-->
+<!--</div>-->
+<div *ngIf="errorMessageCloseShift" class=" col-12 alert alert-danger widthbox div-error" role="alert">
+  <strong>ERROR: </strong><span>{{errorMessageCloseShift}}</span>
+  <br>
+</div>
+<ion-content>
+<!--    <div class="text-center mt-4">-->
+<!--      <button mat-raised-button (click)="next()">Continuar</button>-->
+<!--    </div>-->
+  <ion-col class="center-element">
+    <ion-row>
+      <ion-col>
+        <h2>
+          Ingresa tu cédula para cerrar sesión
+        </h2>
+        <div class="ion-text-center mt-4 div-form">
+          <mat-form-field class="w-75">
+            <input placeholder="Cédula" matInput [formControl]="formControlDNI">
+            <mat-error class="mt-4">{{getErrorMessageDNI()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="center-horizontal mt-5">
+          <ion-button class="ion-button-width-1-5em main-button" (click)="callServicesCloseTurn()">Continuar</ion-button>
+        </div>
+<!--        <div class="center-horizontal mt-7rem">-->
+<!--          <ion-button [disabled]="preloadIButton" class="ion-button-width-1-5em next-button" (click)="closeShiftIbutton()">Ibutton</ion-button>-->
+<!--        </div>-->
+      </ion-col>
+    </ion-row>
+  </ion-col>
+<!--  <div class="text-center">-->
+<!--    <button mat-raised-button (click)="closeShiftIbutton()">Cerrar Usando Ibutton</button>-->
+<!--    <div class="w-100 my-5"></div>-->
+<!--    <button mat-raised-button (click)="callServicesCloseTurn()">Cerrar Turno</button>-->
+<!--  </div>-->
+</ion-content>

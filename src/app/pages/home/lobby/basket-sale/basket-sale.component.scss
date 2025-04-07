@@ -1,0 +1,117 @@
+@import '../../../../../global';
+@import '../../operator-page.component';
+
+::ng-deep {
+
+  .mat-form-field-suffix {
+    height: 2.3em;
+    display: flex;
+    align-items: center;
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-prefix, .mat-form-field-appearance-outline .mat-form-field-suffix {
+    top: 0.4em !important;
+  }
+}
+
+:host ::ng-deep .mat-list-item-content { padding: 0!important; }
+
+h2, h3 {
+  color: black;
+  word-break: break-all;
+}
+
+//.row-products {
+//  background-color: lightgrey;
+//}
+
+.card-content-products {
+  background-color: lightgrey;
+  max-height: 2.5em !important;
+}
+
+.mat-divider {
+  width: 100vw;
+  margin-top: 1em;
+}
+
+ion-item {
+  --padding-end: 0px; // this removes the inner border width
+
+  --inner-padding-end: 3px;
+  --padding-start: 3px;
+}
+
+ion-list {
+  padding: 0 !important;
+}
+
+.h2-title-products {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.items-products {
+  max-height: 20em;
+  overflow-y: auto;
+}
+
+.card-product {
+  margin: 3px !important;
+  background-color: #fff !important;
+  border-radius: 10px !important;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+
+.card-header {
+  min-height: 4em !important;
+}
+
+.all{
+  width: 100%;
+}
+
+
+
+
+.ion-list-products-for-buy {
+    height: 35vh !important;
+    min-height: 330px !important;
+ }
+
+ .col-products {
+    height: 53vh;
+    overflow-y: auto;
+ }
+
+
+
+
+  @media (max-width: 700px) {
+    .ion-list-products-for-buy {
+      height: 47vh !important;
+      min-height: 320px !important;
+   }
+  
+    .label{
+      font-size: 12px;
+    }
+    .button-hiden{
+      display: none;
+    }
+    .col-products {
+      height: 36vh;
+      overflow-y: auto;
+    }
+   
+  }
+  
+
+@media (orientation: portrait) {
+  .form-field-search-product {
+    width: 70% !important;
+  }
+}

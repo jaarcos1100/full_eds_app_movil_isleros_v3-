@@ -1,0 +1,46 @@
+<div>
+  <ion-row class="ml-3">
+    <ion-col size="12">
+      <ion-fab-button (click)="openModalAboutOf($event)" class="button-help-and-about-of ion-float-left mr-2">
+        <ion-icon name="information-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="openModalConfigHost()" class="button-settings ion-float-right mr-2">
+        <ion-icon name="settings"></ion-icon>
+      </ion-fab-button>
+    </ion-col>
+  </ion-row>
+  <div *ngIf="errorMessage" class="background-red ion-text-center">
+    <h3><strong>ERROR: </strong><span>{{errorMessage}}</span></h3>
+    <div class="ion-text-center">
+      <ion-button class="next-button ion-button-width-1-5em color-black" (click)="getIsles()">Recargar</ion-button>
+    </div>
+  </div>
+</div>
+<ion-col class="center-element" *ngIf="!errorMessage" style="overflow-y: auto;">
+  <ion-row class="row-content">
+    <ion-col>
+      <div class="ion-text-center">
+        <div class="logo"></div>
+      </div>
+      <div class="my-3 div-form">
+        <h2 class="color-white ion-text-center mb-4 font-size-23px">Selecciona la isla donde vas a trabajar</h2>
+        <mat-form-field class="w-100 islan-list" >
+          <mat-select class="islan-list-select" placeholder="Selecciona una Isla" [formControl]="formControlIsland">
+            <mat-option [value]="island"
+                        *ngFor="let island of listIslands; let i = index"
+            >
+              {{island.name}}
+            </mat-option>
+          </mat-select>        
+        </mat-form-field>
+      </div>
+      <div class="center-horizontal">
+        <ion-button [disabled]="!listIslands || listIslands.length === 0"
+                    class="ion-button-width-2em main-button"
+                    (click)="next()">
+          Continuar
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-col>

@@ -1,0 +1,45 @@
+@import '../../../../../../global';
+@import '../../../operator-page.component';
+
+::ng-deep .mat-form-field-wrapper {
+  margin: 0 !important;
+}
+
+mat-select {
+  font-size: 1.7em;
+}
+
+mat-option {
+  font-size: 1.2em;
+}
+
+mat-form-field {
+  width: 100%;
+}
+ion-toolbar {
+  --background: #277aa2 !important;
+  --color: white;
+}
+.domains{
+  font-size: 16px;
+}
+
+.background_image{
+    background-image: url("../../../../../../assets/background/main_background.png");
+    --background: none;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.plaque-field{
+    width: 200px;
+    font-size: 12px;
+}
+
+
+@media only screen and (max-width: 680px) {
+  .center-element{
+    padding: 0px 15px 0px 15px;
+  }
+}

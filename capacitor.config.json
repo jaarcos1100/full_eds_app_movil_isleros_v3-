@@ -1,0 +1,15 @@
+{
+  "appId":"com.fyllcolombia.www",
+  "appName":"full eds isleros",
+  "allowNavigation": [
+    {
+      "url": "192.168.1.158:8101",
+      "injectJs": "true"
+    }
+  ],
+  "server": {
+    "cleartext": true,
+    "allowNavigation": ["*"]
+  },
+  "linuxAndroidStudioPath": "/mnt/B0661F0A661ED0C8/Programas Linux/android-studio/bin/studio.sh"
+}

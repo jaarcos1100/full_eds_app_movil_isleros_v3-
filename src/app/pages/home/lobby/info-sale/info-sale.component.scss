@@ -1,0 +1,28 @@
+@import '../../../../../global';
+@import '../../operator-page.component';
+
+.flex-container {
+    display: flex;
+    align-items: center; /* Esto alinea los elementos verticalmente al centro */
+    justify-content: space-between; /* Esto crea espacio igual entre los elementos. */
+  }
+  .refresh-button{
+    --background : #41ffc7;
+  }
+
+  .center-content{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .mat-list-item-user{
+    font-size: 12px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  
+

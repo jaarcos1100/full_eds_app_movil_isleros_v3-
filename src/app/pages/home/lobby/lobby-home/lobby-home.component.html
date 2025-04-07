@@ -1,0 +1,41 @@
+<!--full-width-100vw-->
+<!--<ion-row class="mt-3 ml-3">-->
+<!--  <ion-col size="3">-->
+<!--    <ion-fab-button (click)="openModalCloseShift()" class="button-close ion-float-right mr-3">-->
+<!--      <ion-icon name="power"></ion-icon>-->
+<!--    </ion-fab-button>-->
+<!--  </ion-col>-->
+<!--</ion-row>-->
+<app-toolbar-custom [isHomePage]="true"></app-toolbar-custom>
+<ion-col class="ion-justify-content-center flexbox-middle" style="background: url(./assets/logo_white.png) no-repeat; background-size: 150px; background-position-x: center; background-position-y: 70px; overflow-y: auto;">
+<!--  <div class="ion-text-center" style="height: 20% !important;">-->
+<!--    <img src="./assets/logo_white.png" alt="" width="120">-->
+<!--  </div>-->
+  <ion-grid style="display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 7em !important;
+    height: 80% !important;"
+  >
+    <ion-row>
+      <ion-col *ngFor="let item of rowsMenu" size="12">
+        <ion-row class="ion-justify-content-center">
+          <ion-col *ngFor="let itemMenu of item"
+                   class="option-menu mr-4 ml-4 my-3 cursor-pointer color-text-blue mat-elevation-z15"
+                   style="height: 12em; width: 10em;"
+                   [routerLink]="itemMenu.routeRedirect"
+          >
+            <ion-row class="h-100">
+              <ion-col class="option-menu-content" size="auto">
+                <div class="option-menu-icon"  [style.background-image]="'url('+itemMenu.icon+')'"></div>
+              </ion-col>
+              <ion-col class="d-flex ion-align-items-center" style="width:150px;">
+                <label class="font-size-normal">{{itemMenu.name}}</label>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-col>

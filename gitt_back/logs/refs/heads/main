@@ -1,0 +1,14 @@
+0000000000000000000000000000000000000000 fd1ebbc3cec39cb0fc0ad3c541b920292b199720 camilocano146 <camilocano146@gmail.com> 1673452104 -0500	commit (initial): first commit
+fd1ebbc3cec39cb0fc0ad3c541b920292b199720 fd1ebbc3cec39cb0fc0ad3c541b920292b199720 camilocano146 <camilocano146@gmail.com> 1673452111 -0500	Branch: renamed refs/heads/master to refs/heads/main
+fd1ebbc3cec39cb0fc0ad3c541b920292b199720 2642d496c0724fa440665dae87c267b4cce9c87e camilocano146 <camilocano146@gmail.com> 1680280862 -0500	commit: add some things
+2642d496c0724fa440665dae87c267b4cce9c87e 633f1345a19a5f89e1a5b500f0bb089ecb428df3 camilocano146 <camilocano146@gmail.com> 1683143826 -0500	commit: last files
+633f1345a19a5f89e1a5b500f0bb089ecb428df3 1fc1b20d35780e042883a14eb68741dcfa2c3f6c camilocano146 <camilocano146@gmail.com> 1697840495 -0500	commit: verdsion 2.1
+1fc1b20d35780e042883a14eb68741dcfa2c3f6c e43bcbd9f8e39b6ed8ca96367690f6dda4d217d6 camilocano146 <camilocano146@gmail.com> 1699369454 -0500	commit: verdsion 2.1
+e43bcbd9f8e39b6ed8ca96367690f6dda4d217d6 4c37e3a40d9451c0b055f4460b4b8a580c847751 camilocano146 <camilocano146@gmail.com> 1699640421 -0500	commit: solver errors of restrictions
+4c37e3a40d9451c0b055f4460b4b8a580c847751 1140c000a3b84f05bd3f8257e78e227699ded203 camilocano146 <camilocano146@gmail.com> 1701349429 -0500	commit: last files
+1140c000a3b84f05bd3f8257e78e227699ded203 3751cdc73cc1dc6a02d13e7649e531b6da714017 camilocano146 <camilocano146@gmail.com> 1701350519 -0500	commit: last files
+3751cdc73cc1dc6a02d13e7649e531b6da714017 fe606fa288eec096bf30adbb49a88325c9674fe4 camilocano146 <camilocano146@gmail.com> 1706051562 -0500	commit: add anticipates input
+fe606fa288eec096bf30adbb49a88325c9674fe4 795549a88297ca487c6f331c294aaa2c7bd2d0e9 camilocano146 <camilocano146@gmail.com> 1715694609 -0500	commit: add payment methods
+795549a88297ca487c6f331c294aaa2c7bd2d0e9 4dde3bbdf32f05acbe47f25284c8d7253a96f604 camilocano146 <camilocano146@gmail.com> 1722897236 -0500	commit: update payments methods
+4dde3bbdf32f05acbe47f25284c8d7253a96f604 be75e6fe647da881b00723b2009699312cbe68a7 camilocano146 <camilocano146@gmail.com> 1723152948 -0500	pull: Fast-forward
+be75e6fe647da881b00723b2009699312cbe68a7 2522638948095aabada051236b0acea53a0301db camilocano146 <camilocano146@gmail.com> 1724342133 -0500	commit: remove retentiosn from products and services, solve issues of filters adn solve issues of payment methods

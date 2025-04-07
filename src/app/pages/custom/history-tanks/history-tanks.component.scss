@@ -1,0 +1,40 @@
+@import '../../../../global';
+
+.row-type-sales {
+  margin-top: 5em !important;
+}
+
+.row-type-sales ion-col {
+  height: 4em !important;
+}
+
+.card-history{
+  background-color: rgb(255, 255, 255, 1); border-radius: 10px;
+}
+
+.fixed{
+  position: absolute;
+}
+
+.option-list{
+  width: 200px;
+  height: 60px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  border-radius: 5px;
+}
+
+@media only screen and (max-width: 680px) {
+  .card-history{
+    font-size: 18px;
+  }
+  h5{
+    font-size: 16px !important;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  .option-list{
+    width: 150px;
+  }
+}

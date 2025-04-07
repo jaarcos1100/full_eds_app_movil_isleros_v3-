@@ -1,0 +1,93 @@
+.center-content{
+  overflow-y: scroll !important;
+}
+.mat-form-field-operator {
+  width: 360px;
+}
+
+.button-close {
+  --background: red;
+}
+
+.button-remove {
+  --background: #1b74a0;
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.button-subtract {
+  --color: red !important;
+  --background: white !important;
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.button-add {
+  --color: #1b74a0 !important;
+  --background: white !important;
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.card-hose h6 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  font-weight: 100 !important;
+}
+
+.card-hose {
+  text-align: center;
+  color: black;
+  border-radius: 10%;
+  padding-right: 10px;
+  padding-left: 10px;
+  width: 11em;
+  //min-height: 11em;
+  //max-height: 11em;
+  //padding: 0 !important;
+  //margin: 0 !important;
+}
+
+.h6-title-hose {
+  margin-top: 3px !important;
+}
+
+.h6-sub-title-hose {
+  margin-bottom: 3px !important;
+}
+
+.number-id-sale {
+  font-size: 40px;
+  font-weight: 400;
+}
+
+.div-title-side {
+  border-radius: 1%;
+  color: darkslategrey;
+}
+
+.row-pump {
+  width: max-content;
+}
+
+.row-info {
+  text-align: center;
+  border-radius: 20px;
+}
+
+@media (max-width: 700px) {
+  .card-hose {
+    width: 36vw;
+    height: 23vw;
+    //max-height: 11em;
+    //padding: 0 !important;
+    //margin: 0 !important;
+  }
+  .card-hose h6 {
+    font-size: 0.7em;
+  }
+  .number-id-sale {
+    font-size: 2em;
+  }
+}

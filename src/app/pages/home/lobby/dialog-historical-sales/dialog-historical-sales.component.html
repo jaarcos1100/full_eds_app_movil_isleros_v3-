@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start" fill="outline" style="color: white !important; font-size: 20px; margin-left: 15px;"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-title style="padding-right: 0px !important; padding-left: 0px; color: white !important;">
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!--<div *ngIf="preload" class="display-flex-center-h-v  full-height full-width">-->
+<!--  <img src="./assets/gifs/loading.gif" height="200px" alt="">-->
+<!--</div>-->
+<ion-content>
+  <app-history-tanks></app-history-tanks>
+<!--    <div class="text-center mt-4">-->
+<!--      <button mat-raised-button (click)="next()">Continuar</button>-->
+<!--    </div>-->
+
+<!--  <div class="text-center">-->
+<!--    <button mat-raised-button (click)="closeShiftIbutton()">Cerrar Usando Ibutton</button>-->
+<!--    <div class="w-100 my-5"></div>-->
+<!--    <button mat-raised-button (click)="callServicesCloseTurn()">Cerrar Turno</button>-->
+<!--  </div>-->
+</ion-content>

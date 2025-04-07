@@ -1,0 +1,22 @@
+<ion-col class="center-element">
+  <ion-col size="12" class="ion-text-center">
+    <div class="ion-text-center">
+      <div class="logo"></div>
+    </div>
+    <div class="mt-3 div-form">
+      <h2 class="color-white ion-text-center font-size-23px main-title">Ingresa tu cédula para iniciar sesión</h2>
+      <div class="mt-4 mb-2">
+        <mat-form-field class="mat-form-field-operator" >
+          <input placeholder="Cédula" matInput [formControl]="formControlDNI">
+          <mat-error class="mt-3">{{getErrorMessageDNI()}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="center-horizontal mt-3">
+        <ion-button class="ion-button-width-1-8em main-button" (click)="next()">Continuar</ion-button>
+      </div>
+<!--      <div class="center-horizontal mt-7rem">-->
+<!--        <ion-button [disabled]="preloadIButton" class="ion-button-width-1-8em button-ibutton" (click)="singInIbutton()">Ibutton</ion-button>-->
+<!--      </div>-->
+    </div>
+  </ion-col>
+</ion-col>

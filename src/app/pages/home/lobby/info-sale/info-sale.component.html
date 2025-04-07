@@ -1,0 +1,39 @@
+<app-toolbar-custom class="mb-3" [showOnlyHelp]="true"></app-toolbar-custom>
+<div *ngIf="errorMessage" class="background-red ion-text-center">
+  <h3><strong>ERROR: </strong><span>{{errorMessage}}</span></h3>
+  <div class="ion-text-center">
+    <ion-button class="button-ibutton ion-button-width-1-5em" (click)="backToSales()">Regresar a Ventas</ion-button>
+    <ion-button class="next-button ion-button-width-1-5em color-black" (click)="getInfoSale()">Recargar</ion-button>
+  </div>
+</div>
+
+
+<ion-col *ngIf="sale" class="center-content">
+    <ion-row>
+      <ion-col>
+
+        <h1 class="color-white">
+          RESUMEN DE LA VENTA
+        </h1>
+        <ng-container *ngIf="userDataInvoice && userDataInvoice.companies">
+          <ion-item *ngFor="let user of userDataInvoice?.companies; let i = index" class="mat-list-item-user" [style]="currentUser === i + 1 ? {'--ion-item-background': 'lightskyblue'} : ''">
+            <!--<label class="full-width">{{user.name}} - {{user.nit}} {{user.digit_check ? '- ' + user.digit_check : ''}}</label>-->
+            <label class="full-width">{{user.name}} - {{user.nit}}</label>
+          </ion-item>
+        </ng-container>
+
+        <div> <h3 class="color-white"><strong class="color-white">Producto: </strong>{{sale.hose?.product?.name}}</h3></div>
+        <div class="flex-container"> 
+          <h3 class="color-white"><strong class="color-white">Placa: </strong>{{sale.vehicle?.plaque}}</h3> 
+          <ion-button class="refresh-button" (click)="changePlaque()"><ion-icon name="refresh-circle-outline"></ion-icon></ion-button>
+        </div>
+        
+        <div><h3 class="color-white"><strong class="color-white">Valor Unitario: $ </strong>{{sale.price}}</h3></div>
+        <div><h3 class="color-white"><strong class="color-white">Cantidad: </strong>{{sale.volume}}</h3></div>
+        <div><h3 class="color-white"><strong class="color-white">Valor Total: $ </strong>{{sale.total_value}}</h3></div>
+        <div class="text-center mt-5">
+          <ion-button class="ion-button-width-1-8em main-button" (click)="next()">Continuar</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+</ion-col>

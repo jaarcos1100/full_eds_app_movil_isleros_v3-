@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"
+                 class="button-back"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title (click)="this.modalController.dismiss();">
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="background_image">
+  <ion-col class="center-element">
+    <ion-col size="12" class="ion-text-center">
+      <h1 class="color-white">
+        Ingresa la placa del vehículo
+      </h1>
+      <div>
+        <div class="my-4 div-form">
+          <mat-form-field class="mat-form-field-operator plaque-field">
+            <input placeholder="Placa" matInput [formControl]="formControlPlaque">
+            <mat-error>{{getErrorMessagePlate()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="center-horizontal my-4">
+          <mat-button-toggle-group [formControl]="formControlMode">
+            <!--
+            <mat-button-toggle value="0">Full</mat-button-toggle>
+            <mat-button-toggle value="1">Dinero</mat-button-toggle>
+            <mat-button-toggle value="2">Volumen</mat-button-toggle>
+            -->
+            <mat-button-toggle value="0">
+              <div class="full"></div>
+              <label for="full" class="label-option">Full</label>
+            </mat-button-toggle>
+            <mat-button-toggle value="1">
+              <div class="money"></div>
+              <label for="dinero" class="label-option">Dinero</label>
+            </mat-button-toggle>
+            <mat-button-toggle value="2">
+              <div class="volume"></div>
+              <label for="volumen" class="label-option">Volumen</label>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          
+        </div>
+        <div class="error-mode">
+          <mat-error *ngIf='formControlMode.errors?.required'>{{getErrorMessageMode()}}</mat-error>
+        </div>
+        <div *ngIf="formControlMode.value ==1">
+          <label class="money-value">{{ formControlQuantityMoney.value | currency : 'COP' : '' : '1.0-0'}}</label>
+        </div> 
+        <br>
+        <div class="mb-2 div-form" *ngIf="formControlMode.value ==1">
+          <mat-form-field class="value-field">
+            <input placeholder="Cantidad de dinero" matInput [formControl]="formControlQuantityMoney" type="number" value="0">
+            <mat-error>{{getErrorMessageQuantityMoney()}}</mat-error>
+          </mat-form-field>
+          
+        </div>
+        <br>
+        <div class="div-form" *ngIf="formControlMode.value ==2">
+          <mat-form-field class="value-field">
+            <input placeholder="Cantidad de volumen" matInput [formControl]="formControlQuantityVolumen" type="number">
+            <mat-error>{{getErrorMessageQuantityVolumen()}}</mat-error>
+          </mat-form-field>
+        </div>
+         <br>
+        <div class="center-horizontal">
+          <ion-button class="ion-button-width-1-5em main-button" (click)="next()">Continuar</ion-button>
+        </div>
+<!--        <div class="center-horizontal mt-7rem">-->
+<!--          <ion-button [disabled]="preloadIButton" class="ion-button-width-1-8em button-ibutton" (click)="singInIbutton()">Ibutton</ion-button>-->
+<!--        </div>-->
+      </div>
+    </ion-col>
+  </ion-col>
+</ion-content>

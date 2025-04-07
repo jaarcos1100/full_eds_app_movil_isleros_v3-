@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start"
+                 class="button-back"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title (click)="this.modalController.dismiss();"
+               class="text-back"
+    >
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!--<div *ngIf="preload" class="display-flex-center-h-v  full-height full-width">-->
+<!--  <img src="./assets/gifs/loading.gif" height="200px" alt="">-->
+<!--</div>-->
+<ion-content>
+<!--    <div class="text-center mt-4">-->
+<!--      <button mat-raised-button (click)="next()">Continuar</button>-->
+<!--    </div>-->
+  <ion-col class="center-element">
+    <ion-row>
+      <ion-col>
+        <h2 class="ion-text-center color-blue">
+          Hay ventas sin imprimir
+        </h2>
+        <h3 class="mb-5 ion-text-justify">
+          Debes imprimir las ventas de las siguientes mangueras antes de cerrar turno:
+        </h3>
+        <div *ngFor="let pump of pumps" style="width: max-content; margin: auto">
+          <h2 class="color-green">
+            Surtidor {{pump.id_pump}}
+          </h2>
+          <ul class="ml-4">
+            <li *ngFor="let hose of pump.hoses">
+              <h3>
+                Manguera {{hose.id_hose}}
+              </h3>
+            </li>
+          </ul>
+        </div>
+        <div class="center-horizontal mt-5">
+          <ion-button class="ion-button-width-1-5em button-ibutton" (click)="modalController.dismiss();">
+            Regresar
+          </ion-button>
+        </div>
+<!--        <div class="center-horizontal mt-7rem">-->
+<!--          <ion-button [disabled]="preloadIButton" class="ion-button-width-1-5em next-button" (click)="closeShiftIbutton()">Ibutton</ion-button>-->
+<!--        </div>-->
+      </ion-col>
+    </ion-row>
+  </ion-col>
+<!--  <div class="text-center">-->
+<!--    <button mat-raised-button (click)="closeShiftIbutton()">Cerrar Usando Ibutton</button>-->
+<!--    <div class="w-100 my-5"></div>-->
+<!--    <button mat-raised-button (click)="callServicesCloseTurn()">Cerrar Turno</button>-->
+<!--  </div>-->
+</ion-content>

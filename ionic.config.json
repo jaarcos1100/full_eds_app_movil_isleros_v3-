@@ -1,0 +1,7 @@
+{
+  "name": "eds-app-movil",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

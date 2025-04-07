@@ -1,0 +1,68 @@
+<app-toolbar-custom></app-toolbar-custom>
+<ion-row class="flexbox-space-evenly row-type-sales mb-2">
+  <ion-col (click)="selectFuel()" size="6">
+           <div [style]="{backgroundColor: isFuelSelected ? '#1b74a0' : 'white'}" class="flexbox-middle option-list">
+              <h5 class="m-0 flexbox-middle">
+                <img src="./assets/history/fuel.svg" alt="" width="20" class="mr-3">
+                Combustible
+              </h5>
+           </div>
+    
+  </ion-col>
+  <ion-col (click)="selectBasket()" size="6">
+          <div [style]="{backgroundColor: !isFuelSelected ? '#1b74a0' : 'white'}" class="flexbox-middle option-list">
+            <h5 class="m-0 flexbox-middle">
+              <img src="./assets/history/basket.svg" alt="" width="20" class="mr-3">
+              Canastilla
+            </h5>
+          </div>
+  </ion-col>
+</ion-row>
+<ion-col style="overflow-y: auto">
+  <ion-row>
+    <ion-col style="overflow-y: auto">
+      <h2 class="ion-text-center color-white">
+        Últimas Ventas Realizadas
+      </h2>
+      <div *ngIf="errorMessage" class="background-red ion-text-center">
+        <h3><strong>ERROR: </strong><span>{{errorMessage}}</span></h3>
+        <div class="ion-text-center">
+          <ion-button class="next-button ion-button-width-1-5em color-black"
+                      (click)="isFuelSelected ? this.getHistoricalSalesFuel() : getHistoricalSalesBasket()">
+            Recargar
+          </ion-button>
+        </div>
+      </div>
+      <h3 *ngIf="preload" class="color-dark-blue w-100 ion-text-center mt-5">Cargando...</h3>
+      <h3 *ngIf="(!historicalSales || historicalSales.length === 0) && !preload" class="color-dark-blue w-100 ion-text-center mt-5">
+        No hay ventas
+      </h3>
+      <div class="ion-text-center card-history" *ngFor="let sale of historicalSales; let i = index;">
+        <h1 style="float: left;" class="ml-3 color-blue fixed">{{i + 1}}</h1>
+        <h5 *ngIf="isFuelSelected">
+          Manguera: {{sale.hose?.id_hose}}
+        </h5>
+        <h5>
+          Placa: {{sale.vehicle?.plaque}}
+        </h5>
+        <h5 *ngIf="isFuelSelected">
+          Valor Unitario: $ {{sale.price}}
+        </h5>
+        <h5 *ngIf="isFuelSelected">
+          Volumen: {{convertToFloatFixed3(sale.volume)}}
+        </h5>
+        <h5>
+          Valor Total: $ {{sale.total_value}}
+        </h5>
+        <div class="center-horizontal">
+          <ion-button *ngIf="!sale.type" class="ion-button-width-1-3em next-button" (click)="goToPrintSale(sale)">
+            Imprimir esta venta
+          </ion-button>
+          <ion-button *ngIf="sale.type === 1 && !sale.company?.nit.includes(nitDummie)" class="ion-button-width-1-3em button-electronic-fac" (click)="convertToElectronicInvoice(sale)">
+            Convertir a Factura Electrónica
+          </ion-button>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-col>

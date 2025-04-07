@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"
+                 class="button-back"
+                 (click)="this.modalController.dismiss();">
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title (click)="this.modalController.dismiss();">
+      Regresar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!--<div *ngIf="preload" class="display-flex-center-h-v  full-height full-width">-->
+<!--  <img src="./assets/gifs/loading.gif" height="200px" alt="">-->
+<!--</div>-->
+<ion-content>
+<!--    <div class="text-center mt-4">-->
+<!--      <button mat-raised-button (click)="next()">Continuar</button>-->
+<!--    </div>-->
+  <ion-col class="center-element">
+    <ion-row>
+      <ion-col>
+        <h2 class="ion-text-center">
+          Configuración IP y Puerto
+        </h2>
+        <ion-row class="mt-4 mb-2">
+          <ion-col size="8">
+            <mat-form-field class="w-100">
+              <mat-label>IP</mat-label>
+              <input matInput required
+                     [formControl]="formControlIP">
+              <mat-error>{{getErrorMessageIP()}}</mat-error>
+            </mat-form-field>
+          </ion-col>
+          <ion-col size="4">
+            <mat-form-field class="w-100">
+              <mat-label>Puerto</mat-label>
+              <input matInput required [formControl]="formControlPort">
+              <mat-error>{{getErrorMessagePort()}}</mat-error>
+            </mat-form-field>
+          </ion-col>
+          <ion-col size="8">
+            <h4 for="" class="label-toggle">¿Es datafono de credibanco?</h4>
+          </ion-col>
+          <ion-col size="4">
+            <ion-toggle [(ngModel)]="is_dataphone"></ion-toggle>
+          </ion-col>
+          <ion-col size="8">
+            <h4 for="" class="label-toggle">¿Es impresora de credibanco?</h4>
+          </ion-col>
+          <ion-col size="4">
+            <ion-toggle [(ngModel)]="is_print"></ion-toggle>
+          </ion-col>
+        </ion-row>
+        <div class="center-horizontal">
+          <ion-button class="ion-button-width-1-5em main-button" (click)="openAlertPassword()">
+            Guardar
+          </ion-button>
+        </div>
+
+        <div class="center-horizontal">
+          <ion-button class="ion-button-width-1-5em main-button" (click)="testDataphone()">
+            test dataphone
+          </ion-button>
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-col>
+<!--  <div class="text-center">-->
+<!--    <button mat-raised-button (click)="closeShiftIbutton()">Cerrar Usando Ibutton</button>-->
+<!--    <div class="w-100 my-5"></div>-->
+<!--    <button mat-raised-button (click)="callServicesCloseTurn()">Cerrar Turno</button>-->
+<!--  </div>-->
+</ion-content>
