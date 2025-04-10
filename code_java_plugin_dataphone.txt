@@ -1,0 +1,177 @@
+ package com.fullcolombia.plugins.dataphone;
+
+import com.getcapacitor.JSObject;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.CapacitorPlugin;
+
+import com.credibanco.demosdk.IntegrationClientSDK;
+import com.credibanco.demosdk.ResultIntegrationSDK;
+import com.credibanco.demosdk.util.SubExtraInfoDto;
+
+import android.content.Context;
+
+import androidx.activity.result.ActivityResult;
+import androidx.annotation.NonNull;
+
+import static com.fullcolombia.utils.Constants.*;
+import android.os.Bundle;
+
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import androidx.activity.result.ActivityResult;
+import androidx.annotation.NonNull;
+
+@CapacitorPlugin(name = "dataphone")
+public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
+    private PluginCall pendingCall;
+    private dataphone implementation = new dataphone();
+
+    @PluginMethod
+    public void echo(PluginCall call) {
+        String value = call.getString("value");
+
+
+        JSObject ret = new JSObject();
+        ret.put("value", implementation.echo(value));
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void startSell(PluginCall call) {
+        String amount = call.getString("amount");
+        String tax  = call.getString("tax");
+        String tip = call.getString("tip");
+        String iac = call.getString("iac");
+
+        Log.d("ResultActivity", "amount: " + amount);
+        Log.d("ResultActivity", "tax: " + tax);
+        Log.d("ResultActivity", "tip: " + tip);
+        Log.d("ResultActivity", "iac: " + iac);
+
+        Context context = getContext();
+        if (amount == null || amount.isEmpty()) {
+            call.reject("Amount is required");
+            return;
+        }
+
+        try {
+
+            IntegrationClientSDK sdkInstance = IntegrationClientSDK.Companion.getSmartPosInstance();
+
+            if (sdkInstance == null) {
+                call.reject("SDK instance is null. Make sure the SDK is initialized correctly.");
+                return;
+            }
+
+            long parsedAmount;
+            try {
+                parsedAmount = Long.parseLong(amount);
+            } catch (NumberFormatException e) {
+                call.reject("Invalid amount format: " + amount);
+                return;
+            }
+
+            String codeItem = "123456";
+            String quantity = "1";
+            String unitValue = "100";
+            SubExtraInfoDto subExtraInfo = new SubExtraInfoDto(codeItem, quantity, unitValue, parsedAmount);
+
+            ResultIntegrationSDK resultIntegrationSDK = new ResultIntegrationSDK() {
+                @Override
+                public void resultActivity(@NonNull ActivityResult activityResult) {
+                    JSObject result = new JSObject();
+                    result.put("status", "Transaction completed successfully");
+                    notifyListeners("transactionComplete", result);
+                }
+            };
+
+            this.pendingCall = call;
+
+            sdkInstance.startSell(
+                    context,
+                    amount,
+                    tax,
+                    tip,
+                    iac,
+                    "AN4zBdaJ",
+                    "",
+                    subExtraInfo,
+                    resultIntegrationSDK = this
+            );
+
+        } catch (Exception e) {
+            call.reject("Error starting transaction: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void handleOnActivityResult(int requestCode, int resultCode, android.content.Intent data) {
+        JSObject result = new JSObject();
+        result.put("status", "Transaction completed successfully");
+        notifyListeners("transactionComplete", result);
+    }
+
+    /*@Override
+    public void resultActivity(@NonNull ActivityResult activityResult) {
+        if (activityResult.getResultCode() == RESULT_SELL_CODE) {
+            Bundle bundle = activityResult.getData() != null ? activityResult.getData().getExtras() : null;
+            if (bundle != null) {
+                //String authorizationCode = bundle.getString(AUTORIZATION_SELL_APPROVED);
+                String amount = bundle.getString(TOTAL_AMOUNT_APPROVED);
+                String tax = bundle.getString(IVA_TO_PRINT);
+                String receipt = bundle.getString(RECEIPT_TO_PRINT);
+                String rrn = bundle.getString(RRN_TO_PRINT);
+                String terminalId = bundle.getString(TERMINAL_ID);
+                String timeDate = bundle.getString(TIMEDATE_TO_PRINT);
+                String responseCode = bundle.getString(RESPONSE_CODE);
+                String franchise = bundle.getString(FRANCHISE_TO_PRINT);
+                String accountType = bundle.getString(ACCTYPE_TO_PRINT);
+                String quotas = bundle.getString(QUOTAS_TO_PRINT);
+                String lastFourDigitsCard = bundle.getString(LAST4_TO_PRINT);
+                String merchantPosId = bundle.getString(MERCHANT_POS_ID);
+
+                // Log or process the retrieved values as needed
+            }
+        }
+    }*/
+    @Override
+    public void resultActivity(@NonNull ActivityResult activityResult) {
+            int resultCode = activityResult.getResultCode();
+            Log.d("ResultActivity", "Result Code: " + resultCode);
+            
+            // Preparamos el objeto a retornar a TS
+            JSObject result = new JSObject();
+            result.put("resultCode", resultCode);
+            
+            // Se resuelve el PluginCall pendiente
+            if (this.pendingCall != null) {
+                this.pendingCall.resolve(result);
+                this.pendingCall = null; // se limpia para evitar reutilización
+            }else{
+                Log.e("dataphonePlugin", "No pending call to resolve");
+            }
+        /*
+        if (activityResult.getResultCode() == RESULT_SELL_CODE) {
+            Intent data = activityResult.getData();
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                if (bundle != null && !bundle.isEmpty()) {
+                    Log.d("ResultActivity", "Received Bundle Data:");
+
+                    for (String key : bundle.keySet()) {
+                        Object value = bundle.get(key);
+                        Log.d("ResultActivity", key + " : " + (value != null ? value.toString() : "null"));
+                    }
+                } else {
+                    Log.d("ResultActivity", "Bundle is empty or null.");
+                }
+            } else {
+                Log.d("ResultActivity", "Intent data is null.");
+            }
+        }*/
+    }
+}
