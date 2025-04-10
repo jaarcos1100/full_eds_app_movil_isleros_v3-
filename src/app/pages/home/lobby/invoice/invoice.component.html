@@ -311,8 +311,10 @@
                     <ion-col size="12" *ngIf="payWithCard">
                         <h5 class="text_dataphone_payment">Pago con datafono</h5>
                         <div class="text_dataphone_payment">
-                            <label for="">Por favor ingresa el valor total que deseas trasnferir por datafono</label>
+                            <label for="">Por favor ingresa el valor total que deseas transferir por datafono, el maximo permitido es: {{max_ammount_dataphone}}</label>
                         </div>
+
+
                         
                         <mat-form-field class="mt-3 mat-form-field">
                             <input type="number"

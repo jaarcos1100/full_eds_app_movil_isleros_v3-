@@ -81,6 +81,10 @@ export class InvoiceComponent{
 
   public formControlTotalValue: FormControl;
   public relative_taxes_dataphone_payment:string;
+
+  public result_code_datafone:any;
+
+  public max_ammount_dataphone:number;
   constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService:GlobalVarService, public creditService:CreditService, public restrictionsService:RestrictionsService, public dataphoneService:DataphoneService) {
     if (!operatorService.readSaleID()) {
       navCtrl.navigateRoot('operator/lobby/tankers');
@@ -136,6 +140,8 @@ export class InvoiceComponent{
     this.payWithCard = false;
     this.is_dataphone = LocalStorageIpPortService.getIsDatafono()==true ?  true : false;
     this.is_integrate_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
+    this.result_code_datafone = 'None';
+    this.max_ammount_dataphone = 0;
   }
 
   setListTypeInvoice(){
@@ -840,25 +846,35 @@ export class InvoiceComponent{
     //console.log("pago con tarjeta " + this.payWithCard);
   }
   async payWithDataphone() {
-    let amount = Math.round(this.data_invoice.body.total);
+    //this.max_ammount_dataphone = Math.round(this.data_invoice.body.total);
+    let last_ammount_selected = parseInt(this.formControlTotalValue.value);
     
-    if(parseInt(this.formControlTotalValue.value) > amount){
-      this.toastService.presentToastError("El valor pagado por datafono no puede ser superior al total de la venta");
+    if(last_ammount_selected > this.max_ammount_dataphone){
+      this.toastService.presentToastError("El valor pagado por datafono no puede ser superior al saldo total");
+    }else if(last_ammount_selected < 1){
+      this.toastService.presentToastError("El valor pagado por datafono no puede ser menor a $1");
     }else{
       let dataTransfern = {
-        amount: String(this.formControlTotalValue.value),
+        amount: String(last_ammount_selected),
         tax:this.relative_taxes_dataphone_payment,
         tip: "0",
         iac: "0",
       };
       console.log(dataTransfern);
     
-      const response = await this.dataphoneService.startSellTransaction(dataTransfern);
-      console.log(response.message);
+      let response_from_account = await this.dataphoneService.startSellTransaction(dataTransfern);
+      this.result_code_datafone = response_from_account.resultCode == undefined ? "" : response_from_account.resultCode ;
+      if(this.result_code_datafone=="6000" || this.result_code_datafone==6000){
+        this.toastService.presentToastOk("La transaccion ha sido exitosa");
+        this.max_ammount_dataphone = this.max_ammount_dataphone - last_ammount_selected;
+      }else{
+        this.toastService.presentToastError("La transaccion ha fallido");
+      }
     }
   }
 
   setDataphoneData(){
+    this.max_ammount_dataphone = Math.round(this.data_invoice.body.total);
     this.formControlTotalValue.setValue(Math.round(this.data_invoice.body.total));
     this.relative_taxes_dataphone_payment = String((Math.round(this.data_invoice.body.imp)));
   }
