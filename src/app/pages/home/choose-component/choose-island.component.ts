@@ -34,9 +34,17 @@ export class ChooseIslandComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.loadIsles();
+  
     const savedIp = LocalStorageIpPortService.readAddress();
-    if (!savedIp) { // Si no hay datos en LocalStorage sobre la configuración entonces se agregan unos por defecto (IP y Puerto)
-      this.localStorageIpPortService.saveIp('http://192.168.0.');
+  
+    if (!savedIp) {
+      const encodedIp = 'aHR0cDovLzE5Mi4xNjguMC4=';
+  
+      // Decodificar Base64 a string
+      const decodedIp = atob(encodedIp);
+  
+      // Guardar IP y puerto en LocalStorage
+      this.localStorageIpPortService.saveIp(decodedIp);
       this.localStorageIpPortService.savePort(3001);
     }
   }
