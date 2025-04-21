@@ -52,18 +52,27 @@
           <ion-col size="4">
             <ion-toggle [(ngModel)]="is_print"></ion-toggle>
           </ion-col>
+
+          <ion-col size="8">
+            <h4 for="" class="label-toggle">¿Es Full EDS Lite?</h4>
+          </ion-col>
+          <ion-col size="4">
+            <ion-toggle [(ngModel)]="is_full_eds_lite"></ion-toggle>
+          </ion-col>
+
         </ion-row>
         <div class="center-horizontal">
           <ion-button class="ion-button-width-1-5em main-button" (click)="openAlertPassword()">
             Guardar
           </ion-button>
         </div>
-
+        <!--
         <div class="center-horizontal">
           <ion-button class="ion-button-width-1-5em main-button" (click)="testDataphone()">
             test dataphone
           </ion-button>
         </div>
+        -->
 
       </ion-col>
     </ion-row>

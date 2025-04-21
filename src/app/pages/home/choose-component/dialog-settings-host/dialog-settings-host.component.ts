@@ -30,6 +30,7 @@ export class DialogSettingsHostComponent implements OnInit {
 
   public is_dataphone:boolean;
   public is_print:boolean;
+  public is_full_eds_lite:boolean;
 
   constructor(private localStorageIpPortService: LocalStorageIpPortService,
               private operatorService: OperatorService,
@@ -45,6 +46,9 @@ export class DialogSettingsHostComponent implements OnInit {
     console.log(LocalStorageIpPortService.getIsDatafono());
     this.is_dataphone = LocalStorageIpPortService.getIsDatafono()==true ?  true : false;
     this.is_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
+    this.is_full_eds_lite =LocalStorageIpPortService.getIsFullEDSLite()==true ?  true : false;
+
+
   }
 
   ngOnInit(): void {
@@ -71,6 +75,7 @@ export class DialogSettingsHostComponent implements OnInit {
       this.localStorageIpPortService.savePort(this.formControlPort.value);
       this.localStorageIpPortService.setIsDatafono(this.is_dataphone);
       this.localStorageIpPortService.setIsPrint(this.is_print);
+      this.localStorageIpPortService.setIsFullEDSLite(this.is_full_eds_lite);
       this.toastService.presentToastOk('Datos Guardados');
       this.modalController.dismiss('created');
     } else {

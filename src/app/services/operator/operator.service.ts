@@ -111,6 +111,10 @@ export class OperatorService {
     return this.http.get(`isle/${idIsle}/hoses/volume`);
   }
 
+  getVolumesLite(idIsle: number) {
+    return this.http.get(`isle/${idIsle}/hoses/volume/lite`);
+  }
+
   openShift(data: OpenShift) {
     return this.http.post(`shift/open_shift`, data);
   }

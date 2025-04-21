@@ -42,6 +42,14 @@ export class LocalStorageIpPortService {
     localStorage.setItem('isDatafono', JSON.stringify(is_datafone));
   }
 
+  static getIsFullEDSLite() {
+    return JSON.parse(localStorage.getItem('isFullEDSLite'));
+  }
+
+  setIsFullEDSLite(isFullEDSLite) {
+    localStorage.setItem('isFullEDSLite', JSON.stringify(isFullEDSLite));
+  }
+
   static readAddress() {
     if (!this.readIp() || !this.readPort()) {
       return undefined;
