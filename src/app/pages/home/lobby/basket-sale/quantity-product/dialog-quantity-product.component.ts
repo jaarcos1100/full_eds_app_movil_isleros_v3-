@@ -52,7 +52,6 @@ export class DialogQuantityProductComponent implements OnInit {
       if (indexProduct !== -1) {
         this.toastService.presentToastError('El producto ya ha sido agregado');
       } else {
-        console.log(this.listDependencyProducts);
         const quantity = this.formControlQuantity.value;
         if (quantity <= 0) {
           this.toastService.presentToastError('Debe ingresar un número mayor a 0');

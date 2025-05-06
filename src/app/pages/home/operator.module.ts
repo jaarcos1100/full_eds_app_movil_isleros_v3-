@@ -18,7 +18,7 @@ import {LobbyPageModule} from './lobby/lobby.module';
 import {DialogHelpComponent} from './choose-component/dialog-help/dialog-help.component';
 import {PopoverAboutOfComponent} from './choose-component/popover-about-of/popover-about-of.component';
 import {DialogChangeInvoicePlaqueComponent} from './lobby/info-sale/dialog-change-invoice-plaque/dialog-change-invoice-plaque.component';
-
+import {DialogPutVolumenComponent} from './summary/dialog-put-volume/dialog-put-volume.component';
 
 @NgModule({
   imports: [
@@ -42,7 +42,8 @@ import {DialogChangeInvoicePlaqueComponent} from './lobby/info-sale/dialog-chang
     DialogHistoricalSalesComponent,
     HistoryTanksComponent,
     PopoverAboutOfComponent,
-    DialogChangeInvoicePlaqueComponent
+    DialogChangeInvoicePlaqueComponent,
+    DialogPutVolumenComponent
   ]
 })
 export class OperatorPageModule {}

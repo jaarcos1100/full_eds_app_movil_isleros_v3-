@@ -28,7 +28,6 @@ export class LongPressDirective implements OnInit, OnDestroy {
           gestureEv.event.stopPropagation();
         } catch (e) {}
         this.timerId = setTimeout(() => {
-          console.log('emitttttttttttttttt');
           this.longPressed.emit(gestureEv.event);
         }, this.delay);
       },

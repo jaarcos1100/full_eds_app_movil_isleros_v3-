@@ -22,7 +22,6 @@ export class DataphoneService {
   async startSellTransaction(datos: TransactionData): Promise<any> {
     try {
       const response = await dataphone['startSell'](datos);
-      console.log('Transacción enviada exitosamente:', response);
       return response;
     } catch (error) {
       console.error('Error en la transacción del dataphone:', error);

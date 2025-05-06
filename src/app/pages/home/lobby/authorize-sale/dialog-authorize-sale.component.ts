@@ -4,8 +4,10 @@ import {FormControl, FormControlName, Validators} from '@angular/forms';
 import {Hose} from '../../../../models/hose/hose';
 import {RegisterSale} from '../../../../models/register-sale/RegisterSale';
 import {ToastService} from '../../../../services/toast/toast.service';
-import {ModalController, NavParams} from '@ionic/angular';
+import {ModalController, NavParams, NavController} from '@ionic/angular';
 import {LoadingService} from '../../../../services/loading/loading.service';
+import {LocalStorageIpPortService} from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
+
 
 // const SERVER_URL = 'ws://54.82.57.60:3001/';
 
@@ -26,13 +28,18 @@ export class DialogAuthorizeSaleComponent implements OnInit {
   formControlQuantityMoney:FormControl = new FormControl('',[Validators.required, Validators.min(1), Validators.max(9999999)]);
 
   formControlQuantityVolumen:FormControl = new FormControl('',[Validators.required, Validators.min(0), Validators.max(999)]);
-  
+
+  formControlQuantityVolumenLite:FormControl = new FormControl('',[Validators.required, Validators.min(0), Validators.max(999)]);
   
   public data: Hose = this.navParams.get('data');
 
+  public is_lite:boolean;
+
+
   constructor(private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController,
-              private navParams: NavParams, private loadingService: LoadingService) {
-    console.log(this.data);
+              private navParams: NavParams, private loadingService: LoadingService, public navCtrl: NavController) {
+    this.is_lite = LocalStorageIpPortService.getIsFullEDSLite()==true ?  true : false;
+
   }
 
   private startLoading() {
@@ -95,6 +102,59 @@ export class DialogAuthorizeSaleComponent implements OnInit {
         : '';
   }
 
+  /**
+   * Mensaje de error volumen
+   */
+   getErrorMessageQuantityVolumenLite() {
+    return this.formControlQuantityVolumenLite.hasError('required')
+      ? 'Este campo es obligatorio'
+      : this.formControlQuantityVolumenLite.hasError('min') || this.formControlQuantityVolumenLite.hasError('max')
+        ? 'Debe ser superior a 0 e inferior a 1000 galones'
+        : '';
+  }
+
+  auhtorize(){
+    if(this.is_lite){
+      this.nextLite();
+    }else{
+      this.next();
+    }
+  }
+
+  nextLite() {
+    // this.matDialogRef.close();
+
+      if(this.formControlPlaque.valid && this.formControlQuantityVolumenLite.valid){
+
+        const registerSale: any = {
+          placa: this.formControlPlaque.value.toUpperCase(),
+          manguera: this.data.id_hose,
+          surtidor: this.getIdPump(),
+          isla: this.operatorService.readLocalHostIsland().id_isle,
+          volumen:this.formControlQuantityVolumenLite.value
+        };
+        this.operatorService.registerSaleLite(registerSale).subscribe(
+          value => {
+            this.showSuccessAlert();
+            
+            let body:any = value;
+            console.log("****************");
+            console.log(body.body.sale);
+            console.log("****************");
+            this.preload = false;
+            this.operatorService.saveIdSaleOnInfoSaleOption(body?.body?.sale?._id);
+            this.navCtrl.navigateRoot('operator/lobby/info-sale');
+            this.modalController.dismiss();
+          },
+          error => {
+            this.preload = false;
+            this.toastService.presentToastError('Error en la conexión, intente nuevamente');
+          }
+        );
+      }
+   
+  }
+
   next() {
     // this.matDialogRef.close();
   
@@ -134,11 +194,9 @@ export class DialogAuthorizeSaleComponent implements OnInit {
         mode:this.formControlMode.value,
         quantity:quantity_text
       };
-      console.log(registerSale);
       this.operatorService.registerSale(registerSale).subscribe(
         value => {
           this.showSuccessAlert();
-          console.log(value);
           this.preload = false;
           this.modalController.dismiss();
         },

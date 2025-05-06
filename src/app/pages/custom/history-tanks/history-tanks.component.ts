@@ -118,7 +118,6 @@ export class HistoryTanksComponent implements OnInit {
   convertToElectronicInvoice(sale: Sale) {
     this.startLoading();
     this.operatorService.convertToElectronicInvoice(sale._id).subscribe(value => {
-      console.log(value);
       this.preload = false;
       this.loadingService.dismissLoading();
       if (this.isFuelSelected) {

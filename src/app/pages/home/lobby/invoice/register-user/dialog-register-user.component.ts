@@ -182,11 +182,9 @@ export class DialogRegisterUserComponent implements OnInit {
       this.preload = true;
       this.startLoading();
       this.errorMessage = undefined;
-      console.log(this.buildBody());
       this.operatorService.registerUser(this.buildBody()).subscribe(
         (value: any) => {
           this.changeToInvoice.emit();
-          console.log(value);
           // this.listTypeUser = value;
           setTimeout(() => {
             this.preload = false;
@@ -196,7 +194,6 @@ export class DialogRegisterUserComponent implements OnInit {
          
         },
         (error: HttpErrorResponse) => {
-          console.log(error);
           if (error.status === 400 && (error?.error?.body?.errors?.email || error.error.body?.message?.toLowerCase().includes('email'))) {
             this.toastService.presentToastError('El email ya se escuentra registrado, debe ingresar otro.');
           } else if (error.status === 400 && (error?.error?.body?.errors?.nit || error.error.body?.message?.toLowerCase().includes('nit'))) {
@@ -334,7 +331,6 @@ export class DialogRegisterUserComponent implements OnInit {
     this.operatorService.searchCity(bodySearch, 0, 5).subscribe(
       value => {
         this.cityList = value.body.body.cities;
-        console.log(this.cityList);
       }
     );
   }

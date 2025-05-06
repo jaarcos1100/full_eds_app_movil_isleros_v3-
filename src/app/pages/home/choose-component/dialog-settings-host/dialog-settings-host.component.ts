@@ -43,7 +43,6 @@ export class DialogSettingsHostComponent implements OnInit {
     debugger;
     this.formControlIP.setValue(LocalStorageIpPortService.readIp());
     this.formControlPort.setValue(LocalStorageIpPortService.readPort());
-    console.log(LocalStorageIpPortService.getIsDatafono());
     this.is_dataphone = LocalStorageIpPortService.getIsDatafono()==true ?  true : false;
     this.is_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
     this.is_full_eds_lite =LocalStorageIpPortService.getIsFullEDSLite()==true ?  true : false;
@@ -165,7 +164,6 @@ export class DialogSettingsHostComponent implements OnInit {
         iac: "0",
       };
       let response = await this.dataphoneService.startSellTransaction(dataTransfern);
-      console.log(response.message);
       alert(response);
       
     } catch (error) {

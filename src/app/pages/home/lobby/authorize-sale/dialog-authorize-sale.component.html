@@ -24,7 +24,15 @@
             <mat-error>{{getErrorMessagePlate()}}</mat-error>
           </mat-form-field>
         </div>
-        <div class="center-horizontal my-4">
+
+        <div *ngIf = "is_lite">
+          <mat-form-field class="value-field">
+            <input placeholder="Cantidad de volumen" matInput [formControl]="formControlQuantityVolumenLite" type="number">
+            <mat-error>{{getErrorMessageQuantityVolumenLite()}}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="center-horizontal my-4" *ngIf = "is_lite == false">
           <mat-button-toggle-group [formControl]="formControlMode">
             <!--
             <mat-button-toggle value="0">Full</mat-button-toggle>
@@ -46,30 +54,32 @@
           </mat-button-toggle-group>
           
         </div>
-        <div class="error-mode">
-          <mat-error *ngIf='formControlMode.errors?.required'>{{getErrorMessageMode()}}</mat-error>
-        </div>
-        <div *ngIf="formControlMode.value ==1">
-          <label class="money-value">{{ formControlQuantityMoney.value | currency : 'COP' : '' : '1.0-0'}}</label>
-        </div> 
-        <br>
-        <div class="mb-2 div-form" *ngIf="formControlMode.value ==1">
-          <mat-form-field class="value-field">
-            <input placeholder="Cantidad de dinero" matInput [formControl]="formControlQuantityMoney" type="number" value="0">
-            <mat-error>{{getErrorMessageQuantityMoney()}}</mat-error>
-          </mat-form-field>
-          
-        </div>
-        <br>
-        <div class="div-form" *ngIf="formControlMode.value ==2">
-          <mat-form-field class="value-field">
-            <input placeholder="Cantidad de volumen" matInput [formControl]="formControlQuantityVolumen" type="number">
-            <mat-error>{{getErrorMessageQuantityVolumen()}}</mat-error>
-          </mat-form-field>
+        <div *ngIf = "is_lite == false">
+          <div class="error-mode">
+            <mat-error *ngIf='formControlMode.errors?.required'>{{getErrorMessageMode()}}</mat-error>
+          </div>
+          <div *ngIf="formControlMode.value ==1">
+            <label class="money-value">{{ formControlQuantityMoney.value | currency : 'COP' : '' : '1.0-0'}}</label>
+          </div> 
+          <br>
+          <div class="mb-2 div-form" *ngIf="formControlMode.value ==1">
+            <mat-form-field class="value-field">
+              <input placeholder="Cantidad de dinero" matInput [formControl]="formControlQuantityMoney" type="number" value="0">
+              <mat-error>{{getErrorMessageQuantityMoney()}}</mat-error>
+            </mat-form-field>
+            
+          </div>
+          <br>
+          <div class="div-form" *ngIf="formControlMode.value ==2">
+            <mat-form-field class="value-field">
+              <input placeholder="Cantidad de volumen" matInput [formControl]="formControlQuantityVolumen" type="number">
+              <mat-error>{{getErrorMessageQuantityVolumen()}}</mat-error>
+            </mat-form-field>
+          </div>
         </div>
          <br>
         <div class="center-horizontal">
-          <ion-button class="ion-button-width-1-5em main-button" (click)="next()">Continuar</ion-button>
+          <ion-button class="ion-button-width-1-5em main-button" (click)="auhtorize()">Continuar</ion-button>
         </div>
 <!--        <div class="center-horizontal mt-7rem">-->
 <!--          <ion-button [disabled]="preloadIButton" class="ion-button-width-1-8em button-ibutton" (click)="singInIbutton()">Ibutton</ion-button>-->

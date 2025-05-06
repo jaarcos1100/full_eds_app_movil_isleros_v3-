@@ -36,7 +36,6 @@ export class BasketSaleComponent implements OnInit {
   public util = Util;
 
   constructor(public navCtrl: NavController, private operatorService: OperatorService, private modalController: ModalController, private alertController: AlertController, private loadingService: LoadingService, private toastService: ToastService) {
-    console.log(this.pathToImage);
     this.getInfoBasket();
   }
 
@@ -74,7 +73,6 @@ export class BasketSaleComponent implements OnInit {
         // this.listProductsForBuy.push({name: 'extra', quantity: 3, price: 3, product: this.listDependencyFilterProducts[0].product._id})
         if (this.listDependencyFilterProducts) {
           this.listDependencyAllProducts.push(...this.listDependencyFilterProducts);
-          console.log(this.listDependencyAllProducts.length);
         }
         this.preload = false;
         this.createFormControlsQuantity();
@@ -125,7 +123,6 @@ export class BasketSaleComponent implements OnInit {
     };
     this.operatorService.validatePlaque(plaqueBody).subscribe(
       (value: any) => {
-        console.log(value);
         const vehicle = value.body;
         const productsBasket: ProductsBasket = {
           products: this.listProductsForBuy,
@@ -133,10 +130,8 @@ export class BasketSaleComponent implements OnInit {
           plaque: plaqueBody.plaque,
           isle: this.operatorService.readLocalHostIsland()._id
         };
-        console.log(productsBasket);
         this.operatorService.buyInBasket(productsBasket).subscribe(
           (value1: any) => {
-            console.log(value1);
             const sale = value1.body?.sale;
             this.operatorService.saveIsBasketSale(true);
             this.operatorService.saveTotalPriceSale(productsBasket.total_value);
@@ -236,7 +231,6 @@ export class BasketSaleComponent implements OnInit {
       if (indexProduct !== -1) {
         this.toastService.presentToastError('El producto ya ha sido agregado');
       } else {
-        console.log(this.listDependencyFilterProducts);
         const quantity = this.listFormControlPrice[i].value;
         if (this.listDependencyFilterProducts[i].stock >= quantity) {
           const productBasket: InfoProductsBasket = {

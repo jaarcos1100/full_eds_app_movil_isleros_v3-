@@ -62,7 +62,6 @@ export class SignInOperatorComponent implements OnInit {
       };
       this.operatorService.login(loginOperator).subscribe(
         (value: any) => {
-          console.log(value);
           const user = value.body.user;
           localStorage.setItem('token', JSON.stringify(value.body.token));
           this.operatorService.getRolesUser().subscribe(

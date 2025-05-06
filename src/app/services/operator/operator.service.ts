@@ -61,6 +61,10 @@ export class OperatorService {
     return this.http.post('vehicle/send_authorization', registerSale);
   }
 
+  registerSaleLite(sale: any) {
+    return this.http.post('sale/lite/create', sale);
+  }
+
   registerUser(body: any) {
     return this.http.post('isle/create_user', body);
   }

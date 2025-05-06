@@ -1,0 +1,35 @@
+@import '../../../../../global';
+@import '../../operator-page.component';
+
+
+
+mat-select {
+  font-size: 1.7em;
+}
+
+mat-option {
+  font-size: 1.2em;
+}
+
+mat-form-field {
+  width: 100%;
+}
+ion-toolbar {
+  --background: #277aa2 !important;
+  --color: white;
+}
+
+.domains{
+  font-size: 16px;
+}
+
+.forms{
+  margin-top: 120px;
+}
+
+
+@media only screen and (max-width: 680px) {
+  .center-element{
+    padding: 0px 15px 0px 15px;
+  }
+}

@@ -40,7 +40,6 @@ export class ToolbarCustomComponent implements OnInit {
   getCurrentRoute(){
     this.visible = true;
     if(this.router.url == "/operator/lobby/invoice"){
-      console.log(this.router.url);
       this.visible = false;
     }
   }

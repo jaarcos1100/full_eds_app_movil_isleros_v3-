@@ -77,7 +77,7 @@
                     <ion-row class="background-white card-hose mb-3 ml-3 mr-1 mat-elevation-z15 p-0"
                              [style]="hose?.product?.name?.toUpperCase()?.startsWith('GASOLINA') ? {color: '#bd27d4'} : hose?.product?.name?.toUpperCase()?.startsWith('UREA') ? {color: '#043cf'} : {color: '#b5d62e'}"
                              *ngFor="let hose of getHosesOfPumpAndSide(pump, 0); let i = index;">
-                      <div class="py-1 pl-4 ion-text-left">
+                      <div class="py-1 pl-4 ion-text-left" (click)="putVolumenInHose(0, hose.id_hose)">
                         <h6 class="h6-title-hose">
                           <span class="number-id-sale">{{hose.id_hose}}</span>
                           {{hose.product?.name}}
@@ -92,7 +92,7 @@
                     <ion-row class="background-white card-hose mb-3 mr-3 ml-1 mat-elevation-z15 p-0"
                              [style]="hose?.product?.name?.toUpperCase()?.startsWith('GASOLINA') ? {color: '#bd27d4'} : hose?.product?.name?.toUpperCase()?.startsWith('UREA') ? {color: '#043cf'} : {color: '#b5d62e'}"
                              *ngFor="let hose of getHosesOfPumpAndSide(pump, 1); let i = index;">
-                      <div class="py-1 pl-4 ion-text-left">
+                      <div class="py-1 pl-4 ion-text-left" (click)="putVolumenInHose(0, hose.id_hose)">
                         <h6 class="h6-title-hose">
                           <span class="number-id-sale">{{hose.id_hose}}</span>
                           {{hose.product?.name}}

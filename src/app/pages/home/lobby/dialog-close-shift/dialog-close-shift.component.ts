@@ -82,18 +82,13 @@ export class DialogCloseShiftComponent {
         }
         this.operatorService.statusHose(isle.id_isle).subscribe(
           (value: any) => {
-            console.log(value);
             if (value.body.estado === 1) {
               this.operatorService.getVolumes(isle.id_isle).subscribe(
                 (value1: any) => {
-                  console.log(value1);
                   const bodyVolumesHoses = this.buildBodyVolumesHoses(value1.body);
-                  console.log(bodyVolumesHoses);
                   const bodyCloseShift = this.buildBodyCloseShift(bodyVolumesHoses);
-                  console.log(bodyCloseShift);
                   this.operatorService.closeShift(bodyCloseShift).subscribe(
                     value2 => {
-                      console.log(value2);
                       this.preload = false;
                       this.loadingService.dismissLoading();
                       this.modalController.dismiss();

@@ -11,9 +11,9 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Side} from '../../../models/side/Side';
 import {ToastService} from '../../../services/toast/toast.service';
 import {LoadingService} from '../../../services/loading/loading.service';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import {LocalStorageIpPortService} from '../../../services/localStorageIpPort/local-storage-ip-port.service';
-
+import {DialogPutVolumenComponent} from './dialog-put-volume/dialog-put-volume.component';
 
 @Component({
   selector: 'app-summary',
@@ -36,6 +36,8 @@ export class SummaryComponent {
   public volumes: VolumeHose[];
   public isAccessAfterLogin: boolean;
   public is_lite:boolean;
+  public side:number;
+  public hose_id_to_put_volumen:number;
 
   constructor(
     public navCtrl: NavController,
@@ -43,7 +45,8 @@ export class SummaryComponent {
     private loadingService: LoadingService,
     private toastService: ToastService,
     private route: ActivatedRoute,
-    private localStorageIpPortService: LocalStorageIpPortService
+    private localStorageIpPortService: LocalStorageIpPortService,
+    private modalController: ModalController
   ) {
     // this.isleSummary = JSON.parse('{"isle":{"_id":"5f73dff6a4393d0bffc95b3b","id_isle":1,"name":"Isla 1","__v":0},"pumps":[{"_id":"5f73e00d03c9570c1040bc54","id_pump":1,"name":"Isla_1_surtidor_1","isle":{"_id":"5f73dff6a4393d0bffc95b3b","id_isle":1,"name":"Isla 1","__v":0},"__v":0},{"_id":"5f73e09503c9570c1040bc5b","id_pump":2,"name":"Isla_1_surtidor_2","isle":{"_id":"5f73dff6a4393d0bffc95b3b","id_isle":1,"name":"Isla 1","__v":0},"__v":0}],"sides":[{"_id":"5f73e00d03c9570c1040bc55","pump":{"_id":"5f73e00d03c9570c1040bc54","id_pump":1,"name":"Isla_1_surtidor_1","isle":"5f73dff6a4393d0bffc95b3b","__v":0},"id_side":1,"__v":0},{"_id":"5f73e00d03c9570c1040bc58","pump":{"_id":"5f73e00d03c9570c1040bc54","id_pump":1,"name":"Isla_1_surtidor_1","isle":"5f73dff6a4393d0bffc95b3b","__v":0},"id_side":2,"__v":0},{"_id":"5f73e09503c9570c1040bc5c","pump":{"_id":"5f73e09503c9570c1040bc5b","id_pump":2,"name":"Isla_1_surtidor_2","isle":"5f73dff6a4393d0bffc95b3b","__v":0},"id_side":3,"__v":0},{"_id":"5f73e09503c9570c1040bc5e","pump":{"_id":"5f73e09503c9570c1040bc5b","id_pump":2,"name":"Isla_1_surtidor_2","isle":"5f73dff6a4393d0bffc95b3b","__v":0},"id_side":4,"__v":0}],"hoses":[{"_id":"5f73e00d03c9570c1040bc56","side":{"_id":"5f73e00d03c9570c1040bc55","pump":"5f73e00d03c9570c1040bc54","id_side":1,"__v":0},"__v":0,"id_hose":1,"product":{"value":8359,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"5f73da87a4393d0bffc95b34","code":"003","name":"Diesel1","description":"Combustible","category":"5f73da87a4393d0bffc95b30","organization":"5f73da87a4393d0bffc95b2f","__v":0}},{"_id":"5f73e00d03c9570c1040bc57","side":{"_id":"5f73e00d03c9570c1040bc55","pump":"5f73e00d03c9570c1040bc54","id_side":1,"__v":0},"__v":0,"id_hose":2,"product":{"value":8379,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"5f73da87a4393d0bffc95b33","code":"002","name":"Gasolina1","description":"Combustible","category":"5f73da87a4393d0bffc95b30","organization":"5f73da87a4393d0bffc95b2f","__v":0}},{"_id":"5f73e00d03c9570c1040bc59","side":{"_id":"5f73e00d03c9570c1040bc58","pump":"5f73e00d03c9570c1040bc54","id_side":2,"__v":0},"__v":0,"id_hose":4,"product":{"value":8359,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"5f73da87a4393d0bffc95b34","code":"003","name":"Diesel1","description":"Combustible","category":"5f73da87a4393d0bffc95b30","organization":"5f73da87a4393d0bffc95b2f","__v":0}},{"_id":"5f73e00d03c9570c1040bc5a","side":{"_id":"5f73e00d03c9570c1040bc58","pump":"5f73e00d03c9570c1040bc54","id_side":2,"__v":0},"__v":0,"id_hose":5,"product":{"value":8379,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"5f73da87a4393d0bffc95b33","code":"002","name":"Gasolina1","description":"Combustible","category":"5f73da87a4393d0bffc95b30","organization":"5f73da87a4393d0bffc95b2f","__v":0}},{"_id":"5f73e09503c9570c1040bc5d","side":{"_id":"5f73e09503c9570c1040bc5c","pump":"5f73e09503c9570c1040bc5b","id_side":3,"__v":0},"__v":0,"id_hose":7,"product":{"value":1800,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"602af35a0016451a4039e68f","name":"UREA1","category":"5f73da87a4393d0bffc95b30","organization":"5f73e0f7a4393d0bffc95b3c","description":"Aditivo","code":"012","__v":0}},{"_id":"5f73e09503c9570c1040bc5f","side":{"_id":"5f73e09503c9570c1040bc5e","pump":"5f73e09503c9570c1040bc5b","id_side":4,"__v":0},"__v":0,"id_hose":10,"product":{"value":1800,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"602af35a0016451a4039e68f","name":"UREA1","category":"5f73da87a4393d0bffc95b30","organization":"5f73e0f7a4393d0bffc95b3c","description":"Aditivo","code":"012","__v":0}},{"_id":"6024339124a2ba382ce05e92","side":{"_id":"5f73e00d03c9570c1040bc55","pump":"5f73e00d03c9570c1040bc54","id_side":1,"__v":0},"__v":0,"id_hose":3,"product":{"value":8359,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"5f73da87a4393d0bffc95b34","code":"003","name":"Diesel1","description":"Combustible","category":"5f73da87a4393d0bffc95b30","organization":"5f73da87a4393d0bffc95b2f","__v":0}},{"_id":"602433b224a2ba382ce05e93","side":{"_id":"5f73e00d03c9570c1040bc58","pump":"5f73e00d03c9570c1040bc54","id_side":2,"__v":0},"__v":0,"id_hose":6,"product":{"value":8359,"stock":0,"points":0,"taxes":[],"withholdings":[],"_id":"5f73da87a4393d0bffc95b34","code":"003","name":"Diesel1","description":"Combustible","category":"5f73da87a4393d0bffc95b30","organization":"5f73da87a4393d0bffc95b2f","__v":0}}],"canasta":true}');
     // this.volumes = JSON.parse('[{"pump":{"name":"Isla_1_surtidor_1","id_pump":1},"hose":{"_id":"602433b224a2ba382ce05e93","id_hose":6,"product":"Diesel1","volume":46997.91}},{"pump":{"name":"Isla_1_surtidor_1","id_pump":1},"hose":{"_id":"5f73e00d03c9570c1040bc56","id_hose":1,"product":"Diesel1","volume":1917220.06}},{"pump":{"name":"Isla_1_surtidor_1","id_pump":1},"hose":{"_id":"5f73e00d03c9570c1040bc57","id_hose":2,"product":"Gasolina1","volume":158296.17}},{"pump":{"name":"Isla_1_surtidor_1","id_pump":1},"hose":{"_id":"6024339124a2ba382ce05e92","id_hose":3,"product":"Diesel1","volume":22729.92}},{"pump":{"name":"Isla_1_surtidor_1","id_pump":1},"hose":{"_id":"5f73e00d03c9570c1040bc5a","id_hose":5,"product":"Gasolina1","volume":88958.41}},{"pump":{"name":"Isla_1_surtidor_1","id_pump":1},"hose":{"_id":"5f73e00d03c9570c1040bc59","id_hose":4,"product":"Diesel1","volume":2340722.95}},{"pump":{"name":"Isla_1_surtidor_2","id_pump":2},"hose":{"_id":"5f73e09503c9570c1040bc5d","id_hose":7,"product":"UREA1","volume":2894.35}},{"pump":{"name":"Isla_1_surtidor_2","id_pump":2},"hose":{"_id":"5f73e09503c9570c1040bc5f","id_hose":10,"product":"UREA1","volume":0}}]');
@@ -92,6 +95,8 @@ export class SummaryComponent {
     // };
     //
     // this.volumes = [];
+    this.side = 0;
+    this.hose_id_to_put_volumen = 0;
   }
 
   /**
@@ -106,14 +111,12 @@ export class SummaryComponent {
     const isle: Isle = this.operatorService.readLocalHostIsland();
     this.operatorService.getSummary(isle._id).subscribe(
       (value: any) => {
-        console.log(value);
         this.isleSummary = value.body;
         if (!this.isAccessAfterLogin) {
           this.operatorService.saveIsleSummary(this.isleSummary);
         }
         this.operatorService.getVolumes(isle.id_isle).subscribe(
           (value1: any) => {
-            console.log(value1);
             this.preload = false;
             this.loadingService.dismissLoading();
             this.volumes = value1.body;
@@ -149,14 +152,12 @@ export class SummaryComponent {
     const isle: Isle = this.operatorService.readLocalHostIsland();
     this.operatorService.getSummary(isle._id).subscribe(
       (value: any) => {
-        console.log(value);
         this.isleSummary = value.body;
         if (!this.isAccessAfterLogin) {
           this.operatorService.saveIsleSummary(this.isleSummary);
         }
         this.operatorService.getVolumesLite(isle.id_isle).subscribe(
           (value1: any) => {
-            console.log(value1);
             this.preload = false;
             this.loadingService.dismissLoading();
             this.volumes = value1.body;
@@ -221,10 +222,36 @@ export class SummaryComponent {
     };
   }
 
+  next(){
+    if(this.is_lite){
+      this.startShiftLite();
+    }else{
+      this.startShift();
+    }
+  }
+
+  startShiftLite(){
+    if (!(this.isleSummary?.hoses?.length > 0)) {
+      this.errorMessage = 'La isla no tinen mangueras registradas';
+      return;
+    }
+    let can_open_shift = true;
+    this.isleSummary.hoses.forEach(element => {
+      if(element.volume == 0){
+        this.toastService.presentToastWarning("Debes diligenciar el volumen de todas las mangueras");
+        can_open_shift = false;
+        return;
+      }
+    });
+    if(can_open_shift){
+      this.startShift();
+    }
+  }
+
   /**
    * Acción al oprimir sobre el botón Continuar, Abre turno en la Base de Datos y redirige al lobby
    */
-  next() {
+  startShift() {
     if (!(this.isleSummary?.hoses?.length > 0)) {
       this.errorMessage = 'La isla no tinen mangueras registradas';
       return;
@@ -233,7 +260,6 @@ export class SummaryComponent {
     this.startLoading();
     this.errorMessage = undefined;
     const shiftBody = this.buildShift();
-    console.log(shiftBody);
     this.operatorService.openShift(shiftBody).subscribe(
       (value: any) => {
         this.operatorService.saveIsOpenShift(value.body.shift);
@@ -250,6 +276,35 @@ export class SummaryComponent {
         this.toastService.presentToastError('No se logró iniciar el turno, por favor intente nuevamente');
       }
     );
+  }
+
+  putVolumenInHose(side, hose_id){
+    this.side = side;
+    this.hose_id_to_put_volumen = hose_id;
+    let index_hose = this.findHosePosition();
+    this.openModalPutVolume(index_hose);
+  }
+
+  findHosePosition(){
+    return this.isleSummary.hoses.findIndex(h => h.id_hose === this.hose_id_to_put_volumen);
+  }
+
+  async openModalPutVolume(index_hose) {
+    const modal = await this.modalController.create({
+      component: DialogPutVolumenComponent,
+      cssClass: 'fullscreen',
+      componentProps: {
+        side: this.side,
+        volume: this.isleSummary.hoses[index_hose].volume
+      }
+    });
+    modal.onDidDismiss().then(res => {
+      if (res.data) {
+        let volumeResponse = res.data;
+        this.isleSummary.hoses[index_hose].volume = volumeResponse;
+      }
+    }).catch();
+    return await modal.present();
   }
 
   getHosesOfPump(pump: Pump): Hose[] {

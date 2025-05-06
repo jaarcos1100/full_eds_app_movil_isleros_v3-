@@ -18,7 +18,6 @@ export class GuardLoginOperator implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const operator = this.operatorService.readLocalHostOperator();
-    console.log(operator);
     if (operator) {
       const roles = operator?.roles;
       if (roles) {

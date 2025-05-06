@@ -47,14 +47,12 @@ export class DialogChangeInvoicePlaqueComponent implements OnInit {
         let changePlaque = {
           plaque: this.formControlPlaque.value.toUpperCase()
         };
-        console.log(changePlaque);
 
         let sale_id = this.operatorService.readSaleID();
 
         this.operatorService.changePlaque(changePlaque, sale_id).subscribe(
           value => {
             this.showSuccessAlert();
-            console.log(value);
             this.preload = false;
             this.modalController.dismiss();
           },

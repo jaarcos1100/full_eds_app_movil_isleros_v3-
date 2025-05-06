@@ -56,7 +56,6 @@ export class InfoSaleComponent implements OnInit {
     this.errorMessage = undefined;
     this.operatorService.getSaleDetailsSummary(this.operatorService.readIdSaleOnInfoSaleOption()).subscribe(
       (value: any) => {
-        console.log(value);
         this.sale = value.body.sale;
         if (this.sale) {
           if (this.sale.volume) {
@@ -130,7 +129,6 @@ export class InfoSaleComponent implements OnInit {
    * Consulta Información del vehículo dueño de la venta, para verificar las empresas asociadas a este
    */
     public getDetailsCar() {
-        console.log(this.operatorService.readLocalHostPlaque());
         const plaque = {
           plaque: this.operatorService.readLocalHostPlaque()
           // plaque: 'MQX18C'

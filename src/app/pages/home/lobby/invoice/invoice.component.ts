@@ -20,6 +20,7 @@ import {RestrictionsService} from '../../../../services/restrictions/restriction
 import {Restriction} from '../../../../models/restriction/restriction';
 import {LocalStorageIpPortService} from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
 import {DataphoneService} from '../../../../services/dataphone/dataphone.service';
+import { debounceTime } from 'rxjs/operators';
 
 
 @Component({
@@ -80,9 +81,11 @@ export class InvoiceComponent{
   public is_integrate_print:boolean;
 
   public formControlTotalValue: FormControl;
-  public relative_taxes_dataphone_payment:string;
+  public relative_taxes_dataphone_payment:number;
 
   public result_code_datafone:any;
+
+  private original_tax_percent: number | null = null; // porcentaje fijo inicial
 
   public max_ammount_dataphone:number;
   constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService:GlobalVarService, public creditService:CreditService, public restrictionsService:RestrictionsService, public dataphoneService:DataphoneService) {
@@ -131,7 +134,7 @@ export class InvoiceComponent{
     this.formControlTotalValue = new FormControl('',
     [Validators.minLength(1), Validators.maxLength(1000000), Validators.pattern('[-]?[0-9]+(\\.[0-9]+)?$')]
     );
-    this.relative_taxes_dataphone_payment = '';
+    this.relative_taxes_dataphone_payment = 0;
    
     this.mandatory_print=false;
     this.require_print = true;
@@ -142,6 +145,10 @@ export class InvoiceComponent{
     this.is_integrate_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
     this.result_code_datafone = 'None';
     this.max_ammount_dataphone = 0;
+  }
+
+  ngOnInit(){
+    this.listenDataphoneValue();
   }
 
   setListTypeInvoice(){
@@ -166,7 +173,6 @@ export class InvoiceComponent{
       this.isSelectUser = false;
       return;
     }
-    console.log(this.formControlNIT.value);
     this.userSelected = undefined;
     this.formControlNIT.markAsTouched();
     if (this.formControlNIT.valid && this.formControlNIT.value?.toString()?.length > 0) {
@@ -182,7 +188,6 @@ export class InvoiceComponent{
         this.operatorService.searchUserOrCompany(searchUserOrCompany, 0, 5).subscribe(
           (value: HttpResponse<any>) => {
             this.companiesAutocomplete = value.body.companies;
-            console.log(this.companiesAutocomplete);
           }
         );
       }, AppComponent.timeMillisDelayFilter);
@@ -198,7 +203,6 @@ export class InvoiceComponent{
     this.startLoading();
     this.errorMessage = undefined;
     this.userDataInvoice = undefined;
-    console.log(this.operatorService.readLocalHostPlaque());
     const plaque = {
       plaque: this.operatorService.readLocalHostPlaque()
       // plaque: 'MQX18C'
@@ -210,7 +214,6 @@ export class InvoiceComponent{
         const companies = this.userDataInvoice.companies;
         if (companies && this.lastUserCreated) {
           // @ts-ignore
-          console.log(companies.findIndex(c => c.nit === this.lastUserCreated.nit || c.nit === this.lastUserCreated.document));
           // @ts-ignore
           this.currentUser = companies.findIndex(c => c.nit === this.lastUserCreated.nit || c.nit === this.lastUserCreated.document);
           if (this.currentUser !== -1) {
@@ -381,7 +384,6 @@ export class InvoiceComponent{
   }
 
   chooseClient(user,i){
-    console.log(user,i);
     this.balance_anticipate = user.anticipateBalance;
     this.currentUser = i;
     //this.getRestriction(user._id);
@@ -419,7 +421,6 @@ export class InvoiceComponent{
     let total_sale = this.operatorService.readTotalPriceSale();
       this.globalVarService.getGlobalVar().subscribe(
         (value:any) => {
-          console.log(value);
           
           this.globalVar = value.body.globalVars[0];
           let min_to_fact_electronic = this.globalVar.uvt_quantity * this.globalVar.uvt_value;
@@ -599,19 +600,15 @@ export class InvoiceComponent{
       body = this.buildSaleToInvoiceCopy();
     }
 
-    
-
     body.is_dataphone = this.is_dataphone;
     body.is_integrate_print =this.is_integrate_print;
-
-    console.log(this.listPayment[this.currentMethodPayment].code);
 
     this.operatorService.toInvoice(this.operatorService.readSaleID(), body).subscribe(
       value => {
         this.data_invoice = value;
-        console.log('---------------------------------');
-        console.log(this.data_invoice);
-        console.log('---------------------------------');
+        console.log("-----------------------");
+        console.log(value);
+        console.log("-----------------------");
         this.setDataphoneData();
         
         this.preloadInvoice = false;
@@ -622,7 +619,7 @@ export class InvoiceComponent{
         this.validaDataphone();
         
         this.toastService.presentToastOk('Factura realizada.');
-        if (this.countCopies === 2 || this.require_print == false) {
+        if (this.countCopies === 2 || (this.require_print == false && this.is_dataphone==false)) {
               
             this.deleteRecordCopiesForThisSale();
 
@@ -637,7 +634,7 @@ export class InvoiceComponent{
               }
             }, 300);
             
-        } else {
+        } else if(this.is_dataphone) {
               this.addCountRecordCopiesFotThisSale();
         }
         this.updateCustomerInCloud();
@@ -780,8 +777,7 @@ export class InvoiceComponent{
         if (this.currentInvoiceCode === 'pos') {// pos
           this.startLoading();
           this.organizationService.getValidateInfo().subscribe(res => {
-              console.log('-----------------');
-              console.log(res);
+
               if (res.status == 200) {
                 const response = res.body.body;
                 if (!response.resolutionp) {
@@ -807,8 +803,7 @@ export class InvoiceComponent{
           }
           this.startLoading();
           this.organizationService.getValidateInfo().subscribe(res => {
-              console.log('-----------------');
-              console.log(res);
+
               if (res.status == 200) {
                 const response = res.body.body;
                 if (!response.resolution) {
@@ -840,7 +835,7 @@ export class InvoiceComponent{
   validaDataphone(){
     debugger;
     //console.log("copies:" + this.countCopies, "metodo de pago: "+ this.listPayment[this.currentInvoice].code, "es datafono: "+this.is_dataphone);
-    if(this.countCopies==1 && (this.listPayment[this.currentMethodPayment].code == 48 || this.listPayment[this.currentMethodPayment].code==49) && this.is_dataphone ){
+    if(this.countCopies==1 && (this.listPayment[this.currentMethodPayment].code == 10 || this.listPayment[this.currentMethodPayment].code == 48 || this.listPayment[this.currentMethodPayment].code==49) && this.is_dataphone ){
       this.payWithCard = true;
     }
     //console.log("pago con tarjeta " + this.payWithCard);
@@ -856,11 +851,10 @@ export class InvoiceComponent{
     }else{
       let dataTransfern = {
         amount: String(last_ammount_selected),
-        tax:this.relative_taxes_dataphone_payment,
+        tax:String(this.relative_taxes_dataphone_payment),
         tip: "0",
         iac: "0",
       };
-      console.log(dataTransfern);
     
       let response_from_account = await this.dataphoneService.startSellTransaction(dataTransfern);
       this.result_code_datafone = response_from_account.resultCode == undefined ? "" : response_from_account.resultCode ;
@@ -876,7 +870,45 @@ export class InvoiceComponent{
   setDataphoneData(){
     this.max_ammount_dataphone = Math.round(this.data_invoice.body.total);
     this.formControlTotalValue.setValue(Math.round(this.data_invoice.body.total));
-    this.relative_taxes_dataphone_payment = String((Math.round(this.data_invoice.body.imp)));
+    this.relative_taxes_dataphone_payment = (Math.round(this.data_invoice.body.imp));
+  }
+
+  listenDataphoneValue(){
+    this.formControlTotalValue.valueChanges
+    .pipe(
+      debounceTime(300) // espera 300ms después de dejar de escribir
+    )
+    .subscribe(valor => {
+      this.updateTaxes(this.max_ammount_dataphone,valor);
+    });
+  }
+
+  updateTaxes(first_total: number, new_total: number) {
+    if (first_total <= 0) {
+      console.warn('El total anterior debe ser mayor que cero.');
+      return;
+    }
+
+    if (new_total <= 0) {
+      console.warn('El nuevo total debe ser mayor que cero.');
+      return;
+    }
+    // SOLAMENTE calculamos el porcentaje original la primera vez
+    if (this.original_tax_percent === null) {
+      this.original_tax_percent = this.relative_taxes_dataphone_payment / first_total;
+      console.log('✅ Porcentaje de impuesto inicial guardado:', (this.original_tax_percent * 100).toFixed(2) + '%');
+    }
+
+    // Ya no se vuelve a recalcular: aplicamos el porcentaje inicial al nuevo total
+    this.relative_taxes_dataphone_payment = Math.round(new_total * this.original_tax_percent);
+
+  }
+
+  /**
+   * Método opcional para resetear el porcentaje si quieres
+   */
+  resetOriginalTaxPercent() {
+    this.original_tax_percent = null;
   }
 
 }

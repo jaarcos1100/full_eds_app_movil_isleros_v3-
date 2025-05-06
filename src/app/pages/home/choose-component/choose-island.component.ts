@@ -69,7 +69,6 @@ export class ChooseIslandComponent implements AfterViewInit {
     this.errorMessage = undefined;
     this.operatorService.getIslands().subscribe(
       (value: any) => {
-        console.log(value);
         // this.toastService.presentToastOk(JSON.stringify(value));
         this.listIslands = value.body.isles;
         this.preload = false;
@@ -117,7 +116,6 @@ export class ChooseIslandComponent implements AfterViewInit {
       this.preload = true;
       this.errorMessage = undefined;
       const island: Island = this.formControlIsland.value;
-      console.log(island);
       this.operatorService.verifyTurn(island._id).subscribe(
         (value: any) => {
           if (value.body.avalaible) {
@@ -125,10 +123,8 @@ export class ChooseIslandComponent implements AfterViewInit {
             // this.router.navigate(['operator/sign-in']);
             // this.operatorService.saveIsland(island);
             //
-            console.log(island);
             this.operatorService.statusHose(island.id_isle).subscribe(
               (value1: any) => {
-                console.log(value1);
                 if (value1.body.estado === 1) {
                   this.operatorService.saveIsland(island);
                   // this.router.navigate(['operator/sign-in']);
