@@ -32,6 +32,38 @@
           </mat-form-field>
         </div>
 
+        <div *ngIf = "is_lite">
+          <mat-form-field class="value-field">
+            <input placeholder="Cantidad de dinero" matInput [formControl]="formControlQuantityMoneyLite" type="number">
+            <mat-error>{{getErrorMessageQuantityMoneyLite()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <br>
+        <div>
+          <ion-row>
+            <ion-col size="4">
+              <ion-button (click)="setMoneyOption(10000)">$10.000</ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button (click)="setMoneyOption(30000)">$30.000</ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button (click)="setMoneyOption(60000)">$60.000</ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="4">
+              <ion-button (click)="setMoneyOption(100000)">$100.000</ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button (click)="setMoneyOption(150000)">$150.000</ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button (click)="setMoneyOption(200000)">$200.000</ion-button>
+            </ion-col>
+          </ion-row>
+        </div>
+
         <div class="center-horizontal my-4" *ngIf = "is_lite == false">
           <mat-button-toggle-group [formControl]="formControlMode">
             <!--
@@ -41,15 +73,15 @@
             -->
             <mat-button-toggle value="0">
               <div class="full"></div>
-              <label for="full" class="label-option">Full</label>
+              <span for="full" class="span-option">Full</span>
             </mat-button-toggle>
             <mat-button-toggle value="1">
               <div class="money"></div>
-              <label for="dinero" class="label-option">Dinero</label>
+              <span for="dinero" class="span-option">Dinero</span>
             </mat-button-toggle>
             <mat-button-toggle value="2">
               <div class="volume"></div>
-              <label for="volumen" class="label-option">Volumen</label>
+              <span for="volumen" class="span-option">Volumen</span>
             </mat-button-toggle>
           </mat-button-toggle-group>
           
@@ -59,7 +91,7 @@
             <mat-error *ngIf='formControlMode.errors?.required'>{{getErrorMessageMode()}}</mat-error>
           </div>
           <div *ngIf="formControlMode.value ==1">
-            <label class="money-value">{{ formControlQuantityMoney.value | currency : 'COP' : '' : '1.0-0'}}</label>
+            <span class="money-value">{{ formControlQuantityMoney.value | currency : 'COP' : '' : '1.0-0'}}</span>
           </div> 
           <br>
           <div class="mb-2 div-form" *ngIf="formControlMode.value ==1">

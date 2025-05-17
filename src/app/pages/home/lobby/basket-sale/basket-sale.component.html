@@ -38,12 +38,12 @@
                   </div>
                 </ion-col>
                 <ion-col size="7" class="flexbox-middle">
-                  <label *ngIf="dependencyProduct.product?.name?.length > 25" class="flexbox-middle card-header m-0 color-blue">
+                  <span *ngIf="dependencyProduct.product?.name?.length > 25" class="flexbox-middle card-header m-0 color-blue">
                     {{dependencyProduct.product?.name.substring(0, 40) | titlecase}}
                     <ng-container *ngIf="dependencyProduct.product?.name?.length >= 40">
                       ...
                     </ng-container>
-                  </label>
+                  </span>
                   <h5 *ngIf="dependencyProduct.product?.name?.length <= 25" class="flexbox-middle card-header m-0 color-blue">
                     {{dependencyProduct.product?.name | titlecase}}
                   </h5>
@@ -77,7 +77,7 @@
             <ion-item lines="none" class="border-top-grey-2px pr-0 items-products" *ngFor="let product of listProductsForBuy">
               <ion-row class="all">
                       <ion-col size="4" size-sm="4" class="flexbox-middle">
-                        <label class="label">{{product.name}}</label>
+                        <span class="label">{{product.name}}</span>
                       </ion-col>
           
                       <ion-col size="0" size-sm="1">
@@ -87,7 +87,7 @@
                       </ion-col>
                       
                       <ion-col size="1" size-sm="1" class="flexbox-middle">
-                        <label class="label"><strong>{{product.quantity}}</strong></label>
+                        <span class="label"><strong>{{product.quantity}}</strong></span>
                       </ion-col>
 
                       <ion-col size="0" size-sm="1">

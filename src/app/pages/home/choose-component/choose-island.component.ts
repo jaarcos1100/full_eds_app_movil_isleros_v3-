@@ -11,6 +11,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {DialogHelpComponent} from './dialog-help/dialog-help.component';
 import {PopoverAboutOfComponent} from './popover-about-of/popover-about-of.component';
 
+
 @Component({
   selector: 'app-choose-component',
   templateUrl: './choose-island.component.html',
@@ -21,6 +22,8 @@ export class ChooseIslandComponent implements AfterViewInit {
   public preload = true;
   public errorMessage: string;
   public formControlIsland: FormControl = new FormControl('', [Validators.required]);
+  public is_lite:boolean;
+
 
   constructor(
     public navCtrl: NavController,
@@ -29,8 +32,12 @@ export class ChooseIslandComponent implements AfterViewInit {
     private toastService: ToastService,
     private loadingService: LoadingService,
     private localStorageIpPortService: LocalStorageIpPortService,
+    
     public popoverController: PopoverController
-  ) {}
+  ) {
+    this.is_lite = LocalStorageIpPortService.getIsFullEDSLite()==true ?  true : false;
+
+  }
 
   ngAfterViewInit(): void {
     this.loadIsles();
@@ -123,22 +130,31 @@ export class ChooseIslandComponent implements AfterViewInit {
             // this.router.navigate(['operator/sign-in']);
             // this.operatorService.saveIsland(island);
             //
-            this.operatorService.statusHose(island.id_isle).subscribe(
-              (value1: any) => {
-                if (value1.body.estado === 1) {
-                  this.operatorService.saveIsland(island);
-                  // this.router.navigate(['operator/sign-in']);
-                  this.navCtrl.navigateRoot('operator/sign-in');
-                } else {
-                  this.toastService.presentToastError('Las mangueras no están colgadas');
+            if(this.is_lite){
+              this.operatorService.saveIsland(island);
+              // this.router.navigate(['operator/sign-in']);
+              this.navCtrl.navigateRoot('operator/sign-in');
+              this.preload = false;
+
+            }else{
+              this.operatorService.statusHose(island.id_isle).subscribe(
+                (value1: any) => {
+                  if (value1.body.estado === 1) {
+                    this.operatorService.saveIsland(island);
+                    // this.router.navigate(['operator/sign-in']);
+                    this.navCtrl.navigateRoot('operator/sign-in');
+                  } else {
+                    this.toastService.presentToastError('Las mangueras no están colgadas');
+                  }
+                  this.preload = false;
+                },
+                (error: HttpErrorResponse) => {
+                  this.preload = false;
+                  this.errorMessage = 'Error de conexión';
                 }
-                this.preload = false;
-              },
-              (error: HttpErrorResponse) => {
-                this.preload = false;
-                this.errorMessage = 'Error de conexión';
-              }
-            );
+              );
+            }
+            
           } else {
             this.preload = false;
             this.toastService.presentToastError('La isla ya tiene un turno abierto');

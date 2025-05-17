@@ -1,6 +1,6 @@
 import {LocalStorageIpPortService} from '../../services/localStorageIpPort/local-storage-ip-port.service';
 
-export var Global = {
+export const Global = {
     URL: {
       // ws_port: 3001,
       // http_port: 80,

@@ -62,7 +62,7 @@ export class DialogRegisterUserComponent implements OnInit {
   public isSelectUser: boolean;
   public userSelected: User | Company | any;
   public listEmailDomains: string[] = Util.listEmailDomains;
-  public otherEmailDomain = false;
+  public otherEmailDomain = true;
   public isLegalPerson = false;
   public formControlCity: FormControl = new FormControl('', [ Validators.required]);
   public lastCitySelected: Ubication;
@@ -95,26 +95,33 @@ export class DialogRegisterUserComponent implements OnInit {
   }
 
   private getInfoOrganization() {
-    // if (!this.operatorService.orgId) {
-    //   this.preload = true;
-    //   this.errorMessage = undefined;
-    //   this.operatorService.getInfoOrganization().subscribe(
-    //     (value: any) => {
-    //       const organizationInfo: OrganizationInfo = value.body;
-    //       if (organizationInfo.organization) {
-    //         this.operatorService.orgId = organizationInfo.organization._id;
-    //       }
-    //       this.preload = false;
-    //     },
-    //     error => {
-    //       this.preload = false;
-    //       this.errorMessage = 'Error obteniendo los datos, por favor intente nuevamente';
-    //     }
-    //   );
-    // }
+       this.errorMessage = undefined;
+       this.operatorService.getInfoOrganization().subscribe(
+         (value: any) => {
+            const organizationInfo: OrganizationInfo = value.body;
+            console.log(organizationInfo);
+            this.setDataOrg(organizationInfo.organization.email, organizationInfo.department, organizationInfo.organization.phone);
+         },
+         error => {
+           this.preload = false;
+           this.errorMessage = 'Error obteniendo los datos, por favor intente nuevamente';
+         }
+       );
+     
+  }
+
+  setDataOrg(email, city, phone){
+    this.formControlPhoneNumber.setValue(phone);
+    this.lastCitySelected = city;
+    this.formControlCity.setValue(city.name);
+    let email_split = email.split("@");
+    this.formControlEmail.setValue(email_split[0]);
+    this.formControlEmailOtherDomainText.setValue(email_split[1]);
+
   }
 
   ngOnInit(): void {
+    this.getInfoOrganization();
   }
 
   buildBody(): RegisterInvoice {
@@ -336,6 +343,7 @@ export class DialogRegisterUserComponent implements OnInit {
   }
 
   onSelectOption(option: Ubication) {
+    console.log(option);
     this.lastCitySelected = option;
   }
 

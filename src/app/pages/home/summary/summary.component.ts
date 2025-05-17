@@ -53,8 +53,9 @@ export class SummaryComponent {
 
     this.isAccessAfterLogin = !!this.route.snapshot.paramMap.get('isCurrent');
     this.is_lite = LocalStorageIpPortService.getIsFullEDSLite()==true ?  true : false;
-
+    console.log(this.is_lite);
     if(this.is_lite){
+      
       this.getSummaryLite();
     }else{
       this.getSummary();
@@ -146,12 +147,15 @@ export class SummaryComponent {
   }
 
   public getSummaryLite() {
+    console.log("ejecuta carga de lite");
     this.startLoading();
     this.preload = true;
     this.errorMessage = undefined;
     const isle: Isle = this.operatorService.readLocalHostIsland();
+    console.log("llego 11111 *****");
     this.operatorService.getSummary(isle._id).subscribe(
       (value: any) => {
+        console.log("llego 222222*****");
         this.isleSummary = value.body;
         if (!this.isAccessAfterLogin) {
           this.operatorService.saveIsleSummary(this.isleSummary);

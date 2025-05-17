@@ -25,7 +25,7 @@
         </mat-form-field>
         <div>
           <mat-checkbox style="margin-top: 10px;" [checked]="isLegalPerson" (change)="changeCheckLegalPerson($event)">
-            <label>¿ Es una persona Jurídica ?</label>
+            <span>¿ Es una persona Jurídica ?</span>
           </mat-checkbox>
         </div>
         <ion-row>
@@ -44,7 +44,7 @@
           <!--            </mat-form-field>-->
           <!--          </ion-col>-->
         </ion-row>
-        <label class="m-0" style="color: #003b19">El correo debe ser real para evitar problemas de facturación</label>
+        <span class="m-0" style="color: #003b19">El correo debe ser real para evitar problemas de facturación</span>
         
         <div class="ion-text-center">
           <ion-row>
@@ -55,7 +55,7 @@
               </mat-form-field>
             </ion-col>
             <ion-col class="p-0" size="1" style="margin-top: .5em;">
-              <label>@</label>
+              <span>@</span>
             </ion-col>
             <ion-col class="p-0" size="5" *ngIf="!otherEmailDomain">
               <mat-form-field class="w-100">
@@ -77,7 +77,7 @@
           <ion-col size="6"></ion-col>
           <ion-col size="6" style="text-align: left;">
             <mat-checkbox style="margin-top: 10px;" [checked]="otherEmailDomain" (change)="changeCheckBoxDomain($event)">
-              <label class="mt-2 mb-1">Otro Dominio</label>
+              <span class="mt-2 mb-1">Otro Dominio</span>
             </mat-checkbox>
           </ion-col>
         </ion-row>

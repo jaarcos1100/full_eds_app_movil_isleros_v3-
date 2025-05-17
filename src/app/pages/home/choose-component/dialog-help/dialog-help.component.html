@@ -23,17 +23,17 @@
             <h5 class="color-blue">
               Tanqueos
             </h5>
-            <label class="text-menu">
+            <span class="text-menu">
               Aquí se realizan las Ventas de Combustible.
-            </label>
+            </span>
           </ion-col>
           <ion-col>
             <h5 class="color-blue">
               Histórico de Tanqueos
             </h5>
-            <label>
+            <span>
               Aquí se ven las últimas Ventas de Combustible o Canastilla y se pude convertir Ventas POS a Factura Electrónica, o imprimir alguna venta pendiente.
-            </label>
+            </span>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -41,17 +41,17 @@
             <h5 class="color-blue">
               POS
             </h5>
-            <label class="text-menu">
+            <span class="text-menu">
               Aquí se Realizan Ventas de Canastilla.
-            </label>
+            </span>
           </ion-col>
           <ion-col>
             <h5 class="color-blue ion-text-left">
               Resumen de Cantidades
             </h5>
-            <label>
+            <span>
               Aquí se pueden observar los volumenes actuales de cada una de las mangueras y el tipo de Combustible que contiene cada una.
-            </label>
+            </span>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -108,31 +108,31 @@
       <h5 class="color-darkslategrey">
         Información de la Venta
       </h5>
-      <label>
+      <span>
         Aquí se Observa la cantidad de Combustible vendido así como el precio, Oprima el Botón Continuar para Facturar.
-      </label>
+      </span>
     </div>
     <div *ngIf="router.url.endsWith('basket-plaque')">
       <h5 class="color-darkslategrey">
         Vehículo que realiza la Compra
       </h5>
-      <label class="color-blue">
+      <span class="color-blue">
         Escriba la placa del vehículo que está realizando la compra y oprima Continuar.
-      </label>
+      </span>
     </div>
     <div *ngIf="router.url.endsWith('history-sales')">
       <h5 class="color-darkslategrey">
         Histórico de Ventas
       </h5>
-      <label class="color-blue">
+      <span class="color-blue">
         Puede oprimir sobre los botones Combustible o Canastilla para ver las últimas ventas realizadas.
-      </label>
-      <label>
+      </span>
+      <span>
         Si la Venta fue Facturada como POS le aparecerá un botón por si desea convertirla a Factura Electrónica.
-      </label>
-      <label>
+      </span>
+      <span>
         Si la Venta aún no ha sido facturada, le aparecerá un botón para dirigirse a la información de la venta y continuar con el proceso.
-      </label>
+      </span>
     </div>
     <div *ngIf="router.url.endsWith('invoice')">
       <h4 class="color-darkslategrey">
@@ -172,9 +172,9 @@
       <h5 class="color-darkslategrey">
         Resumen de Mangueras
       </h5>
-      <label class="color-blue">
+      <span class="color-blue">
         En esta sección puede observar las distintas mangueras que hay en la isla, el tipo de combustible que contiene cada una y el volumen de combustible que tienen actualmente.
-      </label>
+      </span>
     </div>
   </div>
 </ion-content>

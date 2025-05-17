@@ -12,7 +12,7 @@
                 <ion-row>
                     <ion-col size="4">
                         <div class="circle_progress_steeper">
-                            <label class="primary-color label-progress">1 de 3</label>
+                            <span class="primary-color label-progress">1 de 3</span>
                         </div>
                     </ion-col>
                     <ion-col size="8">
@@ -89,7 +89,7 @@
                 <ion-row>
                     <ion-col size="4">
                         <div class="circle_progress_steeper">
-                            <label class="primary-color label-progress">2 de 3</label>
+                            <span class="primary-color label-progress">2 de 3</span>
                         </div>
                     </ion-col>
                     <ion-col size="8">
@@ -103,7 +103,7 @@
                     <ng-container *ngFor="let invoice of listTypeInvoices; let i = index;">  
                         
                         <div *ngIf="invoice.code == 'fe' && limit_uvt == true" class="container-toggle">
-                            <label for="" class="label-toggle">La venta supera la configuracion de UVT y se obliga a factura electronica.</label>
+                            <span for="" class="label-toggle">La venta supera la configuracion de UVT y se obliga a factura electronica.</span>
                         </div>
 
                         <ion-card class="card-invoice" [style]="{opacity: currentInvoiceCode === invoice.code ? '100%' : '70%'}" (click)="chooseInvoiceType(i, invoice.code)">
@@ -115,17 +115,17 @@
                                             </div>
                                         </ion-col>
                                         <ion-col size="9" class="name-invoice">
-                                            <label>{{invoice.name}}</label>
+                                            <span>{{invoice.name}}</span>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-content>
                         </ion-card>
                         <div *ngIf="invoice.option_name == 'venta_vale' && currentInvoiceCode == 'fe' && this.quota_value > this.total_sale" class="container-toggle">
-                            <label for="" class="label-toggle">¿Es Vale?</label>
+                            <span for="" class="label-toggle">¿Es Vale?</span>
                             <ion-toggle [(ngModel)]="is_vale"></ion-toggle>
                         </div>
                         <div *ngIf="invoice.option_name == 'cupo_libre' && currentInvoiceCode == 'cupo' && have_free_quota" class="container-toggle container-toggle-credit">
-                            <label for="" class="label-toggle">Cupo libre</label>
+                            <span for="" class="label-toggle">Cupo libre</span>
                             <ion-toggle [(ngModel)]="is_cupo"></ion-toggle>
                         </div>
                         
@@ -165,9 +165,9 @@
                 <h4>Por politicas de admnistracion, las ventas de este cliente deben ser tipo factura electronica a credito.</h4>
             </div>
             <div *ngIf="restriction.type_sold ==  'cupo' && restriction.is_cupo == false">
-                <label *ngIf="quota_value < total_sale">
+                <span *ngIf="quota_value < total_sale">
                     La empresa no tiene cupo en el credito, debe tanquear con cliente 222222222222
-                </label>
+                </span>
                 <h4>Por politicas de admnistracion, las ventas de este cliente deben ser tipo cupo.</h4>
             </div>
             <div *ngIf="restriction.type_sold ==  'cupo' && restriction.is_cupo == true">
@@ -197,7 +197,7 @@
                 <ion-row>
                     <ion-col size="4">
                         <div class="circle_progress_steeper">
-                            <label class="primary-color label-progress">3 de 3</label>
+                            <span class="primary-color label-progress">3 de 3</span>
                         </div>
                     </ion-col>
                     <ion-col size="8">
@@ -229,9 +229,9 @@
                         [formControl]="formAnticipate">
                 </mat-form-field>
                 <div class="label-anticipate-value">
-                    <label for="">
+                    <span for="">
                         El saldo de anticipos de la empresa es:  ${{balance_anticipate | currency : 'COP' : '' : '1.0-0'}} y el valor máximo permitido es de: ${{restriction.anticipate_max_value | currency : 'COP' : '' : '1.0-0'}}. Si el valor ingresado es igual o menor a 0, no se registrara el anticipo.
-                    </label>
+                    </span>
                 </div>
 
             </section>
@@ -246,7 +246,7 @@
                                         </div>
                                     </ion-col>
                                     <ion-col size="9" class="name-invoice">
-                                        <label>{{paymentOption.name}}</label>
+                                        <span>{{paymentOption.name}}</span>
                                     </ion-col>
                                 </ion-row>
                             </ion-card-content>
@@ -277,13 +277,13 @@
 
                 
             <section id="number_copies">
-                <label for="" class="label-toggle">Copias generadas: {{countCopies}}</label>
+                <span for="" class="label-toggle">Copias generadas: {{countCopies}}</span>
             </section>
         
             <section>
 
                 <div *ngIf="!mandatory_print && countCopies==0" class="container-toggle">
-                    <label for="" class="label-toggle">Imprimir esta venta</label>
+                    <span for="" class="label-toggle">Imprimir esta venta</span>
                     <ion-toggle [(ngModel)]="require_print"></ion-toggle>
                 </div>
 
@@ -294,8 +294,8 @@
 
         <section id="btn-finish">
                 <ion-button class="btn-next" (click)="finish()" *ngIf="countCopies==0">
-                    <label for="" *ngIf="require_print==true">Imprimir</label>
-                    <label for="" *ngIf="require_print==false">Finalizar sin imprimir</label>
+                    <span for="" *ngIf="require_print==true">Imprimir</span>
+                    <span for="" *ngIf="require_print==false">Finalizar sin imprimir</span>
                 </ion-button>
                 <ion-row *ngIf="countCopies==1">
                     <ion-col size="6" class="">
@@ -311,7 +311,7 @@
                     <ion-col size="12" *ngIf="payWithCard">
                         <h5 class="text_dataphone_payment">Pago con datafono</h5>
                         <div class="text_dataphone_payment">
-                            <label for="">Por favor ingresa el valor total que deseas transferir por datafono, el maximo permitido es: {{max_ammount_dataphone}}</label>
+                            <span for="">Por favor ingresa el valor total que deseas transferir por datafono, el maximo permitido es: {{max_ammount_dataphone}}</span>
                         </div>
 
 

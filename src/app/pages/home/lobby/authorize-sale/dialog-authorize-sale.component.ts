@@ -30,8 +30,12 @@ export class DialogAuthorizeSaleComponent implements OnInit {
   formControlQuantityVolumen:FormControl = new FormControl('',[Validators.required, Validators.min(0), Validators.max(999)]);
 
   formControlQuantityVolumenLite:FormControl = new FormControl('',[Validators.required, Validators.min(0), Validators.max(999)]);
-  
+
+  formControlQuantityMoneyLite:FormControl = new FormControl('',[Validators.required, Validators.min(0), Validators.max(100000000)]);
+
   public data: Hose = this.navParams.get('data');
+
+  public value_product:number = this.data.product.value;
 
   public is_lite:boolean;
 
@@ -58,6 +62,9 @@ export class DialogAuthorizeSaleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.value_product);
+    this.changeValueVolumenLite();
+    this.changeValueMoneyLite();
   }
 
   /**
@@ -110,6 +117,17 @@ export class DialogAuthorizeSaleComponent implements OnInit {
       ? 'Este campo es obligatorio'
       : this.formControlQuantityVolumenLite.hasError('min') || this.formControlQuantityVolumenLite.hasError('max')
         ? 'Debe ser superior a 0 e inferior a 1000 galones'
+        : '';
+  }
+
+  /**
+   * Mensaje de error dinero
+   */
+   getErrorMessageQuantityMoneyLite() {
+    return this.formControlQuantityMoneyLite.hasError('required')
+      ? 'Este campo es obligatorio'
+      : this.formControlQuantityMoneyLite.hasError('min') || this.formControlQuantityMoneyLite.hasError('max')
+        ? 'Debe ser superior a $0 e inferior a $100.000.000 galones'
         : '';
   }
 
@@ -222,5 +240,36 @@ export class DialogAuthorizeSaleComponent implements OnInit {
       }
     }
     return undefined;
+  }
+
+  changeValueVolumenLite(){
+    this.formControlQuantityVolumenLite.valueChanges.subscribe((volume) => {
+      console.log('Usuario digitó:', volume);
+  
+      if (volume && volume.toString().length > 0) {
+        // Ejecuta tu lógica aquí
+        let total_money = volume * this.value_product;
+        this.formControlQuantityMoneyLite.setValue(total_money);
+      }
+    });
+
+  }
+
+  changeValueMoneyLite(){
+    this.formControlQuantityMoneyLite.valueChanges.subscribe((money) => {
+      console.log('Usuario digitó:', money);
+  
+      if (money && money.toString().length > 0) {
+        // Ejecuta tu lógica aquí
+        let total_volume = money / this.value_product;
+        this.formControlQuantityVolumenLite.setValue(total_volume);
+      }
+    });
+
+  }
+
+  setMoneyOption(money:number){
+    let total_volume = money / this.value_product;
+      this.formControlQuantityVolumenLite.setValue(total_volume);
   }
 }

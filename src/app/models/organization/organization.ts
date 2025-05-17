@@ -22,5 +22,6 @@ export class Organization {
 
 export interface OrganizationInfo {
   organization: Organization;
+  department:any;
   details: any;
 }

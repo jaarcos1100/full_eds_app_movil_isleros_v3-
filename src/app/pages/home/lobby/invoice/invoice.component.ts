@@ -151,6 +151,8 @@ export class InvoiceComponent{
     this.listenDataphoneValue();
   }
 
+  
+
   setListTypeInvoice(){
     this.listTypeInvoices = [
       {icon: 'receipt-outline', name: 'POS', option_name:'none', option:false, code:'pos'},
