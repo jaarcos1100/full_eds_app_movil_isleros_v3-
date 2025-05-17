@@ -46,7 +46,6 @@ ion-fab-button {
 }
 
 .col-sm-intermediate {
-  -ms-flex: 0 0 48%;
   flex: 0 0 48%;
   max-width: 48%;
 }
@@ -86,7 +85,6 @@ mat-toolbar {
 }
 @media screen and (min-width: 900px) {
   .col-lg-intermediate {
-    -ms-flex: 0 0 24%;
     flex: 0 0 24%;
     max-width: 24%;
   }
