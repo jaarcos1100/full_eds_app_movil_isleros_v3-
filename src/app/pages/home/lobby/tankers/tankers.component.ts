@@ -28,12 +28,6 @@ export class TankersComponent implements OnInit {
   opened = 'initial';
   // @ts-ignore
   listSales: Sale[] = [
-    // // @ts-ignore
-    // {vehicle: {plaque: 'KJXA89'}},
-    // // @ts-ignore
-    // {vehicle: {plaque: 'KJXA89'}},
-    // // @ts-ignore
-    // {vehicle: {plaque: 'KJXA89'}},
   ];
   modeDrawer: 'side' | 'push' | 'over';
   hasBackdropDrawer: boolean;
@@ -304,7 +298,6 @@ export class TankersComponent implements OnInit {
    * entonces abre el diálogo para ingresar la placa del vehículo y poder autorizar venta
    */
   openModalOnClickHose(hose: Hose) {
-    debugger;
     const sales = this.operatorService.readListSalesToPrint();
     // TODO
     // sales = [{_id: 3, hose: hose}];

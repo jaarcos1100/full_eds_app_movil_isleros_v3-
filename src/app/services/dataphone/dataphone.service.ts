@@ -28,4 +28,14 @@ export class DataphoneService {
       throw error;
     }
   }
+
+  async startPrint(datos: any): Promise<any> {
+    try {
+      let response = await dataphone['print']({ json: JSON.stringify(datos) });
+      return response;
+    } catch (error) {
+      console.error('Error en la transacción del dataphone:', error);
+      throw error;
+    }
+  }
 }

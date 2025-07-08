@@ -83,11 +83,7 @@
 
 <app-toolbar-custom></app-toolbar-custom>
 <div style="position: absolute; margin-top: 2em; width: 100% !important; overflow-y: auto; height: 100%;">
-    <!--  <div *ngIf="errorMessage" class="background-red ion-text-center">-->
-    <!--    <div class="ion-text-center">-->
-    <!--      <ion-button class="next-button ion-button-width-1-5em color-black">Recargar</ion-button>-->
-    <!--    </div>-->
-    <!--  </div>-->
+
     <ion-col style="overflow-y: auto" *ngIf="!preload && isleSummary">
 
       <ion-grid class="mt-5">
@@ -101,8 +97,6 @@
                   <div class="distance-lineheight"></div>
                   <span class="w-100 label-fuel" style="color: #bd27d4">Gasolina</span>
                 </div>
-                
-  
               </ion-col>
               <ion-col>
   

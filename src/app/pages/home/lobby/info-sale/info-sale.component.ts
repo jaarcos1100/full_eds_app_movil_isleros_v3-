@@ -137,6 +137,7 @@ export class InfoSaleComponent implements OnInit {
           (value: any) => {
             this.userDataInvoice = value.body;
             const companies = this.userDataInvoice.companies;
+            console.log(companies);
             if (companies) {
               // @ts-ignore
             }        },

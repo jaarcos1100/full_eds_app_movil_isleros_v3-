@@ -18,7 +18,7 @@
         <ng-container *ngIf="userDataInvoice && userDataInvoice.companies">
           <ion-item *ngFor="let user of userDataInvoice?.companies; let i = index" class="mat-list-item-user" [style]="currentUser === i + 1 ? {'--ion-item-background': 'lightskyblue'} : ''">
             <!--<span class="full-width">{{user.name}} - {{user.nit}} {{user.digit_check ? '- ' + user.digit_check : ''}}</span>-->
-            <span class="full-width">{{user.name}} - {{user.nit}}</span>
+            <span class="full-width">{{user.full_name}} - {{user.nit}}</span>
           </ion-item>
         </ng-container>
 

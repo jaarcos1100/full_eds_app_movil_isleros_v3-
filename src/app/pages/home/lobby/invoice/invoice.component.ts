@@ -87,6 +87,8 @@ export class InvoiceComponent{
 
   private original_tax_percent: number | null = null; // porcentaje fijo inicial
 
+  private shift_id:string = "";
+
   public max_ammount_dataphone:number;
   constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService:GlobalVarService, public creditService:CreditService, public restrictionsService:RestrictionsService, public dataphoneService:DataphoneService) {
     if (!operatorService.readSaleID()) {
@@ -145,13 +147,12 @@ export class InvoiceComponent{
     this.is_integrate_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
     this.result_code_datafone = 'None';
     this.max_ammount_dataphone = 0;
+    this.shift_id = this.operatorService.readIsOpenShift()._id;
   }
 
   ngOnInit(){
     this.listenDataphoneValue();
   }
-
-  
 
   setListTypeInvoice(){
     this.listTypeInvoices = [
@@ -160,6 +161,8 @@ export class InvoiceComponent{
       {icon: 'cube', name: 'CUPO', option_name:'cupo_libre',option:true, code:'cupo'},
     ];
   }
+
+  //enum: ['EFECTIVO', 'TARJETA_CREDITO', 'TARJETA_DEBITO', 'TRANSFERENCIA', 'CHEQUE']
   setListPayment(){
     this.listPayment = [
       {icon: 'cash-outline', code: 10, name: 'Efectivo'},
@@ -548,7 +551,8 @@ export class InvoiceComponent{
       is_copy: false,
       isle: this.operatorService.readLocalHostIsland().id_isle,
       payment_method:this.listPayment[this.currentMethodPayment].code,
-      require_print:this.require_print
+      require_print:this.require_print,
+      shift_id:this.shift_id
     };
     if (this.formControlKM.value) {
       sale.mileage = this.formControlKM.value;
@@ -609,9 +613,10 @@ export class InvoiceComponent{
       value => {
         this.data_invoice = value;
         console.log("-----------------------");
-        console.log(value);
+        console.log(JSON.stringify(value));
         console.log("-----------------------");
         this.setDataphoneData();
+        this.print(this.data_invoice.body.data);
         
         this.preloadInvoice = false;
         this.enableReturnStep2 = false;
@@ -699,7 +704,7 @@ export class InvoiceComponent{
       recordCopiesInvoice.push({_idInvoicePrinted: this.operatorService.readSaleID(), numberCopies: this.countCopies});
       this.operatorService.saveRecordCopiesInvoice(recordCopiesInvoice);
     }
-  }s
+  }
 
   /**
    * Cuando se termina de facturar una venta entonces se elimina del registro que cuenta la cantidad de veces que se ha impresa una venta
@@ -911,6 +916,13 @@ export class InvoiceComponent{
    */
   resetOriginalTaxPercent() {
     this.original_tax_percent = null;
+  }
+
+  async print(data_json){
+    if(this.is_integrate_print && this.require_print){
+      console.log("si llego a impresora");
+      await this.dataphoneService.startPrint(data_json);
+    }
   }
 
 }

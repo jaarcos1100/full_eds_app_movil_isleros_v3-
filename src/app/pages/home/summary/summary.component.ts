@@ -152,10 +152,8 @@ export class SummaryComponent {
     this.preload = true;
     this.errorMessage = undefined;
     const isle: Isle = this.operatorService.readLocalHostIsland();
-    console.log("llego 11111 *****");
     this.operatorService.getSummary(isle._id).subscribe(
       (value: any) => {
-        console.log("llego 222222*****");
         this.isleSummary = value.body;
         if (!this.isAccessAfterLogin) {
           this.operatorService.saveIsleSummary(this.isleSummary);
@@ -294,21 +292,23 @@ export class SummaryComponent {
   }
 
   async openModalPutVolume(index_hose) {
-    const modal = await this.modalController.create({
-      component: DialogPutVolumenComponent,
-      cssClass: 'fullscreen',
-      componentProps: {
-        side: this.side,
-        volume: this.isleSummary.hoses[index_hose].volume
-      }
-    });
-    modal.onDidDismiss().then(res => {
-      if (res.data) {
-        let volumeResponse = res.data;
-        this.isleSummary.hoses[index_hose].volume = volumeResponse;
-      }
-    }).catch();
-    return await modal.present();
+    if(this.is_lite){
+      const modal = await this.modalController.create({
+        component: DialogPutVolumenComponent,
+        cssClass: 'fullscreen',
+        componentProps: {
+          side: this.side,
+          volume: this.isleSummary.hoses[index_hose].volume
+        }
+      });
+      modal.onDidDismiss().then(res => {
+        if (res.data) {
+          let volumeResponse = res.data;
+          this.isleSummary.hoses[index_hose].volume = volumeResponse;
+        }
+      }).catch();
+      return await modal.present();
+    } 
   }
 
   getHosesOfPump(pump: Pump): Hose[] {

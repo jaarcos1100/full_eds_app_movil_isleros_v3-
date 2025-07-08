@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start"
+                   class="button-back"
+                   (click)="this.modalController.dismiss();">
+        <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+      </ion-buttons>
+      <ion-title (click)="this.modalController.dismiss();">
+        Regresar
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <div class="center-element">
+      <form class="forms">
+        <h4 class="ion-text-center" style="margin-top: 5px !important;"><strong>REGISTRAR VOLUMEN DE MANGUERA</strong></h4>
+          <ion-row>
+            <ion-col class="p-0" size="12">
+              <mat-form-field>
+                <input placeholder="Volumen" type="number" matInput [formControl]="formVolume">
+              </mat-form-field>
+            </ion-col>
+          </ion-row>
+          <div class="center-horizontal">
+            <ion-button class="ion-button-width-1-5em main-button" (click)="saveVolumen()">Continuar</ion-button>
+          </div>
+      </form>
+    </div>
+  </ion-content>

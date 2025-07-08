@@ -29,6 +29,8 @@ import {TankersComponent} from './tankers/tankers.component';
 import {ReplaceTextPipe} from '../../../pipes/replace-text/replace-text.pipe';
 import { DialogViewRemainingSalesComponent } from './dialog-view-remaining-sales/dialog-view-remaining-sales';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { DialogPutVolumenCloseComponent } from './dialog-close-shift/dialog-put-volumen-close/dialog-put-volumen-close.component';
+
 
 @NgModule({
   imports: [
@@ -65,6 +67,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     TankersComponent,
     ReplaceTextPipe,
     DialogViewRemainingSalesComponent,
+    DialogPutVolumenCloseComponent
   ]
 })
 export class LobbyPageModule {}

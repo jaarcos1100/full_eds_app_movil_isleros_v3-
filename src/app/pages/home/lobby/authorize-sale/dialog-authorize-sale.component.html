@@ -39,7 +39,7 @@
           </mat-form-field>
         </div>
         <br>
-        <div>
+        <div *ngIf = "is_lite">
           <ion-row>
             <ion-col size="4">
               <ion-button (click)="setMoneyOption(10000)">$10.000</ion-button>
@@ -73,15 +73,15 @@
             -->
             <mat-button-toggle value="0">
               <div class="full"></div>
-              <span for="full" class="span-option">Full</span>
+              <span for="full" class="span-option-full-lite">Full</span>
             </mat-button-toggle>
             <mat-button-toggle value="1">
               <div class="money"></div>
-              <span for="dinero" class="span-option">Dinero</span>
+              <span for="dinero" class="span-option-full-lite">Dinero</span>
             </mat-button-toggle>
             <mat-button-toggle value="2">
               <div class="volume"></div>
-              <span for="volumen" class="span-option">Volumen</span>
+              <span for="volumen" class="span-option-full-lite">Volumen</span>
             </mat-button-toggle>
           </mat-button-toggle-group>
           
