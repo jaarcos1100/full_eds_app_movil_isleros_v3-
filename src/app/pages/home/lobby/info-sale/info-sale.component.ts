@@ -101,6 +101,7 @@ export class InfoSaleComponent implements OnInit {
     try {
       return parseFloat(parseFloat('0' + value).toFixed(3));
     } catch (e) {
+      console.log(e);
       return 0;
     }
   }

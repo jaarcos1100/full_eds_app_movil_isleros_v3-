@@ -610,22 +610,23 @@ export class InvoiceComponent{
     body.is_integrate_print =this.is_integrate_print;
 
     this.operatorService.toInvoice(this.operatorService.readSaleID(), body).subscribe(
-      value => {
+      async value => {
         this.data_invoice = value;
-        console.log("-----------------------");
-        console.log(JSON.stringify(value));
-        console.log("-----------------------");
+        
         this.setDataphoneData();
-        this.print(this.data_invoice.body.data);
+        console.log("-----------------------");
+        console.log(this.data_invoice.body.data);
+        console.log("-----------------------");
+        
         
         this.preloadInvoice = false;
         this.enableReturnStep2 = false;
-        let company =  this.getIdCompany();
         this.deleteInvoice();
         this.countCopies++;
         this.validaDataphone();
         
         this.toastService.presentToastOk('Factura realizada.');
+        await this.print(this.data_invoice.body.data);
         if (this.countCopies === 2 || (this.require_print == false && this.is_dataphone==false)) {
               
             this.deleteRecordCopiesForThisSale();
@@ -644,7 +645,8 @@ export class InvoiceComponent{
         } else if(this.is_dataphone) {
               this.addCountRecordCopiesFotThisSale();
         }
-        this.updateCustomerInCloud();
+        //this.updateSalesInCloud();
+        
         this.forwardInvoicesAndEmails();
         
       },
@@ -666,7 +668,8 @@ export class InvoiceComponent{
     );
   }
 
-  updateCustomerInCloud(){
+  /*
+  updateSalesInCloud(){
     this.creditService.updateCustomerInCloud(this.getIdCompany()).subscribe(
       value => {
         console.log("cliente actualziado en la nube");
@@ -674,8 +677,8 @@ export class InvoiceComponent{
       err => {
         console.log(err);
       });
-
   }
+  */
 
   outOfInvoice(){
     this.preloadInvoice = false;
@@ -875,9 +878,9 @@ export class InvoiceComponent{
   }
 
   setDataphoneData(){
-    this.max_ammount_dataphone = Math.round(this.data_invoice.body.total);
-    this.formControlTotalValue.setValue(Math.round(this.data_invoice.body.total));
-    this.relative_taxes_dataphone_payment = (Math.round(this.data_invoice.body.imp));
+    this.max_ammount_dataphone = Math.round(this.data_invoice.body.data.total);
+    this.formControlTotalValue.setValue(Math.round(this.data_invoice.body.data.total));
+    this.relative_taxes_dataphone_payment = (Math.round(this.data_invoice.body.data.imp));
   }
 
   listenDataphoneValue(){

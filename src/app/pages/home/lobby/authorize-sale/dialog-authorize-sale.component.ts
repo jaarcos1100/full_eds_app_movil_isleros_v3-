@@ -201,7 +201,11 @@ export class DialogAuthorizeSaleComponent implements OnInit {
       if(this.formControlMode.value != "0"){
         quantity = this.formControlMode.value == "1" ? this.formControlQuantityMoney.value: this.formControlQuantityVolumen.value;
         let indexOfFloat = String(quantity).indexOf(".");
-        indexOfFloat != -1 ? quantity_text = String(quantity) : quantity_text = String(quantity) + ".0";
+        if (indexOfFloat != -1) {
+          quantity_text = String(quantity);
+        } else {
+          quantity_text = String(quantity) + ".0";
+        }
       }
       const registerSale: RegisterSale = {
         plaque: this.formControlPlaque.value.toUpperCase(),

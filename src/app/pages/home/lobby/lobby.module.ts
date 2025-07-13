@@ -24,7 +24,6 @@ import {DialogQuantityProductComponent} from './basket-sale/quantity-product/dia
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {ToolbarCustomComponent} from '../../custom/toolbar-custom/toolbar-custom.component';
-import {LongPressDirective} from '../../../directives/long-press.directive';
 import {TankersComponent} from './tankers/tankers.component';
 import {ReplaceTextPipe} from '../../../pipes/replace-text/replace-text.pipe';
 import { DialogViewRemainingSalesComponent } from './dialog-view-remaining-sales/dialog-view-remaining-sales';
@@ -63,7 +62,6 @@ import { DialogPutVolumenCloseComponent } from './dialog-close-shift/dialog-put-
     DialogAuthorizeSaleComponent,
     DialogQuantityProductComponent,
     ToolbarCustomComponent,
-    LongPressDirective,
     TankersComponent,
     ReplaceTextPipe,
     DialogViewRemainingSalesComponent,

@@ -96,6 +96,7 @@ export class BasketSaleComponent implements OnInit {
    */
   createFormControlsQuantity() {
     for (const product of this.listDependencyFilterProducts) {
+      console.log(product);
       this.listFormControlPrice.push(new FormControl('',
         [Validators.required, Validators.minLength(1), Validators.maxLength(10)]
       ));
@@ -123,7 +124,7 @@ export class BasketSaleComponent implements OnInit {
     };
     this.operatorService.validatePlaque(plaqueBody).subscribe(
       (value: any) => {
-        const vehicle = value.body;
+        //const vehicle = value.body;
         const productsBasket: ProductsBasket = {
           products: this.listProductsForBuy,
           total_value: this.getTotalPrice(),

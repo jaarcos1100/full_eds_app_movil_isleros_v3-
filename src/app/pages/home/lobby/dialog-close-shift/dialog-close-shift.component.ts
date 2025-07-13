@@ -190,7 +190,6 @@ export class DialogCloseShiftComponent {
       this.preload = true;
       this.startLoading();
       this.errorMessageCloseShift = undefined;
-      const isle = this.operatorService.readLocalHostIsland();
       this.operatorService.findShift(this.operatorService.readIsOpenShift()._id).subscribe((res: any) => {
         console.log(res);
         const shift = res.body?.shift;

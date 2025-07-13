@@ -8,7 +8,8 @@ export class CreditService {
 
   constructor(private http: HttpClient) { }
 
+  /*
   updateCustomerInCloud(company_id) {
     return this.http.put<any>('company/'+company_id+'/updateInCloud/', {}, { observe: 'response' });
-  }
+  }*/
 }
