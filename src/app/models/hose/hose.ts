@@ -15,5 +15,5 @@ export class Hose {
 
 export interface ShiftHose {
   hose: string;
-  valume: number;
+  volume: number;
 }

@@ -615,9 +615,9 @@ export class InvoiceComponent{
         
         this.setDataphoneData();
         console.log("-----------------------");
+        console.log(this.data_invoice);
         console.log(this.data_invoice.body.data);
         console.log("-----------------------");
-        
         
         this.preloadInvoice = false;
         this.enableReturnStep2 = false;
@@ -626,6 +626,7 @@ export class InvoiceComponent{
         this.validaDataphone();
         
         this.toastService.presentToastOk('Factura realizada.');
+        this.forwardInvoicesAndEmails();
         await this.print(this.data_invoice.body.data);
         if (this.countCopies === 2 || (this.require_print == false && this.is_dataphone==false)) {
               
@@ -647,7 +648,6 @@ export class InvoiceComponent{
         }
         //this.updateSalesInCloud();
         
-        this.forwardInvoicesAndEmails();
         
       },
       (error: HttpErrorResponse) => {
@@ -726,6 +726,7 @@ export class InvoiceComponent{
   
   // reb envio de mensajes de correo electronico y de facturas
   private forwardInvoicesAndEmails() {
+    console.log("sin ingreso a re envio de facturas");
     this.preloadInvoice = false;
     this.operatorService.forwardInvoice().subscribe(
       value => {},
@@ -838,6 +839,12 @@ export class InvoiceComponent{
     }
   }
 
+  finishCopy(){
+      this.countCopies = 1;
+      this.require_print = true;
+      this.finish();
+  }
+
   showSuccessErrorAlert(message: string) {
     this.toastService.presentToastError(message);
   }
@@ -922,6 +929,7 @@ export class InvoiceComponent{
   }
 
   async print(data_json){
+    console.log("print");
     if(this.is_integrate_print && this.require_print){
       console.log("si llego a impresora");
       await this.dataphoneService.startPrint(data_json);

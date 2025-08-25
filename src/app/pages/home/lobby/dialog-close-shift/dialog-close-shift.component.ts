@@ -13,6 +13,7 @@ import { Pump } from '../../../../models/pump/pump';
 import { Hose, ShiftHose } from '../../../../models/hose/hose';
 import { Side } from '../../../../models/side/Side';
 import { DialogPutVolumenCloseComponent } from './dialog-put-volumen-close/dialog-put-volumen-close.component';
+import {DataphoneService} from '../../../../services/dataphone/dataphone.service';
 
 // const SERVER_URL = 'ws://54.82.57.60:3001/';
 
@@ -34,9 +35,13 @@ export class DialogCloseShiftComponent {
   public side: number;
   public hose_id_to_put_volumen: number;
   errorMessage: string;
+  public is_integrate_print:boolean;
 
-  constructor(public navCtrl: NavController, private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController, private loadingService: LoadingService) {
+
+  constructor(public navCtrl: NavController, private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController, private loadingService: LoadingService, public dataphoneService:DataphoneService) {
     this.is_lite = LocalStorageIpPortService.getIsFullEDSLite() == true ? true : false;
+    this.is_integrate_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
+
     if (this.is_lite) {
 
       this.getSummaryLite();
@@ -122,7 +127,7 @@ export class DialogCloseShiftComponent {
     for (const volumeHose of hoses) {
       hoseVolumes.push({
         hose: volumeHose.hose._id,
-        volume: volumeHose.hose.volume
+        volume: this.is_lite ? volumeHose.hose.volume / 100 : volumeHose.hose.volume
       });
     }
     return hoseVolumes;
@@ -134,7 +139,8 @@ export class DialogCloseShiftComponent {
       user: this.formControlDNI.value,
       isle: this.operatorService.readLocalHostIsland()._id,
       hoses: bodyVolumesHoses,
-      is_lite:this.is_lite
+      is_lite:this.is_lite,
+      is_integrate_print:this.is_integrate_print
     };
   }
 
@@ -214,7 +220,8 @@ export class DialogCloseShiftComponent {
             this.toastService.presentToastOk('Turno finalizado');
             this.operatorService.resumeShift(bodyCloseShift).subscribe(
               value3 => {
-                console.log(value3);
+                console.log(JSON.stringify(value3));
+                this.print(value3);
               }
             );
             this.operatorService.clearShift();
@@ -313,6 +320,9 @@ export class DialogCloseShiftComponent {
                       this.toastService.presentToastOk('Turno finalizado');
                       this.operatorService.resumeShift(bodyCloseShift).subscribe(
                         value3 => {
+                          if(this.is_integrate_print){
+                            this.print(value3);
+                          }
                           console.log(value3);
                         }
                       );
@@ -385,6 +395,14 @@ export class DialogCloseShiftComponent {
     }
     // console.log(hoses);
     return hoses.sort((h1, h2) => h1.id_hose - h2.id_hose);
+  }
+
+  async print(data_json){
+    console.log("print de cierre");
+    if(this.is_integrate_print){
+      console.log("si llego a impresora con print de cierre");
+      await this.dataphoneService.startPrintCloseShift(data_json);
+    }
   }
 
 

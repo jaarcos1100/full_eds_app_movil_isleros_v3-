@@ -148,7 +148,7 @@ export class DialogSettingsHostComponent implements OnInit {
     await alert.present();
   }
 
-  async testDataphone(){
+  async testQR(){
 
     try {
       //console.log(this.valorVenta.toString());
@@ -158,12 +158,9 @@ export class DialogSettingsHostComponent implements OnInit {
       // Validar y preparar los datos ingresados por el usuario
 
       let dataTransfern = {
-        amount: "1000",
-        tax: "0",
-        tip: "0",
-        iac: "0",
+        order: "Order"
       };
-      let response = await this.dataphoneService.startSellTransaction(dataTransfern);
+      let response = await this.dataphoneService.startPrintQR(dataTransfern);
       alert(response);
       
     } catch (error) {

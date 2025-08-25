@@ -38,4 +38,24 @@ export class DataphoneService {
       throw error;
     }
   }
+
+  async startPrintCloseShift(datos: any): Promise<any> {
+    try {
+      let response = await dataphone['printShiftClosureTicket']({ json: JSON.stringify(datos) });
+      return response;
+    } catch (error) {
+      console.error('Error en la transacción del dataphone:', error);
+      throw error;
+    }
+  }
+
+  async startPrintQR(datos: any): Promise<any> {
+    try {
+      let response = await dataphone['printQrTicket']({ json: JSON.stringify(datos) });
+      return response;
+    } catch (error) {
+      console.error('Error en la transacción del dataphone:', error);
+      throw error;
+    }
+  }
 }

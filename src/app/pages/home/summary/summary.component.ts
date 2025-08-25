@@ -205,14 +205,20 @@ export class SummaryComponent {
 
   getHosesForOpenShift(): ShiftHose[] {
     const shiftHose: ShiftHose[] = [];
+    
     for (const volume of this.volumes) {
-      const hose: Hose = this.isleSummary.hoses.find(h => h.id_hose === volume.hose?.id_hose);
-      shiftHose.push({
-        hose: hose._id,
-        // @ts-ignore
-        volume: volume.hose.volume
-      });
+      console.log("volume:", JSON.stringify(volume));
+      console.log("hoses:", JSON.stringify(this.isleSummary.hoses));
+      
+      const hose = this.isleSummary.hoses.find(h => h.id_hose === volume.hose?.id_hose);
+      if (hose) {
+        shiftHose.push({
+          hose: hose._id,
+          volume:  this.is_lite ? hose.volume / 100 : hose.volume // <- Usamos el volumen real del resumen
+        });
+      }
     }
+    
     return shiftHose;
   }
 
