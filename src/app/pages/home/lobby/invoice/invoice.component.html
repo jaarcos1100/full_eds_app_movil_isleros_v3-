@@ -25,59 +25,57 @@
 
             <mat-form-field class="mt-3 mat-form-field">
                 <img matSuffix src="./assets/basket/search.svg" alt="" width="20" height="20">
-                <input type="text"
-                       aria-label="Number"
-                       placeholder="Buscar otro cliente por NIT o Cédula"
-                       matInput
-                       (ngModelChange)="changeUsersAutocomplete()"
-                       [formControl]="formControlNIT"
-                       [matAutocomplete]="auto">
+                <input type="text" aria-label="Number" placeholder="Buscar otro cliente por NIT o Cédula" matInput
+                    (ngModelChange)="changeUsersAutocomplete()" [formControl]="formControlNIT" [matAutocomplete]="auto">
                 <mat-error>{{getErrorMessageNit()}}</mat-error>
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of companiesAutocomplete" [value]="option.nit" (onSelectionChange)="onSelectOption(option)">
-                        <span>{{option.nit}}{{option.digit_check ? '-' : ''}}{{option.digit_check}} {{option.name}}</span>
+                    <mat-option *ngFor="let option of companiesAutocomplete" [value]="option.nit"
+                        (onSelectionChange)="onSelectOption(option)">
+                        <span>{{option.nit}}{{option.digit_check ? '-' : ''}}{{option.digit_check}}
+                            {{option.name}}</span>
+                        <ion-icon *ngIf="option.from_fullsuit" name="cloud-outline" class="cloud-icon-fullsuit"
+                            style="margin-left: 8px; color: #3880ff;"></ion-icon>
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
 
         </section>
-        <section id="list_clients">  
+        <section id="list_clients">
             <ng-container *ngIf="preloadInvoice; else clientsLoaded">
-              <ion-card>
-                <ion-card-content class="client-content ion-text-center">
-                  <ion-spinner name="bubbles"></ion-spinner>
-                  <p>Cargando clientes...</p>
-                </ion-card-content>
-              </ion-card>
-            </ng-container>
-          
-            <ng-template #clientsLoaded>
-              <div *ngIf="userDataInvoice">
-                <ion-card class="client"
-                          *ngFor="let user of userDataInvoice.companies; let i = index"
-                          [ngClass]="i === currentUser ? 'client-selected' : 'client-default'"
-                          (click)="chooseClient(user, i)">
-                  <ion-card-content class="client-content">
-                    <ion-text>
-                      <strong>{{user.name}}</strong>
-                    </ion-text>
-                    <ion-text>
-                      <p>Nit/CC: {{user.nit}}</p>
-                    </ion-text>
-                  </ion-card-content>
+                <ion-card>
+                    <ion-card-content class="client-content ion-text-center">
+                        <ion-spinner name="bubbles"></ion-spinner>
+                        <p>Cargando clientes...</p>
+                    </ion-card-content>
                 </ion-card>
-              </div>
-          
-              <ion-card class="btn-new-client" (click)="registerUser()">
-                <ion-card-content>
-                  <ion-text class="primary-color">
-                    <p>+ Crear nuevo cliente</p>
-                  </ion-text>
-                </ion-card-content>
-              </ion-card>
+            </ng-container>
+
+            <ng-template #clientsLoaded>
+                <div *ngIf="userDataInvoice">
+                    <ion-card class="client" *ngFor="let user of userDataInvoice.companies; let i = index"
+                        [ngClass]="i === currentUser ? 'client-selected' : 'client-default'"
+                        (click)="chooseClient(user, i)">
+                        <ion-card-content class="client-content">
+                            <ion-text>
+                                <strong>{{user.name}}</strong>
+                            </ion-text>
+                            <ion-text>
+                                <p>Nit/CC: {{user.nit}}</p>
+                            </ion-text>
+                        </ion-card-content>
+                    </ion-card>
+                </div>
+
+                <ion-card class="btn-new-client" (click)="registerUser()">
+                    <ion-card-content>
+                        <ion-text class="primary-color">
+                            <p>+ Crear nuevo cliente</p>
+                        </ion-text>
+                    </ion-card-content>
+                </ion-card>
             </ng-template>
-          
-          </section>
+
+        </section>
         <section id="btns">
 
             <ion-button class="btn-next" (click)="goToStep2()">
@@ -113,38 +111,42 @@
         </section>
         <section id="sold_type" *ngIf="restriction.type_sold ==  'none'">
 
-                    <ng-container *ngFor="let invoice of listTypeInvoices; let i = index;">  
-                        
-                        <div *ngIf="invoice.code == 'fe' && limit_uvt == true" class="container-toggle">
-                            <span for="" class="label-toggle">La venta supera la configuracion de UVT y se obliga a factura electronica.</span>
-                        </div>
+            <ng-container *ngFor="let invoice of listTypeInvoices; let i = index;">
 
-                        <ion-card class="card-invoice" [style]="{opacity: currentInvoiceCode === invoice.code ? '100%' : '70%'}" (click)="chooseInvoiceType(i, invoice.code)">
-                                <ion-card-content class="card-invoice-content">
-                                    <ion-row>
-                                        <ion-col size="3" class="flexbox-middle">
-                                            <div class="icon">
-                                                <ion-icon [name]="invoice.icon"></ion-icon>
-                                            </div>
-                                        </ion-col>
-                                        <ion-col size="9" class="name-invoice">
-                                            <span>{{invoice.name}}</span>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-card-content>
-                        </ion-card>
-                        <div *ngIf="invoice.option_name == 'venta_vale' && currentInvoiceCode == 'fe' && this.quota_value > this.total_sale" class="container-toggle">
-                            <span for="" class="label-toggle">¿Es Vale?</span>
-                            <ion-toggle [(ngModel)]="is_vale"></ion-toggle>
-                        </div>
-                        <div *ngIf="invoice.option_name == 'cupo_libre' && currentInvoiceCode == 'cupo' && have_free_quota" class="container-toggle container-toggle-credit">
-                            <span for="" class="label-toggle">Cupo libre</span>
-                            <ion-toggle [(ngModel)]="is_cupo"></ion-toggle>
-                        </div>
-                        
-                    </ng-container>
+                <div *ngIf="invoice.code == 'fe' && limit_uvt == true" class="container-toggle">
+                    <span for="" class="label-toggle">La venta supera la configuracion de UVT y se obliga a factura
+                        electronica.</span>
+                </div>
+
+                <ion-card class="card-invoice" [style]="{opacity: currentInvoiceCode === invoice.code ? '100%' : '70%'}"
+                    (click)="chooseInvoiceType(i, invoice.code)">
+                    <ion-card-content class="card-invoice-content">
+                        <ion-row>
+                            <ion-col size="3" class="flexbox-middle">
+                                <div class="icon">
+                                    <ion-icon [name]="invoice.icon"></ion-icon>
+                                </div>
+                            </ion-col>
+                            <ion-col size="9" class="name-invoice">
+                                <span>{{invoice.name}}</span>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card-content>
+                </ion-card>
+                <div *ngIf="invoice.option_name == 'venta_vale' && currentInvoiceCode == 'fe' && this.quota_value > this.total_sale"
+                    class="container-toggle">
+                    <span for="" class="label-toggle">¿Es Vale?</span>
+                    <ion-toggle [(ngModel)]="is_vale"></ion-toggle>
+                </div>
+                <div *ngIf="invoice.option_name == 'cupo_libre' && currentInvoiceCode == 'cupo' && have_free_quota"
+                    class="container-toggle container-toggle-credit">
+                    <span for="" class="label-toggle">Cupo libre</span>
+                    <ion-toggle [(ngModel)]="is_cupo"></ion-toggle>
+                </div>
+
+            </ng-container>
         </section>
-        <section class="restriction" >
+        <section class="restriction">
 
             <ion-card *ngIf="restriction.type_sold != 'none'">
                 <ion-card-content class="client-content">
@@ -156,10 +158,12 @@
                         <p>{{userDataInvoice.companies[currentUser].name}}</p>
                     </ion-text>
                     <ion-text>
-                        <p>Nit/CC: {{userDataInvoice.companies[currentUser].nit}}</p> <!-- Ejemplo de número de identificación -->
+                        <p>Nit/CC: {{userDataInvoice.companies[currentUser].nit}}</p>
+                        <!-- Ejemplo de número de identificación -->
                     </ion-text>
                     <ion-text>
-                        <p>Cupo credito: ${{userDataInvoice.companies[currentUser].credit | currency : 'COP' : '' : '1.0-0'}}</p>
+                        <p>Cupo credito: ${{userDataInvoice.companies[currentUser].credit | currency : 'COP' : '' :
+                            '1.0-0'}}</p>
                     </ion-text>
                 </ion-card-content>
             </ion-card>
@@ -175,7 +179,8 @@
                 <div *ngIf="quota_value < total_sale">
                     La empresa no tiene cupo en el credito, debe tanquear con cliente 222222222222
                 </div>
-                <h4>Por politicas de admnistracion, las ventas de este cliente deben ser tipo factura electronica a credito.</h4>
+                <h4>Por politicas de admnistracion, las ventas de este cliente deben ser tipo factura electronica a
+                    credito.</h4>
             </div>
             <div *ngIf="restriction.type_sold ==  'cupo' && restriction.is_cupo == false">
                 <span *ngIf="quota_value < total_sale">
@@ -190,10 +195,11 @@
         <section>
             <section id="btns">
 
-                <ion-button class="btn-next" (click)="goToStep3()" [disabled]="(quota_value < total_sale) && ((restriction.type_sold =='cupo' && restriction.is_cupo==false) || (restriction.type_sold =='fe' && restriction.is_vale==true)) " >
+                <ion-button class="btn-next" (click)="goToStep3()"
+                    [disabled]="(quota_value < total_sale) && ((restriction.type_sold =='cupo' && restriction.is_cupo==false) || (restriction.type_sold =='fe' && restriction.is_vale==true)) ">
                     Siguiente
                 </ion-button>
-    
+
             </section>
         </section>
         <section id="dummie-space">
@@ -219,14 +225,11 @@
                 </ion-row>
             </ion-grid>
         </section>
-        <div *ngIf="countCopies==0"> 
+        <div *ngIf="countCopies==0">
             <section id="kilometers">
 
                 <mat-form-field class="mt-3 mat-form-field">
-                    <input type="text"
-                        aria-label="Number"
-                        placeholder="Kilometros recorridos(opcional)"
-                        matInput
+                    <input type="text" aria-label="Number" placeholder="Kilometros recorridos(opcional)" matInput
                         [formControl]="formControlKM">
                     <mat-error>{{getErrorMessageKM()}}</mat-error>
                 </mat-form-field>
@@ -235,35 +238,36 @@
             <section id="anticipate" *ngIf="has_anticipate">
 
                 <mat-form-field class="mt-3 mat-form-field">
-                    <input type="text"
-                        aria-label="Number"
-                        placeholder="Valor de anticipo(opcional)"
-                        matInput
+                    <input type="text" aria-label="Number" placeholder="Valor de anticipo(opcional)" matInput
                         [formControl]="formAnticipate">
                 </mat-form-field>
                 <div class="label-anticipate-value">
                     <span for="">
-                        El saldo de anticipos de la empresa es:  ${{balance_anticipate | currency : 'COP' : '' : '1.0-0'}} y el valor máximo permitido es de: ${{restriction.anticipate_max_value | currency : 'COP' : '' : '1.0-0'}}. Si el valor ingresado es igual o menor a 0, no se registrara el anticipo.
+                        El saldo de anticipos de la empresa es: ${{balance_anticipate | currency : 'COP' : '' :
+                        '1.0-0'}} y el valor máximo permitido es de: ${{restriction.anticipate_max_value | currency :
+                        'COP' : '' : '1.0-0'}}. Si el valor ingresado es igual o menor a 0, no se registrara el
+                        anticipo.
                     </span>
                 </div>
 
             </section>
             <section>
-                <ng-container *ngFor="let paymentOption of listPayment; let i = index;">         
-                    <ion-card class="card-invoice" [style]="{opacity: currentMethodPayment === i ? '100%' : '70%'}" (click)="chooseMethodType(i)">
-                            <ion-card-content class="card-invoice-content">
-                                <ion-row>
-                                    <ion-col size="3" class="flexbox-middle">
-                                        <div class="icon">
-                                            <ion-icon [name]="paymentOption.icon"></ion-icon>
-                                        </div>
-                                    </ion-col>
-                                    <ion-col size="9" class="name-invoice">
-                                        <span>{{paymentOption.name}}</span>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-card-content>
-                    </ion-card>                
+                <ng-container *ngFor="let paymentOption of listPayment; let i = index;">
+                    <ion-card class="card-invoice" [style]="{opacity: currentMethodPayment === i ? '100%' : '70%'}"
+                        (click)="chooseMethodType(i)">
+                        <ion-card-content class="card-invoice-content">
+                            <ion-row>
+                                <ion-col size="3" class="flexbox-middle">
+                                    <div class="icon">
+                                        <ion-icon [name]="paymentOption.icon"></ion-icon>
+                                    </div>
+                                </ion-col>
+                                <ion-col size="9" class="name-invoice">
+                                    <span>{{paymentOption.name}}</span>
+                                </ion-col>
+                            </ion-row>
+                        </ion-card-content>
+                    </ion-card>
                 </ng-container>
             </section>
             <!--
@@ -288,11 +292,11 @@
             </section>
             -->
 
-                
+
             <section id="number_copies">
                 <span for="" class="label-toggle">Copias generadas: {{countCopies}}</span>
             </section>
-        
+
             <section>
 
                 <div *ngIf="!mandatory_print && countCopies==0" class="container-toggle">
@@ -306,43 +310,41 @@
 
 
         <section id="btn-finish">
-                <ion-button class="btn-next" (click)="finish()" *ngIf="countCopies==0">
-                    <span for="" *ngIf="require_print==true">Imprimir</span>
-                    <span for="" *ngIf="require_print==false">Finalizar sin imprimir</span>
-                </ion-button>
-                <ion-row *ngIf="countCopies==1">
-                    <ion-col size="6" class="">
-                        <ion-button class="btn-option" (click)="finishCopy()">
-                            Imprimir copia
-                        </ion-button>
-                    </ion-col>
-                    <ion-col size="6">
-                        <ion-button class="btn-option" (click)="outOfInvoice()">
-                            Finalizar venta
-                        </ion-button>
-                    </ion-col>
-                    <ion-col size="12" *ngIf="payWithCard">
-                        <h5 class="text_dataphone_payment">Pago con datafono</h5>
-                        <div class="text_dataphone_payment">
-                            <span for="">Por favor ingresa el valor total que deseas transferir por datafono, el maximo permitido es: {{max_ammount_dataphone}}</span>
-                        </div>
+            <ion-button class="btn-next" (click)="finish()" *ngIf="countCopies==0">
+                <span for="" *ngIf="require_print==true">Imprimir</span>
+                <span for="" *ngIf="require_print==false">Finalizar sin imprimir</span>
+            </ion-button>
+            <ion-row *ngIf="countCopies==1">
+                <ion-col size="6" class="">
+                    <ion-button class="btn-option" (click)="finishCopy()">
+                        Imprimir copia
+                    </ion-button>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-button class="btn-option" (click)="outOfInvoice()">
+                        Finalizar venta
+                    </ion-button>
+                </ion-col>
+                <ion-col size="12" *ngIf="payWithCard">
+                    <h5 class="text_dataphone_payment">Pago con datafono</h5>
+                    <div class="text_dataphone_payment">
+                        <span for="">Por favor ingresa el valor total que deseas transferir por datafono, el maximo
+                            permitido es: {{max_ammount_dataphone}}</span>
+                    </div>
 
 
-                        
-                        <mat-form-field class="mt-3 mat-form-field">
-                            <input type="number"
-                                aria-label="Number"
-                                placeholder="Valor total"
-                                matInput
-                                [formControl]="formControlTotalValue">
-                        </mat-form-field>
-                        <h5 class="text_dataphone_payment">Impuestos: {{relative_taxes_dataphone_payment}}</h5>
-                        <ion-button class="btn-option" (click)="payWithDataphone()">
-                            Activar datafono
-                        </ion-button>
-                    </ion-col>
 
-                </ion-row>
+                    <mat-form-field class="mt-3 mat-form-field">
+                        <input type="number" aria-label="Number" placeholder="Valor total" matInput
+                            [formControl]="formControlTotalValue">
+                    </mat-form-field>
+                    <h5 class="text_dataphone_payment">Impuestos: {{relative_taxes_dataphone_payment}}</h5>
+                    <ion-button class="btn-option" (click)="payWithDataphone()">
+                        Activar datafono
+                    </ion-button>
+                </ion-col>
+
+            </ion-row>
         </section>
         <section id="dummie-space"></section>
     </div>

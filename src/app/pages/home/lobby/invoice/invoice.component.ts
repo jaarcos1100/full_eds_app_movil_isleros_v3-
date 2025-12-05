@@ -1,25 +1,25 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
-import {OperatorService} from '../../../../services/operator/operator.service';
-import {UserDataInvoice} from '../../../../models/user-data-invoice/UserDataInvoice';
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
-import {Payment} from '../../../../models/payment/Payment';
-import {Sale} from '../../../../models/sale/sale';
-import {User} from '../../../../models/user/user';
-import {OrganizationsService} from '../../../../services/organizations/organizations.service';
-import {GlobalVarService} from '../../../../services/globalVars/global-var-service';
-import {CreditService} from '../../../../services/credits/credit-service.service';
-import {ToastService} from '../../../../services/toast/toast.service';
-import {ModalController, NavController} from '@ionic/angular';
-import {DialogRegisterUserComponent} from './register-user/dialog-register-user.component';
-import {Company} from '../../../../models/company/company';
-import {LoadingService} from '../../../../services/loading/loading.service';
-import {Router} from '@angular/router';
-import {AppComponent} from '../../../../app.component';
-import {RestrictionsService} from '../../../../services/restrictions/restrictions.service';
-import {Restriction} from '../../../../models/restriction/restriction';
-import {LocalStorageIpPortService} from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
-import {DataphoneService} from '../../../../services/dataphone/dataphone.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { OperatorService } from '../../../../services/operator/operator.service';
+import { UserDataInvoice } from '../../../../models/user-data-invoice/UserDataInvoice';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Payment } from '../../../../models/payment/Payment';
+import { Sale } from '../../../../models/sale/sale';
+import { User } from '../../../../models/user/user';
+import { OrganizationsService } from '../../../../services/organizations/organizations.service';
+import { GlobalVarService } from '../../../../services/globalVars/global-var-service';
+import { CreditService } from '../../../../services/credits/credit-service.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { ModalController, NavController } from '@ionic/angular';
+import { DialogRegisterUserComponent } from './register-user/dialog-register-user.component';
+import { Company } from '../../../../models/company/company';
+import { LoadingService } from '../../../../services/loading/loading.service';
+import { Router } from '@angular/router';
+import { AppComponent } from '../../../../app.component';
+import { RestrictionsService } from '../../../../services/restrictions/restrictions.service';
+import { Restriction } from '../../../../models/restriction/restriction';
+import { LocalStorageIpPortService } from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
+import { DataphoneService } from '../../../../services/dataphone/dataphone.service';
 import { debounceTime, delay } from 'rxjs/operators';
 
 
@@ -28,13 +28,13 @@ import { debounceTime, delay } from 'rxjs/operators';
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.scss']
 })
-export class InvoiceComponent{
+export class InvoiceComponent {
 
-  public current_step:number;// paso actual
+  public current_step: number;// paso actual
   public isSelectUser: boolean;
   public formControlNIT: FormControl;
-  public formControlKM:FormControl;
-  public formAnticipate:FormControl;
+  public formControlKM: FormControl;
+  public formAnticipate: FormControl;
   public userSelected: User | Company | any;
   private timer: number;
   public readonly typeCompany: TypeUser = {
@@ -44,54 +44,54 @@ export class InvoiceComponent{
   companiesAutocomplete: User[] | Company[] = [];
   public static readonly nitDummie = '22222222222';
   public userDataInvoice: UserDataInvoice;
-  public currentUser:number; // User Seleccionado, por defecto es 0 que indica el Usuario Consumidor Final (osea Dummie)
-  public currentInvoice:number;
-  public currentInvoiceCode:string;
-  public currentMethodPayment:number;
+  public currentUser: number; // User Seleccionado, por defecto es 0 que indica el Usuario Consumidor Final (osea Dummie)
+  public currentInvoice: number;
+  public currentInvoiceCode: string;
+  public currentMethodPayment: number;
   public preloadInvoice: boolean = false;
   public lastUserCreated: User | Company;
-  public errorMessage:string;
-  public id_user_selected:string;
-  public listTypeInvoices:any[];
-  public listPayment:Payment[];
-  public countCopies:number;
+  public errorMessage: string;
+  public id_user_selected: string;
+  public listTypeInvoices: any[];
+  public listPayment: Payment[];
+  public countCopies: number;
   public isBasketSale: boolean;
-  public globalVar:any;
-  public can_be_vale:boolean;
-  public quota_value:number;
-  public have_free_quota:boolean;
-  public is_varios_user:boolean;
-  public total_sale:number;
-  public restriction:Restriction;
-  public limit_uvt:boolean;
-  public is_vale:boolean;
-  public is_cupo:boolean;
+  public globalVar: any;
+  public can_be_vale: boolean;
+  public quota_value: number;
+  public have_free_quota: boolean;
+  public is_varios_user: boolean;
+  public total_sale: number;
+  public restriction: Restriction;
+  public limit_uvt: boolean;
+  public is_vale: boolean;
+  public is_cupo: boolean;
   private companyDummie: Company;
   static typeSaleFreeQuota = 4;
   public minLengthEmail = 5;
-  public mandatory_print:boolean;
-  public require_print:boolean;
-  public enableReturnStep2:boolean;
-  public has_anticipate:boolean;
-  public balance_anticipate:number;
-  public data_invoice:any;
-  public payWithCard:boolean;
+  public mandatory_print: boolean;
+  public require_print: boolean;
+  public enableReturnStep2: boolean;
+  public has_anticipate: boolean;
+  public balance_anticipate: number;
+  public data_invoice: any;
+  public payWithCard: boolean;
 
-  public is_dataphone:boolean;
-  public is_integrate_print:boolean;
+  public is_dataphone: boolean;
+  public is_integrate_print: boolean;
 
   public formControlTotalValue: FormControl;
-  public relative_taxes_dataphone_payment:number;
+  public relative_taxes_dataphone_payment: number;
 
-  public result_code_datafone:any;
+  public result_code_datafone: any;
 
   private original_tax_percent: number | null = null; // porcentaje fijo inicial
 
-  private shift_id:string = "";
+  private shift_id: string = "";
 
-  public max_ammount_dataphone:number;
+  public max_ammount_dataphone: number;
   public organizationId: string;
-  constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService:GlobalVarService, public creditService:CreditService, public restrictionsService:RestrictionsService, public dataphoneService:DataphoneService) {
+  constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService: GlobalVarService, public creditService: CreditService, public restrictionsService: RestrictionsService, public dataphoneService: DataphoneService) {
     if (!operatorService.readSaleID()) {
       navCtrl.navigateRoot('operator/lobby/tankers');
       return;
@@ -121,36 +121,36 @@ export class InvoiceComponent{
     this.restriction.is_vale = false;
     this.restriction.require_print = false;
     this.limit_uvt = false;
-    this.currentInvoiceCode='pos';
+    this.currentInvoiceCode = 'pos';
     this.is_cupo = false;
     this.is_vale = false;
     this.has_anticipate = false;
     this.formControlKM = new FormControl('',
-    [Validators.minLength(1), Validators.maxLength(20), Validators.pattern('[-]?[0-9]+(\\.[0-9]+)?$')]
+      [Validators.minLength(1), Validators.maxLength(20), Validators.pattern('[-]?[0-9]+(\\.[0-9]+)?$')]
     );
 
     this.formAnticipate = new FormControl('',
-    [Validators.minLength(1), Validators.maxLength(10000), Validators.pattern('[-]?[0-9]+(\\.[0-9]+)?$')]
+      [Validators.minLength(1), Validators.maxLength(10000), Validators.pattern('[-]?[0-9]+(\\.[0-9]+)?$')]
     );
 
     this.formControlTotalValue = new FormControl('',
-    [Validators.minLength(1), Validators.maxLength(1000000), Validators.pattern('[-]?[0-9]+(\\.[0-9]+)?$')]
+      [Validators.minLength(1), Validators.maxLength(1000000), Validators.pattern('[-]?[0-9]+(\\.[0-9]+)?$')]
     );
     this.relative_taxes_dataphone_payment = 0;
-   
-    this.mandatory_print=false;
+
+    this.mandatory_print = false;
     this.require_print = true;
-    this.enableReturnStep2=true;
+    this.enableReturnStep2 = true;
     this.data_invoice = {};
     this.payWithCard = false;
-    this.is_dataphone = LocalStorageIpPortService.getIsDatafono()==true ?  true : false;
-    this.is_integrate_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
+    this.is_dataphone = LocalStorageIpPortService.getIsDatafono() == true ? true : false;
+    this.is_integrate_print = LocalStorageIpPortService.getIsPrint() == true ? true : false;
     this.result_code_datafone = 'None';
     this.max_ammount_dataphone = 0;
     this.shift_id = this.operatorService.readIsOpenShift()._id;
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.listenDataphoneValue();
     this.loadOrganizationId();
   }
@@ -167,22 +167,22 @@ export class InvoiceComponent{
     }
   }
 
-  setListTypeInvoice(){
+  setListTypeInvoice() {
     this.listTypeInvoices = [
-      {icon: 'receipt-outline', name: 'POS', option_name:'none', option:false, code:'pos'},
-      {icon: 'cloud-upload', name: 'FACTURA ELECTRÓNICA', option_name:'venta_vale', option:true, code:'fe'},
-      {icon: 'cube', name: 'CUPO', option_name:'cupo_libre',option:true, code:'cupo'},
+      { icon: 'receipt-outline', name: 'POS', option_name: 'none', option: false, code: 'pos' },
+      { icon: 'cloud-upload', name: 'FACTURA ELECTRÓNICA', option_name: 'venta_vale', option: true, code: 'fe' },
+      { icon: 'cube', name: 'CUPO', option_name: 'cupo_libre', option: true, code: 'cupo' },
     ];
   }
 
   //enum: ['EFECTIVO', 'TARJETA_CREDITO', 'TARJETA_DEBITO', 'TRANSFERENCIA', 'CHEQUE']
-  setListPayment(){
+  setListPayment() {
     this.listPayment = [
-      {icon: 'cash-outline', code: 10, name: 'Efectivo'},
-      {icon: 'card-outline', code: 48, name: 'Tarjeta Crédito'},
-      {icon: 'card-outline', code: 49, name: 'Tarjeta Débito'},
-      {icon: 'phone-portrait-outline', code: 30, name: 'Transferencia credito'},
-      {icon: 'newspaper-outline', code: 20, name: 'Cheque'},
+      { icon: 'cash-outline', code: 10, name: 'Efectivo' },
+      { icon: 'card-outline', code: 48, name: 'Tarjeta Crédito' },
+      { icon: 'card-outline', code: 49, name: 'Tarjeta Débito' },
+      { icon: 'phone-portrait-outline', code: 30, name: 'Transferencia credito' },
+      { icon: 'newspaper-outline', code: 20, name: 'Cheque' },
     ];
   }
 
@@ -207,6 +207,7 @@ export class InvoiceComponent{
         this.operatorService.searchUserOrCompany(searchUserOrCompany, 0, 5).subscribe(
           (value: HttpResponse<any>) => {
             this.companiesAutocomplete = value.body.companies;
+            console.log(this.companiesAutocomplete)
           }
         );
       }, AppComponent.timeMillisDelayFilter);
@@ -218,7 +219,7 @@ export class InvoiceComponent{
   /**
    * Consulta Información del vehículo dueño de la venta, para verificar las empresas asociadas a este
    */
-   public getDetailsCar() {
+  public getDetailsCar() {
     this.startLoading();
     this.errorMessage = undefined;
     this.userDataInvoice = undefined;
@@ -255,7 +256,7 @@ export class InvoiceComponent{
       }
     );
   }
-  
+
 
   private startLoading() {
     this.preloadInvoice = true;
@@ -297,7 +298,7 @@ export class InvoiceComponent{
   /**
    * Mensaje de error NIT
    */
-   getErrorMessageNit() {
+  getErrorMessageNit() {
     return this.formControlNIT.hasError('required')
       ? 'Este campo es obligatorio'
       : this.formControlNIT.hasError('minlength')
@@ -309,9 +310,14 @@ export class InvoiceComponent{
             : '';
   }
 
-  onSelectOption(option: User | Company) {  
+  onSelectOption(option: User | Company | any) {
+
     this.userSelected = option;
     this.isSelectUser = true;
+
+    if (option.from_fullsuit) {
+      this.userSelected = this.createFullSuitClientLocally(option);
+    }
 
     this.getRestriction(option._id);
     this.balance_anticipate = option.anticipateBalance;
@@ -322,7 +328,70 @@ export class InvoiceComponent{
       this.moveScrollListToElement(this.currentUser);
     } else {
       this.userDataInvoice.companies.push(option);
-      this.currentUser = this.userDataInvoice.companies.length -1;
+      this.currentUser = this.userDataInvoice.companies.length - 1;
+      this.moveScrollListToElement(0);
+    }
+  }
+
+
+  /**
+   * Crea un cliente de FullSuit en la base de datos local
+   */
+  createFullSuitClientLocally(option: any) {
+    const fullSuitData = option.full_suit_raw;
+
+    const body = {
+      name: fullSuitData.names || option.name,
+      nit: fullSuitData.nit || option.nit,
+      emails: fullSuitData.email ? [fullSuitData.email] : option.emails,
+      phones: fullSuitData.phone ? [fullSuitData.phone] : option.phones,
+      type: 'company',
+      plaque: this.operatorService.readLocalHostPlaque(),
+      digit_check: fullSuitData.digitVerification?.toString() || option.digit_check || '0',
+      address: fullSuitData.address || '',
+      from_fullsuit: true
+    };
+
+    this.startLoading();
+    this.operatorService.registerUser(body).subscribe(
+      (value: any) => {
+        this.preloadInvoice = false;
+        const createdClient = value.body.user || value.body;
+        this.toastService.presentToastOk('Cliente de FullSuit creado exitosamente');
+        this.moveScrollListToElement(0);
+        return createdClient;
+
+      },
+      (error: any) => {
+        this.preloadInvoice = false;
+        if (error.status === 400 && error?.error?.body?.errors?.nit) {
+          this.toastService.presentToastError('El NIT ya existe en la base de datos local');
+          // Si ya existe, buscar y seleccionar el existente
+          this.addExistingClientToList(option);
+        } else {
+          this.toastService.presentToastError('Error al crear el cliente, intente nuevamente');
+        }
+      }
+    );
+  }
+
+  /**
+   * Agrega un cliente existente a la lista cuando ya existe en BD local
+   */
+  addExistingClientToList(option: any) {
+    const indexCompany = this.userDataInvoice?.companies.findIndex(c => c.nit === option.nit);
+    if (indexCompany !== -1) {
+      this.currentUser = indexCompany;
+      this.getRestriction(this.userDataInvoice.companies[indexCompany]._id);
+      this.balance_anticipate = this.userDataInvoice.companies[indexCompany].anticipateBalance;
+      this.moveScrollListToElement(this.currentUser);
+    } else {
+      // Agregar sin el flag de fullsuit ya que existe localmente
+      option.from_fullsuit = false;
+      this.userDataInvoice.companies.push(option);
+      this.currentUser = this.userDataInvoice.companies.length - 1;
+      this.getRestriction(option._id);
+      this.balance_anticipate = option.anticipateBalance;
       this.moveScrollListToElement(0);
     }
   }
@@ -333,19 +402,19 @@ export class InvoiceComponent{
     itemOfList.scrollIntoView();
   }
 
-  goToStep1(){
+  goToStep1() {
     this.current_step = 1;
   }
 
-  goToStep2(){
+  goToStep2() {
     this.getRestriction(this.userDataInvoice.companies[this.currentUser]._id)
     setTimeout(() => {
-      this.current_step = 2; 
+      this.current_step = 2;
     }, 1000);
-    
+
   }
-  
-  goToStep3(){
+
+  goToStep3() {
     this.current_step = 3;
     this.formAnticipate.reset();
 
@@ -355,19 +424,19 @@ export class InvoiceComponent{
   findAndRemoveByAttribute(list, attribute, value) {
     // Encuentra el índice del elemento en la lista.
     const index = list.findIndex(item => item[attribute] === value);
-    
+
     // Si el índice es -1, el elemento no se encontró en la lista.
     if (index !== -1) {
-        // El método splice() cambia el contenido del array, eliminando elementos existentes y/o agregando nuevos elementos.
-        list.splice(index, 1);  // splice devuelve un array con el elemento eliminado
-        return list
+      // El método splice() cambia el contenido del array, eliminando elementos existentes y/o agregando nuevos elementos.
+      list.splice(index, 1);  // splice devuelve un array con el elemento eliminado
+      return list
     }
 
     // Si no se encontró el elemento, se podría devolver null o manejarlo de cualquier otra manera que se desee.
     return null;
-}
+  }
 
-  buildStep2(){
+  buildStep2() {
     //this.is_cupo = false;
     //this.is_vale = false;
     this.have_free_quota = this.haveFreeQuotaCurrentCompany();
@@ -380,52 +449,52 @@ export class InvoiceComponent{
 
     this.currentInvoiceCode = 'pos';
     this.currentInvoice = 0;
-    
-    if(this.is_varios_user || this.quota_value < this.total_sale){
+
+    if (this.is_varios_user || this.quota_value < this.total_sale) {
       this.listTypeInvoices = this.findAndRemoveByAttribute(this.listTypeInvoices, 'name', 'CUPO')
     }
 
-    if(this.limit_uvt == true){
+    if (this.limit_uvt == true) {
       this.listTypeInvoices = this.findAndRemoveByAttribute(this.listTypeInvoices, 'name', 'POS')
     }
-  
-    if(this.is_varios_user== true && this.limit_uvt == true){
+
+    if (this.is_varios_user == true && this.limit_uvt == true) {
       this.currentInvoiceCode = 'fe';
-    }else if(this.is_varios_user==false && this.limit_uvt==true){
+    } else if (this.is_varios_user == false && this.limit_uvt == true) {
       this.currentInvoiceCode = 'fe';
-    }else{
+    } else {
       this.currentInvoiceCode = 'pos';
     }
 
-    if(this.restriction && this.restriction.type_sold != 'none'){
+    if (this.restriction && this.restriction.type_sold != 'none') {
       this.currentInvoiceCode = this.restriction.type_sold;
     }
   }
 
-  chooseClient(user,i){
+  chooseClient(user, i) {
     this.balance_anticipate = user.anticipateBalance;
     this.currentUser = i;
     //this.getRestriction(user._id);
   }
 
-  chooseMethodType(i){
+  chooseMethodType(i) {
     this.currentMethodPayment = i;
   }
 
-  chooseInvoiceType(i, code){
+  chooseInvoiceType(i, code) {
     this.currentInvoice = i;
     this.currentInvoiceCode = code;
 
   }
 
-  isVariosUsers(){
-    return this.currentUser == 0 ? true : false; 
+  isVariosUsers() {
+    return this.currentUser == 0 ? true : false;
   }
 
   /**
    * Verifica si esta venta que se va a facturar ya fué impresa en su factura original o copia
    */
-   readCountCopiesForThisSale() {
+  readCountCopiesForThisSale() {
     const recordInvoice = this.operatorService.readRecordCopiesInvoice();
     if (recordInvoice && recordInvoice.length > 0) {
       const findRecordSale = recordInvoice.find(r => r._idInvoicePrinted === this.operatorService.readSaleID());
@@ -436,89 +505,89 @@ export class InvoiceComponent{
   }
 
   // lista las variables globales para validar el UVT
-  getGlobalVar(){
+  getGlobalVar() {
     let total_sale = this.operatorService.readTotalPriceSale();
-      this.globalVarService.getGlobalVar().subscribe(
-        (value:any) => {
-          
-          this.globalVar = value.body.globalVars[0];
-          let min_to_fact_electronic = this.globalVar.uvt_quantity * this.globalVar.uvt_value;
-          if(total_sale >= min_to_fact_electronic){
-            this.limit_uvt = true;
-          }
-          this.mandatory_print = false;
-          if(this.globalVar.require_print){
-            this.mandatory_print = true;
-          }
-        },
-        err => {
-          console.log(err);
+    this.globalVarService.getGlobalVar().subscribe(
+      (value: any) => {
+
+        this.globalVar = value.body.globalVars[0];
+        let min_to_fact_electronic = this.globalVar.uvt_quantity * this.globalVar.uvt_value;
+        if (total_sale >= min_to_fact_electronic) {
+          this.limit_uvt = true;
         }
-      );
+        this.mandatory_print = false;
+        if (this.globalVar.require_print) {
+          this.mandatory_print = true;
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
-  
+
   // lista las restricciones de cada empresa
-  getRestriction(company_id){
+  getRestriction(company_id) {
     debugger;
-      this.is_cupo = false;
-      this.is_vale = false;
-      this.restrictionsService.getRestrictions(company_id).subscribe(
-        (value:any) => {
-          if(value.body.restrictions.length > 0){
-            this.restriction = value.body.restrictions[0];
+    this.is_cupo = false;
+    this.is_vale = false;
+    this.restrictionsService.getRestrictions(company_id).subscribe(
+      (value: any) => {
+        if (value.body.restrictions.length > 0) {
+          this.restriction = value.body.restrictions[0];
 
-            if((this.restriction.type_sold == 'fe' && this.restriction.is_vale==true) || this.restriction.type_sold=='cupo'){
-              this.currentMethodPayment = 0;
-            }
+          if ((this.restriction.type_sold == 'fe' && this.restriction.is_vale == true) || this.restriction.type_sold == 'cupo') {
+            this.currentMethodPayment = 0;
+          }
 
-            if(this.restriction.type_sold == 'fe' && this.restriction.is_vale==true){
-              this.is_vale = true;
-            }else if(this.restriction.type_sold == 'cupo' && this.restriction.is_cupo==true){
-              this.is_cupo= true;
-            }
+          if (this.restriction.type_sold == 'fe' && this.restriction.is_vale == true) {
+            this.is_vale = true;
+          } else if (this.restriction.type_sold == 'cupo' && this.restriction.is_cupo == true) {
+            this.is_cupo = true;
+          }
 
 
-            if(!this.globalVar.require_print){
-              if(this.restriction.require_print){
-                this.mandatory_print = true;
-                this.require_print = true;
-              }else{
-                this.mandatory_print = false;
-                this.require_print = true;
-              }
-            }else{
+          if (!this.globalVar.require_print) {
+            if (this.restriction.require_print) {
+              this.mandatory_print = true;
+              this.require_print = true;
+            } else {
+              this.mandatory_print = false;
               this.require_print = true;
             }
-
-            if(this.restriction.allow_anticipate){
-              this.has_anticipate= this.restriction.allow_anticipate;
-            }else{
-              this.has_anticipate = false;
-            }
-          }else{
-            this.restriction.type_sold = 'none';
-            this.restriction.is_cupo = false;
-            this.restriction.is_vale = false;
-            this.restriction.require_print = false;
-            this.restriction.allow_anticipate = false;
-            this.restriction.anticipate_max_value = 0;
-            this.is_vale = false;
-            this.is_cupo = false;
-
-            this.getGlobalVar();
+          } else {
+            this.require_print = true;
           }
-          this.buildStep2();
-        },
-        err => {
-          console.log(err);
+
+          if (this.restriction.allow_anticipate) {
+            this.has_anticipate = this.restriction.allow_anticipate;
+          } else {
+            this.has_anticipate = false;
+          }
+        } else {
+          this.restriction.type_sold = 'none';
+          this.restriction.is_cupo = false;
+          this.restriction.is_vale = false;
+          this.restriction.require_print = false;
+          this.restriction.allow_anticipate = false;
+          this.restriction.anticipate_max_value = 0;
+          this.is_vale = false;
+          this.is_cupo = false;
+
+          this.getGlobalVar();
         }
-      );
+        this.buildStep2();
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   /**
    * Verifica si la empresa configurado tiene Cupo Libre
    */
-   haveFreeQuotaCurrentCompany() {
+  haveFreeQuotaCurrentCompany() {
     let have_free_quota = this.currentUser > 0 && this.userDataInvoice.companies[this.currentUser].have_open_credit;
     return have_free_quota;
   }
@@ -526,15 +595,15 @@ export class InvoiceComponent{
   /**
    * Verifica si la empresa configurado tiene Cupo Libre
    */
-   quotaCurrentCompany() {
-    let quota = this.currentUser > 0 && this.userDataInvoice.companies[this.currentUser].credit != undefined ? this.userDataInvoice.companies[this.currentUser].credit : 0 ;
+  quotaCurrentCompany() {
+    let quota = this.currentUser > 0 && this.userDataInvoice.companies[this.currentUser].credit != undefined ? this.userDataInvoice.companies[this.currentUser].credit : 0;
     return quota;
   }
 
   /**
    * Mensaje de error kilometraje
    */
-   getErrorMessageKM() {
+  getErrorMessageKM() {
     return this.formControlKM.hasError('required')
       ? 'Este campo es obligatorio'
       : this.formControlKM.hasError('minlength')
@@ -553,7 +622,7 @@ export class InvoiceComponent{
       type: this.is_cupo ? InvoiceComponent.typeSaleFreeQuota : this.findCurrentInvoice(),
       is_copy: true,
       isle: this.operatorService.readLocalHostIsland().id_isle,
-      require_print:this.require_print
+      require_print: this.require_print
     };
     return sale;
   }
@@ -564,9 +633,9 @@ export class InvoiceComponent{
       type: this.is_cupo ? InvoiceComponent.typeSaleFreeQuota : this.findCurrentInvoice(),
       is_copy: false,
       isle: this.operatorService.readLocalHostIsland().id_isle,
-      payment_method:this.listPayment[this.currentMethodPayment].code,
-      require_print:this.require_print,
-      shift_id:this.shift_id
+      payment_method: this.listPayment[this.currentMethodPayment].code,
+      require_print: this.require_print,
+      shift_id: this.shift_id
     };
     if (this.formControlKM.value) {
       sale.mileage = this.formControlKM.value;
@@ -574,7 +643,7 @@ export class InvoiceComponent{
 
     sale.company = this.getIdCompany();
     sale.is_vale = this.is_vale;
-    if(this.has_anticipate && parseInt(this.formAnticipate.value) > 0){
+    if (this.has_anticipate && parseInt(this.formAnticipate.value) > 0) {
       sale.anticipate = parseInt(this.formAnticipate.value);
     }
     return sale;
@@ -582,9 +651,9 @@ export class InvoiceComponent{
 
   getIdCompany() {
     //if (this.currentUser !== 0) {
-      const companies = this.userDataInvoice.companies;
-      const company = companies[this.currentUser];
-      return company._id;
+    const companies = this.userDataInvoice.companies;
+    const company = companies[this.currentUser];
+    return company._id;
     //}
     //return this.companyDummie._id;
   }
@@ -598,9 +667,9 @@ export class InvoiceComponent{
   getFullCompany() {
 
 
-      const companies = this.userDataInvoice.companies;
-      const company = companies[this.currentUser];
-      return company;
+    const companies = this.userDataInvoice.companies;
+    const company = companies[this.currentUser];
+    return company;
 
   }
 
@@ -621,48 +690,48 @@ export class InvoiceComponent{
     }
 
     body.is_dataphone = this.is_dataphone;
-    body.is_integrate_print =this.is_integrate_print;
+    body.is_integrate_print = this.is_integrate_print;
 
     this.operatorService.toInvoice(this.operatorService.readSaleID(), body).subscribe(
       async value => {
         this.data_invoice = value;
-        
+
         this.setDataphoneData();
         console.log("-----------------------");
         console.log(this.data_invoice);
         console.log(this.data_invoice.body.data);
         console.log("-----------------------");
-        
+
         this.preloadInvoice = false;
         this.enableReturnStep2 = false;
         this.deleteInvoice();
         this.countCopies++;
         this.validaDataphone();
-        
+
         this.toastService.presentToastOk('Factura realizada.');
         this.forwardInvoicesAndEmails();
         await this.print(this.data_invoice.body.data);
-        if (this.countCopies === 2 || (this.require_print == false && this.is_dataphone==false)) {
-              
-            this.deleteRecordCopiesForThisSale();
+        if (this.countCopies === 2 || (this.require_print == false && this.is_dataphone == false)) {
 
-          
-            this.preloadInvoice = false;
-            //this.stopLoading();
-            setTimeout(() => {
-              if (this.isBasketSale) {
-                  this.navCtrl.navigateRoot('operator/lobby/pos');
-              } else {
-                  this.navCtrl.navigateRoot('operator/lobby/tankers');
-              }
-            }, 300);
-            
-        } else if(this.is_dataphone) {
-              this.addCountRecordCopiesFotThisSale();
+          this.deleteRecordCopiesForThisSale();
+
+
+          this.preloadInvoice = false;
+          //this.stopLoading();
+          setTimeout(() => {
+            if (this.isBasketSale) {
+              this.navCtrl.navigateRoot('operator/lobby/pos');
+            } else {
+              this.navCtrl.navigateRoot('operator/lobby/tankers');
+            }
+          }, 300);
+
+        } else if (this.is_dataphone) {
+          this.addCountRecordCopiesFotThisSale();
         }
         //this.updateSalesInCloud();
-        
-        
+
+
       },
       (error: HttpErrorResponse) => {
         const errMessage = error.error.body?.message;
@@ -694,7 +763,7 @@ export class InvoiceComponent{
   }
   */
 
-  outOfInvoice(){
+  outOfInvoice() {
     this.preloadInvoice = false;
     if (this.isBasketSale) {
       this.navCtrl.navigateRoot('operator/lobby/pos');
@@ -706,19 +775,19 @@ export class InvoiceComponent{
   /**
    * Aumenta la cantidad de Ventas Impresas de la venta que se está facturando
    */
-   addCountRecordCopiesFotThisSale() {
+  addCountRecordCopiesFotThisSale() {
     let recordCopiesInvoice = this.operatorService.readRecordCopiesInvoice();
     if (recordCopiesInvoice && recordCopiesInvoice.length > 0) {
       const findRecordSale = recordCopiesInvoice.find(r => r._idInvoicePrinted === this.operatorService.readSaleID());
       if (findRecordSale) {
         findRecordSale.numberCopies = this.countCopies;
       } else {
-        recordCopiesInvoice.push({_idInvoicePrinted: this.operatorService.readSaleID(), numberCopies: this.countCopies});
+        recordCopiesInvoice.push({ _idInvoicePrinted: this.operatorService.readSaleID(), numberCopies: this.countCopies });
       }
       this.operatorService.saveRecordCopiesInvoice(recordCopiesInvoice);
     } else {
       recordCopiesInvoice = [];
-      recordCopiesInvoice.push({_idInvoicePrinted: this.operatorService.readSaleID(), numberCopies: this.countCopies});
+      recordCopiesInvoice.push({ _idInvoicePrinted: this.operatorService.readSaleID(), numberCopies: this.countCopies });
       this.operatorService.saveRecordCopiesInvoice(recordCopiesInvoice);
     }
   }
@@ -726,7 +795,7 @@ export class InvoiceComponent{
   /**
    * Cuando se termina de facturar una venta entonces se elimina del registro que cuenta la cantidad de veces que se ha impresa una venta
    */
-   private deleteRecordCopiesForThisSale() {
+  private deleteRecordCopiesForThisSale() {
     const recordCopiesInvoice: RecordCopyInvoice[] = this.operatorService.readRecordCopiesInvoice();
     if (recordCopiesInvoice && recordCopiesInvoice.length > 0) {
       const indexSaleInvoiced = recordCopiesInvoice.findIndex(r => r._idInvoicePrinted === this.operatorService.readSaleID());
@@ -737,34 +806,34 @@ export class InvoiceComponent{
       }
     }
   }
-  
+
   // reb envio de mensajes de correo electronico y de facturas
   private forwardInvoicesAndEmails() {
     console.log("sin ingreso a re envio de facturas");
     this.preloadInvoice = false;
     this.operatorService.forwardInvoice().subscribe(
-      value => {},
+      value => { },
     );
     this.operatorService.forwardEmails().subscribe(
-      value => {},
+      value => { },
     );
 
     this.operatorService.forwardInvoiceToSysplus().subscribe(
-      value => {},
+      value => { },
     );
 
     this.operatorService.forwardInvoiceToFullSuit().subscribe(
-      value => {},
+      value => { },
     );
 
     this.operatorService.forwardInvoiceAdjusmentToFullSuit().subscribe(
-      value => {},
+      value => { },
     );
 
     this.operatorService.forwardAnulateInvoiceToFullSuit().subscribe(
-      value => {},
+      value => { },
     );
-  
+
   }
 
   private deleteInvoice() {
@@ -785,13 +854,13 @@ export class InvoiceComponent{
    * por ejemplo si es una venta POS o Electrónica entonces llama a un servicio para verificar si hay Resolución para la empresa facturadora
    */
   finish() {
-    if(this.has_anticipate){
-      if(parseInt(this.formAnticipate.value) > this.restriction.anticipate_max_value){
+    if (this.has_anticipate) {
+      if (parseInt(this.formAnticipate.value) > this.restriction.anticipate_max_value) {
         this.showSuccessErrorAlert('El valor del anticipo no puede ser superior al valor autorizado');
         return;
       }
 
-      if(parseInt(this.formAnticipate.value) > this.balance_anticipate){
+      if (parseInt(this.formAnticipate.value) > this.balance_anticipate) {
         this.showSuccessErrorAlert('El valor del anticipo no puede ser superior al balance disponible de la empresa');
         return;
       }
@@ -816,19 +885,19 @@ export class InvoiceComponent{
           this.startLoading();
           this.organizationService.getValidateInfo().subscribe(res => {
 
-              if (res.status == 200) {
-                const response = res.body.body;
-                if (!response.resolutionp) {
-                  this.preloadInvoice = false;
-                  this.showSuccessErrorAlert('No hay resolución POS en la estación.');
-                } else {
-                  this.toInvoiceService();
-                }
-              } else {
+            if (res.status == 200) {
+              const response = res.body.body;
+              if (!response.resolutionp) {
                 this.preloadInvoice = false;
-                this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+                this.showSuccessErrorAlert('No hay resolución POS en la estación.');
+              } else {
+                this.toInvoiceService();
               }
-            },
+            } else {
+              this.preloadInvoice = false;
+              this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+            }
+          },
             error1 => {
               this.preloadInvoice = false;
               this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
@@ -842,19 +911,19 @@ export class InvoiceComponent{
           this.startLoading();
           this.organizationService.getValidateInfo().subscribe(res => {
 
-              if (res.status == 200) {
-                const response = res.body.body;
-                if (!response.resolution) {
-                  this.preloadInvoice = false;
-                  this.showSuccessErrorAlert('No hay resolución de Factura Electrrónica en la estación.');
-                } else {
-                  this.toInvoiceService();
-                }
-              } else {
+            if (res.status == 200) {
+              const response = res.body.body;
+              if (!response.resolution) {
                 this.preloadInvoice = false;
-                this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+                this.showSuccessErrorAlert('No hay resolución de Factura Electrrónica en la estación.');
+              } else {
+                this.toInvoiceService();
               }
-            },
+            } else {
+              this.preloadInvoice = false;
+              this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+            }
+          },
             error1 => {
               this.preloadInvoice = false;
               this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
@@ -866,20 +935,20 @@ export class InvoiceComponent{
     }
   }
 
-  finishCopy(){
-      this.countCopies = 1;
-      this.require_print = true;
-      this.finish();
+  finishCopy() {
+    this.countCopies = 1;
+    this.require_print = true;
+    this.finish();
   }
 
   showSuccessErrorAlert(message: string) {
     this.toastService.presentToastError(message);
   }
 
-  validaDataphone(){
+  validaDataphone() {
     debugger;
     //console.log("copies:" + this.countCopies, "metodo de pago: "+ this.listPayment[this.currentInvoice].code, "es datafono: "+this.is_dataphone);
-    if(this.countCopies==1 && (this.listPayment[this.currentMethodPayment].code == 10 || this.listPayment[this.currentMethodPayment].code == 48 || this.listPayment[this.currentMethodPayment].code==49) && this.is_dataphone ){
+    if (this.countCopies == 1 && (this.listPayment[this.currentMethodPayment].code == 10 || this.listPayment[this.currentMethodPayment].code == 48 || this.listPayment[this.currentMethodPayment].code == 49) && this.is_dataphone) {
       this.payWithCard = true;
     }
     //console.log("pago con tarjeta " + this.payWithCard);
@@ -887,44 +956,44 @@ export class InvoiceComponent{
   async payWithDataphone() {
     //this.max_ammount_dataphone = Math.round(this.data_invoice.body.total);
     let last_ammount_selected = parseInt(this.formControlTotalValue.value);
-    
-    if(last_ammount_selected > this.max_ammount_dataphone){
+
+    if (last_ammount_selected > this.max_ammount_dataphone) {
       this.toastService.presentToastError("El valor pagado por datafono no puede ser superior al saldo total");
-    }else if(last_ammount_selected < 1){
+    } else if (last_ammount_selected < 1) {
       this.toastService.presentToastError("El valor pagado por datafono no puede ser menor a $1");
-    }else{
+    } else {
       let dataTransfern = {
         amount: String(last_ammount_selected),
-        tax:String(this.relative_taxes_dataphone_payment),
+        tax: String(this.relative_taxes_dataphone_payment),
         tip: "0",
         iac: "0",
       };
-    
+
       let response_from_account = await this.dataphoneService.startSellTransaction(dataTransfern);
-      this.result_code_datafone = response_from_account.resultCode == undefined ? "" : response_from_account.resultCode ;
-      if(this.result_code_datafone=="6000" || this.result_code_datafone==6000){
+      this.result_code_datafone = response_from_account.resultCode == undefined ? "" : response_from_account.resultCode;
+      if (this.result_code_datafone == "6000" || this.result_code_datafone == 6000) {
         this.toastService.presentToastOk("La transaccion ha sido exitosa");
         this.max_ammount_dataphone = this.max_ammount_dataphone - last_ammount_selected;
-      }else{
+      } else {
         this.toastService.presentToastError("La transaccion ha fallido");
       }
     }
   }
 
-  setDataphoneData(){
+  setDataphoneData() {
     this.max_ammount_dataphone = Math.round(this.data_invoice.body.data.total);
     this.formControlTotalValue.setValue(Math.round(this.data_invoice.body.data.total));
     this.relative_taxes_dataphone_payment = (Math.round(this.data_invoice.body.data.imp));
   }
 
-  listenDataphoneValue(){
+  listenDataphoneValue() {
     this.formControlTotalValue.valueChanges
-    .pipe(
-      debounceTime(300) // espera 300ms después de dejar de escribir
-    )
-    .subscribe(valor => {
-      this.updateTaxes(this.max_ammount_dataphone,valor);
-    });
+      .pipe(
+        debounceTime(300) // espera 300ms después de dejar de escribir
+      )
+      .subscribe(valor => {
+        this.updateTaxes(this.max_ammount_dataphone, valor);
+      });
   }
 
   updateTaxes(first_total: number, new_total: number) {
@@ -955,9 +1024,9 @@ export class InvoiceComponent{
     this.original_tax_percent = null;
   }
 
-  async print(data_json){
+  async print(data_json) {
     console.log("print");
-    if(this.is_integrate_print && this.require_print){
+    if (this.is_integrate_print && this.require_print) {
       console.log("si llego a impresora");
       await this.dataphoneService.startPrint(data_json);
     }
