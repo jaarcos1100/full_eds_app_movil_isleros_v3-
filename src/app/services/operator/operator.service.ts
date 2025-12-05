@@ -229,6 +229,18 @@ export class OperatorService {
     return this.http.post(`sale/resend_facts_sysplus`, '');
   }
 
+  forwardInvoiceToFullSuit() {
+    return this.http.get(`full_suit/migrate/sales`);
+  }
+
+  forwardInvoiceAdjusmentToFullSuit() {
+    return this.http.get(`full_suit/migrate/sales_adjusment`);
+  }
+
+  forwardAnulateInvoiceToFullSuit() {
+    return this.http.get(`full_suit/migrate/update_anulate`);
+  }
+
   /**
    * Llamar Servicio para reenvío de Emails a los clientes con la información de la venta
    */
@@ -349,4 +361,10 @@ export class OperatorService {
     return this.http.put<any>('sale/vehicle/'+sale_id, body, { observe: 'response' });
 
   }
+
+  fullSuitMigrateCustomers() {
+    return this.http.get<any>("full_suit/organization/migrate/all_customers/", { observe: 'response' });
+  }
+
+
 }

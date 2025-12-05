@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">full eds isleros</string>
-    <string name="title_activity_main">full eds isleros</string>
-    <string name="package_name">com.fyllcolombia.www</string>
-    <string name="custom_url_scheme">com.fyllcolombia.www</string>
-</resources>

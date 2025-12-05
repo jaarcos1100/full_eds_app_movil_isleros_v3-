@@ -20,7 +20,7 @@ import {RestrictionsService} from '../../../../services/restrictions/restriction
 import {Restriction} from '../../../../models/restriction/restriction';
 import {LocalStorageIpPortService} from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
 import {DataphoneService} from '../../../../services/dataphone/dataphone.service';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, delay } from 'rxjs/operators';
 
 
 @Component({
@@ -48,7 +48,7 @@ export class InvoiceComponent{
   public currentInvoice:number;
   public currentInvoiceCode:string;
   public currentMethodPayment:number;
-  public preloadInvoice:boolean;
+  public preloadInvoice: boolean = false;
   public lastUserCreated: User | Company;
   public errorMessage:string;
   public id_user_selected:string;
@@ -90,6 +90,7 @@ export class InvoiceComponent{
   private shift_id:string = "";
 
   public max_ammount_dataphone:number;
+  public organizationId: string;
   constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService:GlobalVarService, public creditService:CreditService, public restrictionsService:RestrictionsService, public dataphoneService:DataphoneService) {
     if (!operatorService.readSaleID()) {
       navCtrl.navigateRoot('operator/lobby/tankers');
@@ -103,8 +104,7 @@ export class InvoiceComponent{
       [Validators.minLength(3), Validators.maxLength(15), Validators.pattern('[0-9]+')]
     );
     this.currentUser = 1;// posicion de usuario actual
-    this.currentInvoice = 0;//  posicion de tipo de factura
-    this.preloadInvoice = false;// 
+    this.currentInvoice = 0;//  posicion de tipo de factura 
     this.errorMessage = '';
     this.currentMethodPayment = 0;// metodo actual de pago
     this.setListPayment();
@@ -152,6 +152,19 @@ export class InvoiceComponent{
 
   ngOnInit(){
     this.listenDataphoneValue();
+    this.loadOrganizationId();
+  }
+
+  loadOrganizationId() {
+    // Obtener organizationId desde el isleSummary (producto de las mangueras)
+    const isleSummary = this.operatorService.readLocalHostIsleSummary();
+    if (isleSummary?.hoses?.length > 0 && isleSummary.hoses[0]?.product?.organization) {
+      const org = isleSummary.hoses[0].product.organization;
+      this.organizationId = typeof org === 'string' ? org : org._id;
+      console.log('Organization ID cargado desde isleSummary:', this.organizationId);
+    } else {
+      console.warn('No se pudo obtener el organizationId desde isleSummary');
+    }
   }
 
   setListTypeInvoice(){
@@ -189,6 +202,7 @@ export class InvoiceComponent{
         const searchUserOrCompany = {
           type,
           identification: this.formControlNIT.value,
+          organization: this.organizationId,
         };
         this.operatorService.searchUserOrCompany(searchUserOrCompany, 0, 5).subscribe(
           (value: HttpResponse<any>) => {
@@ -738,6 +752,19 @@ export class InvoiceComponent{
     this.operatorService.forwardInvoiceToSysplus().subscribe(
       value => {},
     );
+
+    this.operatorService.forwardInvoiceToFullSuit().subscribe(
+      value => {},
+    );
+
+    this.operatorService.forwardInvoiceAdjusmentToFullSuit().subscribe(
+      value => {},
+    );
+
+    this.operatorService.forwardAnulateInvoiceToFullSuit().subscribe(
+      value => {},
+    );
+  
   }
 
   private deleteInvoice() {

@@ -193,6 +193,11 @@ export class DialogRegisterUserComponent implements OnInit {
         (value: any) => {
           this.changeToInvoice.emit();
           // this.listTypeUser = value;
+
+          this.operatorService.fullSuitMigrateCustomers().subscribe(
+            value => {},
+          );
+
           setTimeout(() => {
             this.preload = false;
             this.modalController.dismiss(value.body.user);

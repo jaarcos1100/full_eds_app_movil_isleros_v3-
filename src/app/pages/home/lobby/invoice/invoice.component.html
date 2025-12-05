@@ -42,29 +42,42 @@
 
         </section>
         <section id="list_clients">  
-            <div *ngIf="userDataInvoice">
-                <ion-card class="client" *ngFor="let user of userDataInvoice.companies; let i = index" [ngClass] = "i === currentUser ? 'client-selected' : 'client-default'" (click)="chooseClient(user, i)">
-                    <ion-card-content class="client-content">
-                      <ion-text>
-                        <strong>{{user.name}}</strong>
-                      </ion-text>
-                      <ion-text>
-                        <p>Nit/CC: {{user.nit}} </p> <!-- Ejemplo de número de identificación -->
-                      </ion-text>
-                    </ion-card-content>
-                </ion-card>
-            </div>
-              
-              
-            <ion-card class="btn-new-client" (click)="registerUser()">
-                <ion-card-content>
-                    <ion-text class="primary-color">
-                        <p>+ Crear nuevo cliente</p> <!-- Ejemplo de número de identificación -->
-                    </ion-text>
+            <ng-container *ngIf="preloadInvoice; else clientsLoaded">
+              <ion-card>
+                <ion-card-content class="client-content ion-text-center">
+                  <ion-spinner name="bubbles"></ion-spinner>
+                  <p>Cargando clientes...</p>
                 </ion-card-content>
-            </ion-card>    
-              
-        </section>
+              </ion-card>
+            </ng-container>
+          
+            <ng-template #clientsLoaded>
+              <div *ngIf="userDataInvoice">
+                <ion-card class="client"
+                          *ngFor="let user of userDataInvoice.companies; let i = index"
+                          [ngClass]="i === currentUser ? 'client-selected' : 'client-default'"
+                          (click)="chooseClient(user, i)">
+                  <ion-card-content class="client-content">
+                    <ion-text>
+                      <strong>{{user.name}}</strong>
+                    </ion-text>
+                    <ion-text>
+                      <p>Nit/CC: {{user.nit}}</p>
+                    </ion-text>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+          
+              <ion-card class="btn-new-client" (click)="registerUser()">
+                <ion-card-content>
+                  <ion-text class="primary-color">
+                    <p>+ Crear nuevo cliente</p>
+                  </ion-text>
+                </ion-card-content>
+              </ion-card>
+            </ng-template>
+          
+          </section>
         <section id="btns">
 
             <ion-button class="btn-next" (click)="goToStep2()">
