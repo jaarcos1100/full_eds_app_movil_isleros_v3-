@@ -207,7 +207,6 @@ export class InvoiceComponent {
         this.operatorService.searchUserOrCompany(searchUserOrCompany, 0, 5).subscribe(
           (value: HttpResponse<any>) => {
             this.companiesAutocomplete = value.body.companies;
-            console.log(this.companiesAutocomplete)
           }
         );
       }, AppComponent.timeMillisDelayFilter);
@@ -311,14 +310,16 @@ export class InvoiceComponent {
   }
 
   onSelectOption(option: User | Company | any) {
-
     this.userSelected = option;
     this.isSelectUser = true;
 
+    // Si es cliente de FullSuit, crear en base de datos local primero
     if (option.from_fullsuit) {
-      this.userSelected = this.createFullSuitClientLocally(option);
+      this.createFullSuitClientLocally(option);
+      return; // Salir, el resto se maneja en el callback del subscribe
     }
 
+    // Para clientes locales, continuar normalmente
     this.getRestriction(option._id);
     this.balance_anticipate = option.anticipateBalance;
 
@@ -333,7 +334,6 @@ export class InvoiceComponent {
     }
   }
 
-
   /**
    * Crea un cliente de FullSuit en la base de datos local
    */
@@ -341,14 +341,14 @@ export class InvoiceComponent {
     const fullSuitData = option.full_suit_raw;
 
     const body = {
-      name: fullSuitData.names || option.name,
-      nit: fullSuitData.nit || option.nit,
-      emails: fullSuitData.email ? [fullSuitData.email] : option.emails,
-      phones: fullSuitData.phone ? [fullSuitData.phone] : option.phones,
+      name: fullSuitData?.names || option.name,
+      nit: fullSuitData?.nit || option.nit,
+      emails: fullSuitData?.email ? [fullSuitData.email] : option.emails,
+      phones: fullSuitData?.phone ? [fullSuitData.phone] : option.phones,
       type: 'company',
       plaque: this.operatorService.readLocalHostPlaque(),
-      digit_check: fullSuitData.digitVerification?.toString() || option.digit_check || '0',
-      address: fullSuitData.address || '',
+      digit_check: fullSuitData?.digitVerification?.toString() || option.digit_check || '0',
+      address: fullSuitData?.address || '',
       from_fullsuit: true
     };
 
@@ -356,17 +356,44 @@ export class InvoiceComponent {
     this.operatorService.registerUser(body).subscribe(
       (value: any) => {
         this.preloadInvoice = false;
-        const createdClient = value.body.user || value.body;
-        this.toastService.presentToastOk('Cliente de FullSuit creado exitosamente');
-        this.moveScrollListToElement(0);
-        return createdClient;
-
+        const createdClient = value.body?.user;
+        const clientId = createdClient._id;
+        if (!clientId) {
+          this.toastService.presentToastError('No se pudo obtener el ID del cliente creado');
+          return;
+        }
+        // Buscar el cliente por su _id para obtenerlo como un cliente normal
+        const searchBody = {
+          type: 'company',
+          identification: createdClient.document,
+        };
+        this.operatorService.searchUserOrCompany(searchBody, 0, 1).subscribe(
+          (searchResult: any) => {
+            const companies = searchResult.body?.companies || [];
+            const found = companies.find(
+              c => String(c.nit) === String(createdClient.document)
+            );
+            console.log(found)
+            if (found) {
+              this.userDataInvoice.companies.push(found);
+              this.currentUser = this.userDataInvoice.companies.length - 1;
+              this.getRestriction(found._id);
+              this.balance_anticipate = found.anticipateBalance;
+              this.toastService.presentToastOk('Cliente de FullSuit creado exitosamente');
+              this.moveScrollListToElement(this.currentUser);
+            } else {
+              this.toastService.presentToastError('No se pudo cargar el cliente recién creado');
+            }
+          },
+          (err) => {
+            this.toastService.presentToastError('Error al buscar el cliente recién creado');
+          }
+        );
       },
       (error: any) => {
         this.preloadInvoice = false;
-        if (error.status === 400 && error?.error?.body?.errors?.nit) {
+        if (error.status === 400 && (error?.error?.body?.errors?.nit || error?.error?.body?.message?.includes('nit'))) {
           this.toastService.presentToastError('El NIT ya existe en la base de datos local');
-          // Si ya existe, buscar y seleccionar el existente
           this.addExistingClientToList(option);
         } else {
           this.toastService.presentToastError('Error al crear el cliente, intente nuevamente');
@@ -379,21 +406,40 @@ export class InvoiceComponent {
    * Agrega un cliente existente a la lista cuando ya existe en BD local
    */
   addExistingClientToList(option: any) {
-    const indexCompany = this.userDataInvoice?.companies.findIndex(c => c.nit === option.nit);
-    if (indexCompany !== -1) {
-      this.currentUser = indexCompany;
-      this.getRestriction(this.userDataInvoice.companies[indexCompany]._id);
-      this.balance_anticipate = this.userDataInvoice.companies[indexCompany].anticipateBalance;
-      this.moveScrollListToElement(this.currentUser);
-    } else {
-      // Agregar sin el flag de fullsuit ya que existe localmente
-      option.from_fullsuit = false;
-      this.userDataInvoice.companies.push(option);
-      this.currentUser = this.userDataInvoice.companies.length - 1;
-      this.getRestriction(option._id);
-      this.balance_anticipate = option.anticipateBalance;
-      this.moveScrollListToElement(0);
-    }
+    // Buscar el cliente en la BD local por NIT
+    const searchBody = {
+      type: 'company',
+      identification: option.nit
+    };
+
+    this.operatorService.searchUserOrCompany(searchBody, 0, 5).subscribe(
+      (value: any) => {
+        const companies = value.body?.companies || [];
+        // Buscar el cliente local (sin from_fullsuit)
+        const localClient = companies.find(c => c.nit === option.nit && !c.from_fullsuit);
+
+        if (localClient) {
+          // Verificar si ya está en la lista
+          const indexExisting = this.userDataInvoice?.companies.findIndex(c => c._id === localClient._id);
+          if (indexExisting !== -1) {
+            this.currentUser = indexExisting;
+          } else {
+            this.userDataInvoice.companies.push(localClient);
+            this.currentUser = this.userDataInvoice.companies.length - 1;
+          }
+
+          this.getRestriction(localClient._id);
+          this.balance_anticipate = localClient.anticipateBalance;
+          this.moveScrollListToElement(this.currentUser);
+          this.toastService.presentToastOk('Cliente seleccionado');
+        } else {
+          this.toastService.presentToastError('No se encontró el cliente local');
+        }
+      },
+      (error) => {
+        this.toastService.presentToastError('Error al buscar el cliente');
+      }
+    );
   }
 
   moveScrollListToElement(index) {
@@ -1033,9 +1079,6 @@ export class InvoiceComponent {
   }
 
 }
-
-
-
 
 export interface TypeUser {
   valueBackground: string;
