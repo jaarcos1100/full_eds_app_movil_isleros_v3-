@@ -113,7 +113,7 @@ export class DialogRegisterUserComponent implements OnInit {
   setDataOrg(email, city, phone){
     this.formControlPhoneNumber.setValue(phone);
     this.lastCitySelected = city;
-    this.formControlCity.setValue(city.name);
+    //this.formControlCity.setValue(city.name);
     let email_split = email.split("@");
     this.formControlEmail.setValue(email_split[0]);
     this.formControlEmailOtherDomainText.setValue(email_split[1]);
@@ -200,7 +200,7 @@ export class DialogRegisterUserComponent implements OnInit {
 
           setTimeout(() => {
             this.preload = false;
-            this.modalController.dismiss(value.body.user);
+            this.modalController.dismiss(value.body.company);
             this.toastService.presentToastOk('Empresa Creada');
           }, 300);
          
