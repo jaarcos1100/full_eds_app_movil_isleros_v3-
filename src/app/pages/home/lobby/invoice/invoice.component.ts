@@ -235,9 +235,7 @@ export class InvoiceComponent {
           // @ts-ignore
           // @ts-ignore
           this.currentUser = companies.findIndex(c => c.nit === this.lastUserCreated.nit || c.nit === this.lastUserCreated.document);
-          if (this.currentUser !== -1) {
-            this.currentUser += 1;
-          } else {
+          if (this.currentUser === -1) {
             this.currentUser = 0;
           }
         }
@@ -313,13 +311,13 @@ export class InvoiceComponent {
     this.userSelected = option;
     this.isSelectUser = true;
 
-    // Si es cliente de FullSuit, crear en base de datos local primero
-    if (option.from_fullsuit) {
+    // Si es cliente de FullSuit y NO tiene _id (es decir, no ha sido creado localmente aún)
+    if (option.from_fullsuit && !option._id) {
       this.createFullSuitClientLocally(option);
       return; // Salir, el resto se maneja en el callback del subscribe
     }
 
-    // Para clientes locales, continuar normalmente
+    // Para clientes locales o que ya han sido creados, continuar normalmente
     this.getRestriction(option._id);
     this.balance_anticipate = option.anticipateBalance;
 
@@ -330,7 +328,7 @@ export class InvoiceComponent {
     } else {
       this.userDataInvoice.companies.push(option);
       this.currentUser = this.userDataInvoice.companies.length - 1;
-      this.moveScrollListToElement(0);
+      this.moveScrollListToElement(this.currentUser);
     }
   }
 
@@ -356,8 +354,8 @@ export class InvoiceComponent {
     this.operatorService.registerUser(body).subscribe(
       (value: any) => {
         this.preloadInvoice = false;
-        const createdClient = value.body?.user;
-        const clientId = createdClient._id;
+        const createdClient = value.body?.user || value.body?.company;
+        const clientId = createdClient?._id;
         if (!clientId) {
           this.toastService.presentToastError('No se pudo obtener el ID del cliente creado');
           return;
@@ -365,13 +363,13 @@ export class InvoiceComponent {
         // Buscar el cliente por su _id para obtenerlo como un cliente normal
         const searchBody = {
           type: 'company',
-          identification: createdClient.document,
+          identification: createdClient.nit || createdClient.document,
         };
         this.operatorService.searchUserOrCompany(searchBody, 0, 1).subscribe(
           (searchResult: any) => {
             const companies = searchResult.body?.companies || [];
             const found = companies.find(
-              c => String(c.nit) === String(createdClient.document)
+              c => String(c.nit) === String(createdClient.nit || createdClient.document)
             );
             console.log(found)
             if (found) {
@@ -415,8 +413,8 @@ export class InvoiceComponent {
     this.operatorService.searchUserOrCompany(searchBody, 0, 5).subscribe(
       (value: any) => {
         const companies = value.body?.companies || [];
-        // Buscar el cliente local (sin from_fullsuit)
-        const localClient = companies.find(c => c.nit === option.nit && !c.from_fullsuit);
+        // Buscar el cliente local
+        const localClient = companies.find(c => String(c.nit) === String(option.nit));
 
         if (localClient) {
           // Verificar si ya está en la lista
