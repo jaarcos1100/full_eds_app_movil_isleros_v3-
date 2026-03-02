@@ -39,7 +39,7 @@ export class DialogRegisterUserComponent implements OnInit {
     [Validators.required, Validators.minLength(3), Validators.maxLength(30)]
   );
   formControlNIT: FormControl = new FormControl('',
-    [Validators.required, Validators.minLength(5), Validators.maxLength(15), Validators.pattern('[0-9]+')]
+    [Validators.required, Validators.minLength(6), Validators.maxLength(15), Validators.pattern('[0-9]+')]
   );
   formControlEmail: FormControl = new FormControl('',
     [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern('^[a-zA-Z0-9._%+-]+$')]
@@ -261,7 +261,7 @@ export class DialogRegisterUserComponent implements OnInit {
     return this.formControlNIT.hasError('required')
       ? 'Este campo es obligatorio'
       : this.formControlNIT.hasError('minlength')
-        ? 'Longitud mínima de 5 caracteres'
+        ? 'Longitud mínima de 6 caracteres'
         : this.formControlNIT.hasError('maxlength')
           ? 'Longitud máxima de 15 caracteres'
           : this.formControlNIT.hasError('pattern')
