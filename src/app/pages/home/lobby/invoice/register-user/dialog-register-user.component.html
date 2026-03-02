@@ -1,8 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start"
-                 class="button-back"
-                 (click)="this.modalController.dismiss();">
+    <ion-buttons slot="start" class="button-back" (click)="this.modalController.dismiss();">
       <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
     </ion-buttons>
     <ion-title (click)="this.modalController.dismiss();">
@@ -31,8 +29,7 @@
         <ion-row>
           <ion-col size="12">
             <mat-form-field>
-              <input placeholder="Cédula o NIT" matInput required
-                     [formControl]="formControlNIT">
+              <input placeholder="Cédula o NIT" matInput required [formControl]="formControlNIT">
               <mat-error>{{getErrorMessageNit()}}</mat-error>
             </mat-form-field>
           </ion-col>
@@ -45,7 +42,7 @@
           <!--          </ion-col>-->
         </ion-row>
         <span class="m-0" style="color: #003b19">El correo debe ser real para evitar problemas de facturación</span>
-        
+
         <div class="ion-text-center">
           <ion-row>
             <ion-col class="p-0" size="6">
@@ -72,29 +69,26 @@
             </ion-col>
           </ion-row>
         </div>
-        <mat-error style="font-size: 1.3em !important; text-align: left;" *ngIf="(formControlCity.touched && !lastCitySelected) || (formControlCity.value && !lastCitySelected)">Debe oprimir sobre una ciudad para seleccionarla</mat-error>
         <ion-row style="margin-bottom: 0.2em; margin-top: 0.2em;">
           <ion-col size="6"></ion-col>
           <ion-col size="6" style="text-align: left;">
-            <mat-checkbox style="margin-top: 10px;" [checked]="otherEmailDomain" (change)="changeCheckBoxDomain($event)">
+            <mat-checkbox style="margin-top: 10px;" [checked]="otherEmailDomain"
+              (change)="changeCheckBoxDomain($event)">
               <span class="mt-2 mb-1">Otro Dominio</span>
             </mat-checkbox>
           </ion-col>
         </ion-row>
         <mat-form-field class="w-100">
           <img matSuffix src="./assets/basket/search.svg" alt="" width="30" height="30">
-          <input type="text"
-                 aria-label="Number"
-                 placeholder="Buscar Ciudad por Nombre o Código DIAN"
-                 matInput
-                 (ngModelChange)="changeCityAutocomplete()"
-                 [formControl]="formControlCity"
-                 [matAutocomplete]="auto">
+          <input type="text" aria-label="Number" placeholder="Buscar Ciudad por Nombre o Código DIAN" matInput
+            (ngModelChange)="changeCityAutocomplete()" [formControl]="formControlCity" [matAutocomplete]="auto">
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let option of cityList" [value]="option.name" (onSelectionChange)="onSelectOption(option)">
+            <mat-option *ngFor="let option of cityList" [value]="option.name"
+              (onSelectionChange)="onSelectOption(option)">
               <span>{{option.name}} - Código: {{option.code}}</span>
             </mat-option>
           </mat-autocomplete>
+             <mat-error *ngIf="formControlCity.touched && !lastCitySelected">Debe oprimir sobre una ciudad para seleccionarla</mat-error>
         </mat-form-field>
         <div class="ion-text-center">
           <mat-form-field>

@@ -1,19 +1,19 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Island} from '../../../../../models/island/Island';
-import {FormControl, Validators} from '@angular/forms';
-import {OperatorService} from '../../../../../services/operator/operator.service';
-import {Router} from '@angular/router';
-import {User} from '../../../../../models/user/user';
-import {RegisterInvoice} from '../../../../../models/user/register-invoice/RegisterInvoice';
-import {Global} from '../../../../../models/global/global';
-import {OrganizationInfo} from '../../../../../models/organization/organization';
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
-import {Company} from '../../../../../models/company/company';
-import {ModalController} from '@ionic/angular';
-import {LoadingService} from '../../../../../services/loading/loading.service';
-import {ToastService} from '../../../../../services/toast/toast.service';
-import {Util} from '../../../../../util/Util';
-import {Ubication} from '../../../../../models/ubication/ubication';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Island } from '../../../../../models/island/Island';
+import { FormControl, Validators } from '@angular/forms';
+import { OperatorService } from '../../../../../services/operator/operator.service';
+import { Router } from '@angular/router';
+import { User } from '../../../../../models/user/user';
+import { RegisterInvoice } from '../../../../../models/user/register-invoice/RegisterInvoice';
+import { Global } from '../../../../../models/global/global';
+import { OrganizationInfo } from '../../../../../models/organization/organization';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Company } from '../../../../../models/company/company';
+import { ModalController } from '@ionic/angular';
+import { LoadingService } from '../../../../../services/loading/loading.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
+import { Util } from '../../../../../util/Util';
+import { Ubication } from '../../../../../models/ubication/ubication';
 
 @Component({
   selector: 'app-register-user',
@@ -42,16 +42,16 @@ export class DialogRegisterUserComponent implements OnInit {
     [Validators.required, Validators.minLength(5), Validators.maxLength(15), Validators.pattern('[0-9]+')]
   );
   formControlEmail: FormControl = new FormControl('',
-    [Validators.required, Validators.minLength(3), Validators.maxLength(100)]
+    [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern('^[a-zA-Z0-9._%+-]+$')]
   );
   formControlEmailOtherDomainText: FormControl = new FormControl('',
-    [Validators.required, Validators.maxLength(30)]
+    [Validators.required, Validators.maxLength(30), Validators.pattern('^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]
   );
   formControlEmailDomain: FormControl = new FormControl('',
     [Validators.required]
   );
   formControlPhoneNumber: FormControl = new FormControl('',
-    [Validators.required, Validators.minLength(5), Validators.maxLength(20)]
+    [Validators.required, Validators.minLength(5), Validators.maxLength(20), Validators.pattern('^[0-9]+$')]
   );
   // formControlDigit: FormControl = new FormControl('',
   //   [Validators.minLength(1), Validators.maxLength(1), Validators.pattern('[0-9]+')]
@@ -64,15 +64,15 @@ export class DialogRegisterUserComponent implements OnInit {
   public listEmailDomains: string[] = Util.listEmailDomains;
   public otherEmailDomain = true;
   public isLegalPerson = false;
-  public formControlCity: FormControl = new FormControl('', [ Validators.required]);
+  public formControlCity: FormControl = new FormControl('', [Validators.required]);
   public lastCitySelected: Ubication;
   public cityList: Ubication[];
 
   constructor(private operatorService: OperatorService,
-              private router: Router,
-              public modalController: ModalController,
-              private loadingService: LoadingService,
-              private toastService: ToastService,
+    private router: Router,
+    public modalController: ModalController,
+    private loadingService: LoadingService,
+    private toastService: ToastService,
   ) {
     this.formControlEmailDomain.setValue(this.listEmailDomains[0]);
     // this.formControlTypeUser.setValue(this.typeCompany.valueBackground);
@@ -95,30 +95,31 @@ export class DialogRegisterUserComponent implements OnInit {
   }
 
   private getInfoOrganization() {
-       this.errorMessage = undefined;
-       this.operatorService.getInfoOrganization().subscribe(
-         (value: any) => {
-            const organizationInfo: OrganizationInfo = value.body;
-            console.log(organizationInfo);
-            this.setDataOrg(organizationInfo.organization.email, organizationInfo.department, organizationInfo.organization.phone);
-         },
-         error => {
-           this.preload = false;
-           this.errorMessage = 'Error obteniendo los datos, por favor intente nuevamente';
-         }
-       );
-     
+    this.errorMessage = undefined;
+    this.operatorService.getInfoOrganization().subscribe(
+      (value: any) => {
+        const organizationInfo: OrganizationInfo = value.body;
+        console.log(organizationInfo);
+        this.setDataOrg(organizationInfo.organization.email, organizationInfo.department, organizationInfo.organization.phone);
+      },
+      error => {
+        this.preload = false;
+        this.errorMessage = 'Error obteniendo los datos, por favor intente nuevamente';
+      }
+    );
+
   }
 
   setDataOrg(email, city, phone){
-    this.formControlPhoneNumber.setValue(phone);
-    this.lastCitySelected = city;
-    //this.formControlCity.setValue(city.name);
-    let email_split = email.split("@");
-    this.formControlEmail.setValue(email_split[0]);
-    this.formControlEmailOtherDomainText.setValue(email_split[1]);
+  this.formControlPhoneNumber.setValue(phone);
 
-  }
+  this.lastCitySelected = undefined;
+  this.formControlCity.reset();
+
+  const email_split = email.split("@");
+  this.formControlEmail.setValue(email_split[0]);
+  this.formControlEmailOtherDomainText.setValue(email_split[1]);
+}
 
   ngOnInit(): void {
     this.getInfoOrganization();
@@ -172,7 +173,16 @@ export class DialogRegisterUserComponent implements OnInit {
         this.formControlEmailOtherDomainText.markAsTouched();
         return;
       }
-      let emailDomain = this.formControlEmailOtherDomainText.value?.toString();
+      let emailDomain = this.formControlEmailOtherDomainText.value?.toString().toLowerCase();
+      // Si termina en algo sospechoso como .c... o .co... (que no sea .com o .co)
+      const isSuspicious = /.*(\.co[a-z]|\.c[a-z][a-z]|\.coom|\.con|\.cim|\.cpm)$/.test(emailDomain);
+      const isValidCommon = /.*(\.com|\.co|\.net|\.org|\.edu|\.gov|\.com\.co|\.edu\.co)$/.test(emailDomain);
+
+      if (isSuspicious && !isValidCommon) {
+        this.formControlEmailOtherDomainText.setErrors({ blockedSuffix: true });
+        this.formControlEmailOtherDomainText.markAsTouched();
+        return;
+      }
       emailDomain = Util.replaceAllStrings(emailDomain, ' ', '');
       emailDomain = Util.replaceAllStrings(emailDomain, '@', '');
       this.formControlEmailOtherDomainText.setValue(emailDomain);
@@ -183,6 +193,7 @@ export class DialogRegisterUserComponent implements OnInit {
       this.formControlEmail.valid &&
       this.formControlPhoneNumber.valid &&
       this.lastCitySelected &&
+      this.formControlCity.valid &&
       (!this.otherEmailDomain || this.otherEmailDomain && this.formControlEmailOtherDomainText.valid)
     ) {
       this.operatorService.deleteUserRegister();
@@ -195,7 +206,7 @@ export class DialogRegisterUserComponent implements OnInit {
           // this.listTypeUser = value;
 
           this.operatorService.fullSuitMigrateCustomers().subscribe(
-            value => {},
+            value => { },
           );
 
           setTimeout(() => {
@@ -203,7 +214,7 @@ export class DialogRegisterUserComponent implements OnInit {
             this.modalController.dismiss(value.body.company);
             this.toastService.presentToastOk('Empresa Creada');
           }, 300);
-         
+
         },
         (error: HttpErrorResponse) => {
           if (error.status === 400 && (error?.error?.body?.errors?.email || error.error.body?.message?.toLowerCase().includes('email'))) {
@@ -215,6 +226,7 @@ export class DialogRegisterUserComponent implements OnInit {
           }
           this.preload = false;
         }
+
       );
     } else {
       this.formControlName.markAsTouched();
@@ -223,6 +235,9 @@ export class DialogRegisterUserComponent implements OnInit {
       this.formControlPhoneNumber.markAsTouched();
       this.formControlEmailOtherDomainText.markAsTouched();
       this.formControlCity.markAsTouched();
+      if (!this.lastCitySelected) {
+        this.formControlCity.setErrors({ required: true })
+      }
     }
   }
 
@@ -233,9 +248,9 @@ export class DialogRegisterUserComponent implements OnInit {
     return this.formControlName.hasError('required')
       ? 'Este campo es obligatorio'
       : this.formControlName.hasError('minlength')
-        ? 'Longitud mínima de 3 cacteres'
+        ? 'Longitud mínima de 3 caracteres'
         : this.formControlName.hasError('maxlength')
-          ? 'Longitud máxima de 30 cacteres'
+          ? 'Longitud máxima de 30 caracteres'
           : '';
   }
 
@@ -246,9 +261,9 @@ export class DialogRegisterUserComponent implements OnInit {
     return this.formControlNIT.hasError('required')
       ? 'Este campo es obligatorio'
       : this.formControlNIT.hasError('minlength')
-        ? 'Longitud mínima de 5 cacteres'
+        ? 'Longitud mínima de 5 caracteres'
         : this.formControlNIT.hasError('maxlength')
-          ? 'Longitud máxima de 15 cacteres'
+          ? 'Longitud máxima de 15 caracteres'
           : this.formControlNIT.hasError('pattern')
             ? 'Solo se permiten caracteres numéricos'
             : '';
@@ -261,21 +276,37 @@ export class DialogRegisterUserComponent implements OnInit {
     return this.formControlEmail.hasError('required')
       ? 'Este campo es obligatorio'
       : this.formControlEmail.hasError('minlength')
-        ? 'Longitud mínima de 3 cacteres'
+        ? 'Longitud mínima de 3 caracteres'
         : this.formControlEmail.hasError('maxlength')
-          ? 'Longitud máxima de 40 cacteres'
-          : '';
+          ? 'Longitud máxima de 100 caracteres'
+          : this.formControlEmail.hasError('pattern')
+            ? 'Formato de correo no válido'
+            : '';
   }
 
   /**
    * Mensaje de error dominio de email
    */
   getErrorMessageEmailOtherDomainText() {
-    return this.formControlEmailOtherDomainText.hasError('required')
-      ? 'Este campo es obligatorio'
-      : this.formControlEmailOtherDomainText.hasError('maxlength')
-        ? 'Longitud máxima de 15 cacteres'
-        : '';
+    const value = this.formControlEmailOtherDomainText.value?.toLowerCase() || '';
+
+    // Si termina en algo sospechoso como .c... o .co... (que no sea .com o .co)
+    const isSuspicious = /.*(\.co[a-z]|\.c[a-z][a-z]|\.coom|\.con|\.cim|\.cpm)$/.test(value);
+    const isValidCommon = /.*(\.com|\.co|\.net|\.org|\.edu|\.gov|\.com\.co|\.edu\.co)$/.test(value);
+
+    if (this.formControlEmailOtherDomainText.hasError('required')) {
+      return 'Este campo es obligatorio';
+    }
+    if (this.formControlEmailOtherDomainText.hasError('maxlength')) {
+      return 'Longitud máxima de 30 caracteres';
+    }
+    if ((isSuspicious && !isValidCommon) || this.formControlEmailOtherDomainText.hasError('blockedSuffix')) {
+      return 'Sufijo inválido (ej: use .com o .co)';
+    }
+    if (this.formControlEmailOtherDomainText.hasError('pattern')) {
+      return 'Dominio no válido (ej: gmail.com)';
+    }
+    return '';
   }
 
   /**
@@ -285,10 +316,12 @@ export class DialogRegisterUserComponent implements OnInit {
     return this.formControlPhoneNumber.hasError('required')
       ? 'Este campo es obligatorio'
       : this.formControlPhoneNumber.hasError('minlength')
-        ? 'Longitud mínima de 5 cacteres'
+        ? 'Longitud mínima de 5 caracteres'
         : this.formControlPhoneNumber.hasError('maxlength')
-          ? 'Longitud máxima de 20 cacteres'
-          : '';
+          ? 'Longitud máxima de 20 caracteres'
+          : this.formControlPhoneNumber.hasError('pattern')
+            ? 'Solo se permiten caracteres numéricos'
+            : '';
   }
 
   back() {
@@ -356,8 +389,8 @@ export class DialogRegisterUserComponent implements OnInit {
    * Mensaje de error ciudad
    */
   getErrorMessageCity() {
-    return this.formControlCity.hasError('required')
-      ? 'Este campo es obligatorio.'
+    return (this.formControlCity.hasError('required') || !this.lastCitySelected)
+      ? 'Debe seleccionar una ciudad de la lista'
       : '';
   }
 
