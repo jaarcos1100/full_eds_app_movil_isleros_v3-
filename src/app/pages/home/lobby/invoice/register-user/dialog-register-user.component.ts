@@ -176,7 +176,7 @@ export class DialogRegisterUserComponent implements OnInit {
       let emailDomain = this.formControlEmailOtherDomainText.value?.toString().toLowerCase();
       // Si termina en algo sospechoso como .c... o .co... (que no sea .com o .co)
       const isSuspicious = /.*(\.co[a-z]|\.c[a-z][a-z]|\.coom|\.con|\.cim|\.cpm)$/.test(emailDomain);
-      const isValidCommon = /.*(\.com|\.co|\.net|\.org|\.edu|\.gov|\.com\.co|\.edu\.co)$/.test(emailDomain);
+      const isValidCommon = /.*(\.com|\.co|\.net|\.org|\.edu|\.gov|\.com\.co|\.edu\.co|\.es)$/.test(emailDomain);
 
       if (isSuspicious && !isValidCommon) {
         this.formControlEmailOtherDomainText.setErrors({ blockedSuffix: true });
@@ -292,7 +292,7 @@ export class DialogRegisterUserComponent implements OnInit {
 
     // Si termina en algo sospechoso como .c... o .co... (que no sea .com o .co)
     const isSuspicious = /.*(\.co[a-z]|\.c[a-z][a-z]|\.coom|\.con|\.cim|\.cpm)$/.test(value);
-    const isValidCommon = /.*(\.com|\.co|\.net|\.org|\.edu|\.gov|\.com\.co|\.edu\.co)$/.test(value);
+    const isValidCommon = /.*(\.com|\.co|\.net|\.org|\.edu|\.gov|\.com\.co|\.edu\.co|\.es)$/.test(value);
 
     if (this.formControlEmailOtherDomainText.hasError('required')) {
       return 'Este campo es obligatorio';

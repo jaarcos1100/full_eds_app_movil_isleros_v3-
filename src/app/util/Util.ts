@@ -23,6 +23,9 @@ export class Util {
     'outlook.com',
     'yahoo.com',
     'icloud.com',
+    'live.com',
+    'hotmail.es',
+    'yahoo.es',
   ];
 
   static getDigitVerification(nit: number): number {
@@ -68,8 +71,8 @@ export class Util {
     // convertir a array la parte decimal, invertir las posiciones y convertir a entero para quitar ceros a la derecha y luego regresar a string invirtiendo nuevamente
     const array = p[1].split('').reverse();
     p[1] = ((+array.join('')) + '').split('').reverse().join('');
-    return "$ " + (p[0].split("").reverse().reduce(function(acc, num, i, orig) {
-        return  num=="-" ? acc : num + (i && !(i % 3) ? "." : "") + acc;
+    return "$ " + (p[0].split("").reverse().reduce(function (acc, num, i, orig) {
+      return num == "-" ? acc : num + (i && !(i % 3) ? "." : "") + acc;
     }, "") + (p[1] != '0' ? "." + p[1] : ''));
   }
 }
