@@ -64,6 +64,8 @@ export class DialogRegisterUserComponent implements OnInit {
   public listEmailDomains: string[] = Util.listEmailDomains;
   public otherEmailDomain = true;
   public isLegalPerson = false;
+  public useDefaultEmail = false;
+  public defaultProviderEmail: string;
   public formControlCity: FormControl = new FormControl('', [Validators.required]);
   public lastCitySelected: Ubication;
   public cityList: Ubication[];
@@ -116,10 +118,25 @@ export class DialogRegisterUserComponent implements OnInit {
   this.lastCitySelected = undefined;
   this.formControlCity.reset();
 
-  const email_split = email.split("@");
-  this.formControlEmail.setValue(email_split[0]);
-  this.formControlEmailOtherDomainText.setValue(email_split[1]);
+  this.defaultProviderEmail = email;
 }
+
+  /**
+   * Al marcar/desmarcar el check, precarga o limpia los campos de correo
+   * con el correo por defecto del proveedor, para cuando el cliente no tiene uno propio.
+   */
+  toggleUseDefaultEmail() {
+    this.useDefaultEmail = !this.useDefaultEmail;
+    if (this.useDefaultEmail && this.defaultProviderEmail) {
+      const email_split = this.defaultProviderEmail.split('@');
+      this.otherEmailDomain = true;
+      this.formControlEmail.setValue(email_split[0]);
+      this.formControlEmailOtherDomainText.setValue(email_split[1]);
+    } else {
+      this.formControlEmail.reset();
+      this.formControlEmailOtherDomainText.reset();
+    }
+  }
 
   ngOnInit(): void {
     this.getInfoOrganization();
@@ -160,19 +177,13 @@ export class DialogRegisterUserComponent implements OnInit {
   }
 
   register() {
-    if (!this.formControlEmail.value) {
-      this.formControlEmail.markAsTouched();
-      return;
+    if (this.formControlEmail.value) {
+      let email = this.formControlEmail.value.toString();
+      email = Util.replaceAllStrings(email, ' ', '');
+      email = Util.replaceAllStrings(email, '@', '');
+      this.formControlEmail.setValue(email);
     }
-    let email = this.formControlEmail.value.toString();
-    email = Util.replaceAllStrings(email, ' ', '');
-    email = Util.replaceAllStrings(email, '@', '');
-    this.formControlEmail.setValue(email);
-    if (this.otherEmailDomain) {
-      if (!this.formControlEmailOtherDomainText.value) {
-        this.formControlEmailOtherDomainText.markAsTouched();
-        return;
-      }
+    if (this.otherEmailDomain && this.formControlEmailOtherDomainText.value) {
       let emailDomain = this.formControlEmailOtherDomainText.value?.toString().toLowerCase();
       // Si termina en algo sospechoso como .c... o .co... (que no sea .com o .co)
       const isSuspicious = /.*(\.co[a-z]|\.c[a-z][a-z]|\.coom|\.con|\.cim|\.cpm)$/.test(emailDomain);
@@ -180,12 +191,11 @@ export class DialogRegisterUserComponent implements OnInit {
 
       if (isSuspicious && !isValidCommon) {
         this.formControlEmailOtherDomainText.setErrors({ blockedSuffix: true });
-        this.formControlEmailOtherDomainText.markAsTouched();
-        return;
+      } else {
+        emailDomain = Util.replaceAllStrings(emailDomain, ' ', '');
+        emailDomain = Util.replaceAllStrings(emailDomain, '@', '');
+        this.formControlEmailOtherDomainText.setValue(emailDomain);
       }
-      emailDomain = Util.replaceAllStrings(emailDomain, ' ', '');
-      emailDomain = Util.replaceAllStrings(emailDomain, '@', '');
-      this.formControlEmailOtherDomainText.setValue(emailDomain);
     }
     if (
       this.formControlName.valid &&
