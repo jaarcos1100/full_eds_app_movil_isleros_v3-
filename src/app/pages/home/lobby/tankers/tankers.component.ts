@@ -148,9 +148,22 @@ export class TankersComponent implements OnInit {
   }
 
   /**
+   * Cache de mangueras por surtidor/lado. Sin esto, getHosesOfPumpAndSide se ejecuta (con sorts
+   * incluidos) en cada ciclo de detección de cambios de Angular por estar en un *ngFor del
+   * template, lo que recrea el DOM de las mangueras constantemente y hace que la pantalla se
+   * sienta congelada al tocar una manguera (el atenuado y el spinner tardan en reflejarse).
+   */
+  private hosesByPumpAndSideCache = new Map<string, Hose[]>();
+
+  /**
    * Consulta las mangueras de un lado especídico de un Surtidor
    */
   getHosesOfPumpAndSide(pump: Pump, indexSide: number): Hose[] {
+    const cacheKey = `${pump._id}-${indexSide}`;
+    if (this.hosesByPumpAndSideCache.has(cacheKey)) {
+      return this.hosesByPumpAndSideCache.get(cacheKey);
+    }
+
     const hoses: Hose[] = [];
     let sidesOfThisPump: Side[] = this.isleSummary.sides?.filter(s => s.pump?._id === pump._id);
     if (sidesOfThisPump) {
@@ -158,15 +171,22 @@ export class TankersComponent implements OnInit {
     } else {
       sidesOfThisPump = [];
     }
-    // console.log(this.isleSummary.hoses.sort((l1, l2) => l1.side.id_side - l2.side.id_side));
     for (const hose of this.isleSummary.hoses.sort((l1, l2) => l1.side.id_side - l2.side.id_side)) {
-      // console.log(hose, hose.side.pump, pump._id, hose.side.id_side, indexSide, hose.side.pump === pump._id, hose.side.id_side === sidesOfThisPump[indexSide].id_side);
       if (hose.side.pump === pump._id && hose.side.id_side === sidesOfThisPump[indexSide].id_side) {
         hoses.push(hose);
       }
     }
-    // console.log(hoses);
-    return hoses.sort((h1, h2) => h1.id_hose - h2.id_hose);
+    const result = hoses.sort((h1, h2) => h1.id_hose - h2.id_hose);
+    this.hosesByPumpAndSideCache.set(cacheKey, result);
+    return result;
+  }
+
+  trackByHoseId(index: number, hose: Hose) {
+    return hose._id;
+  }
+
+  trackByPumpId(index: number, pump: Pump) {
+    return pump._id;
   }
 
   /**
@@ -297,7 +317,14 @@ export class TankersComponent implements OnInit {
    * Busca si hay una venta en esta manguera, si la hay entonces redirige al componente que muestra información de la venta, si no hay venta
    * entonces abre el diálogo para ingresar la placa del vehículo y poder autorizar venta
    */
+  public isProcessingHoseClick = false;
+
   openModalOnClickHose(hose: Hose) {
+    if (this.isProcessingHoseClick) {
+      return;
+    }
+    this.isProcessingHoseClick = true;
+
     const sales = this.operatorService.readListSalesToPrint();
     // TODO
     // sales = [{_id: 3, hose: hose}];
@@ -320,6 +347,7 @@ export class TankersComponent implements OnInit {
         value => {
           this.preload = false;
           this.loadingService.dismissLoading();
+          this.isProcessingHoseClick = false;
           const sale = value.body?.body?.sale;
           if (sale) {
             this.operatorService.deleteUserRegister();
@@ -335,6 +363,7 @@ export class TankersComponent implements OnInit {
         }, error => {
           this.preload = false;
           this.loadingService.dismissLoading();
+          this.isProcessingHoseClick = false;
           this.toastService.presentToastError('Error consultando ventas en esta manguera');
           this.openModalAuthorizeSale(hose);
         }

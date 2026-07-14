@@ -249,11 +249,14 @@ export class DialogAuthorizeSaleComponent implements OnInit {
   changeValueVolumenLite(){
     this.formControlQuantityVolumenLite.valueChanges.subscribe((volume) => {
       console.log('Usuario digitó:', volume);
-  
+
       if (volume && volume.toString().length > 0) {
-        // Ejecuta tu lógica aquí
-        let total_money = volume * this.value_product;
-        this.formControlQuantityMoneyLite.setValue(total_money);
+        // Ejecuta tu lógica aquí (redondeado para evitar errores de precisión de punto flotante)
+        let total_money = Math.round(volume * this.value_product);
+        this.formControlQuantityMoneyLite.setValue(total_money, { emitEvent: false });
+      } else {
+        // Si se borra el volumen, el dinero calculado tampoco tiene sentido: se limpia también
+        this.formControlQuantityMoneyLite.setValue('', { emitEvent: false });
       }
     });
 
@@ -262,18 +265,22 @@ export class DialogAuthorizeSaleComponent implements OnInit {
   changeValueMoneyLite(){
     this.formControlQuantityMoneyLite.valueChanges.subscribe((money) => {
       console.log('Usuario digitó:', money);
-  
+
       if (money && money.toString().length > 0) {
-        // Ejecuta tu lógica aquí
-        let total_volume = money / this.value_product;
-        this.formControlQuantityVolumenLite.setValue(total_volume);
+        // Ejecuta tu lógica aquí (redondeado a 3 decimales, precisión estándar de volumen en litros)
+        let total_volume = Math.round((money / this.value_product) * 1000) / 1000;
+        this.formControlQuantityVolumenLite.setValue(total_volume, { emitEvent: false });
+      } else {
+        // Si se borra el dinero, el volumen calculado tampoco tiene sentido: se limpia también
+        this.formControlQuantityVolumenLite.setValue('', { emitEvent: false });
       }
     });
 
   }
 
   setMoneyOption(money:number){
-    let total_volume = money / this.value_product;
-      this.formControlQuantityVolumenLite.setValue(total_volume);
+    let total_volume = Math.round((money / this.value_product) * 1000) / 1000;
+    this.formControlQuantityVolumenLite.setValue(total_volume, { emitEvent: false });
+    this.formControlQuantityMoneyLite.setValue(money, { emitEvent: false });
   }
 }

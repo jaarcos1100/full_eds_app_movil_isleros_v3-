@@ -131,7 +131,7 @@
           <ion-grid class="flexbox-middle py-0">
             <ion-row class="flexbox-middle">
               <ion-col style="max-width: max-content" class="column-pump my-0"
-                       *ngFor="let pump of isleSummary.pumps; let i = index;">
+                       *ngFor="let pump of isleSummary.pumps; let i = index; trackBy: trackByPumpId;">
                 <h2 class="color-dark-blue ion-text-center h2-pump-name color-white flexbox-middle">
                   <img src="./assets/summary/pump.svg" alt="" width="40" class="mr-3">
                   Surtidor {{pump.id_pump}}
@@ -142,8 +142,9 @@
                     <h3 class="ion-text-center pr-3 color-white">Lado 1</h3>
                     <ion-row (click)="openModalOnClickHose(hose)"
                              class="background-white card-hose mb-3 ml-3 mr-1 mat-elevation-z15 p-0"
+                             [class.hose-disabled]="isProcessingHoseClick"
                              [style]="hose?.product?.name?.toUpperCase()?.startsWith('GASOLINA') ? {color: '#bd27d4'} : hose?.product?.name?.toUpperCase()?.startsWith('UREA') ? {color: '#043cf'} : {color: '#b5d62e'}"
-                             *ngFor="let hose of getHosesOfPumpAndSide(pump, 0); let i = index;">
+                             *ngFor="let hose of getHosesOfPumpAndSide(pump, 0); let i = index; trackBy: trackByHoseId;">
                       <div class="py-1 pl-4 ion-text-left">
                         <h6>
                           <span class="number-id-sale">{{hose.id_hose}}</span>
@@ -158,8 +159,9 @@
                     <h3 class="ion-text-center pl-3 color-white">Lado 2</h3>
                     <ion-row (click)="openModalOnClickHose(hose)"
                              class="background-white card-hose mb-3 mr-3 ml-1 mat-elevation-z15 p-0"
+                             [class.hose-disabled]="isProcessingHoseClick"
                              [style]="hose?.product?.name?.toUpperCase()?.startsWith('GASOLINA') ? {color: '#bd27d4'} : hose?.product?.name?.toUpperCase()?.startsWith('UREA') ? {color: '#043cf'} : {color: '#b5d62e'}"
-                             *ngFor="let hose of getHosesOfPumpAndSide(pump, 1); let i = index;">
+                             *ngFor="let hose of getHosesOfPumpAndSide(pump, 1); let i = index; trackBy: trackByHoseId;">
                       <div class="py-1 pl-4 ion-text-left">
                         <h6>
                           <span class="number-id-sale">{{hose.id_hose}}</span>

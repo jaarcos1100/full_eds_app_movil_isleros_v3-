@@ -43,9 +43,8 @@ export class InterceptorService implements HttpInterceptor {
         // return this.handle401Error(request, next);
       } else if (error instanceof HttpErrorResponse && error.status === 403) {
         this.navCtrl.navigateRoot('');
-      } else {
-        return throwError(error);
       }
+      return throwError(error);
     }),
       timeout(30000));
   }
