@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Solo para que el APK de pruebas enlace; no afecta a tu app -->
+    <style name="Theme.SplashScreen" parent="@android:style/Theme.NoDisplay" />
+</resources>
