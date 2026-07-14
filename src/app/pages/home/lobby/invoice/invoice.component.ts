@@ -228,18 +228,25 @@ export class InvoiceComponent {
     };
     this.operatorService.getVehicleDetails(plaque).subscribe(
       (value: any) => {
-        this.userDataInvoice = value.body;
-        this.currentUser = 0;
-        const companies = this.userDataInvoice.companies;
-        if (companies && this.lastUserCreated) {
-          // @ts-ignore
-          // @ts-ignore
-          this.currentUser = companies.findIndex(c => c.nit === this.lastUserCreated.nit || c.nit === this.lastUserCreated.document);
-          if (this.currentUser === -1) {
-            this.currentUser = 0;
-          }
-        }
+        // Se apaga el spinner de una vez: si algo más abajo lanza una excepción
+        // (respuesta con forma inesperada), el spinner no debe quedar colgado.
         this.preloadInvoice = false;
+        try {
+          this.userDataInvoice = value.body;
+          this.currentUser = 0;
+          const companies = this.userDataInvoice?.companies;
+          if (companies && this.lastUserCreated) {
+            // @ts-ignore
+            this.currentUser = companies.findIndex(c => c.nit === this.lastUserCreated.nit || c.nit === this.lastUserCreated.document);
+            if (this.currentUser === -1) {
+              this.currentUser = 0;
+            }
+          }
+        } catch (e) {
+          console.log(e);
+          this.errorMessage = 'Error obteniendo los datos de la factura, intente nuevamente';
+          this.toastService.presentToastError('Error obteniendo los datos de la factura, intente nuevamente');
+        }
       },
       (error: HttpErrorResponse) => {
         this.preloadInvoice = false;
@@ -461,8 +468,6 @@ export class InvoiceComponent {
   goToStep3() {
     this.current_step = 3;
     this.formAnticipate.reset();
-
-
   }
 
   findAndRemoveByAttribute(list, attribute, value) {
@@ -782,7 +787,9 @@ export class InvoiceComponent {
         console.log(error.error);
         this.preloadInvoice = false;
         this.forwardInvoicesAndEmails();
-        if (error.error?.body?.status == 500) {
+        if (error.status === 401 || error.status === 403) {
+          this.toastService.presentToastError('Tu turno ha caducado, por favor inicia sesión nuevamente.');
+        } else if (error.error?.body?.status == 500) {
           this.deleteInvoice();
           this.countCopies++;
         } else if (errMessage === 'NOT_ENOUGH_CREDIT') {
@@ -942,9 +949,13 @@ export class InvoiceComponent {
               this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
             }
           },
-            error1 => {
+            (error1: HttpErrorResponse) => {
               this.preloadInvoice = false;
-              this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+              if (error1.status === 401 || error1.status === 403) {
+                this.toastService.presentToastError('Tu turno ha caducado, por favor inicia sesión nuevamente.');
+              } else {
+                this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+              }
             });
         } else if (this.currentInvoiceCode === 'fe') {// factura electronica
           const selectedCompany = this.getFullCompany();
@@ -968,9 +979,13 @@ export class InvoiceComponent {
               this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
             }
           },
-            error1 => {
+            (error1: HttpErrorResponse) => {
               this.preloadInvoice = false;
-              this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+              if (error1.status === 401 || error1.status === 403) {
+                this.toastService.presentToastError('Tu turno ha caducado, por favor inicia sesión nuevamente.');
+              } else {
+                this.toastService.presentToastError('Error al facturar, por favor intente nuevamente.');
+              }
             });
         }
       }
