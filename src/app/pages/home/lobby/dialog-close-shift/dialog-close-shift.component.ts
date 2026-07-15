@@ -3,8 +3,7 @@ import { OperatorService } from '../../../../services/operator/operator.service'
 import { FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { AlertController, ModalController, NavController } from '@ionic/angular';
-import { Util } from 'src/app/util/Util';
+import { ModalController, NavController } from '@ionic/angular';
 import { LoadingService } from '../../../../services/loading/loading.service';
 import { IsleSummary } from '../../../../models/isle-summary/IsleSummary';
 import { LocalStorageIpPortService } from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
@@ -39,7 +38,7 @@ export class DialogCloseShiftComponent {
   public is_integrate_print:boolean;
 
 
-  constructor(public navCtrl: NavController, private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController, private loadingService: LoadingService, public dataphoneService:DataphoneService, private alertController: AlertController) {
+  constructor(public navCtrl: NavController, private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController, private loadingService: LoadingService, public dataphoneService:DataphoneService) {
     this.is_lite = LocalStorageIpPortService.getIsFullEDSLite() == true ? true : false;
     this.is_integrate_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
 
@@ -223,7 +222,6 @@ export class DialogCloseShiftComponent {
               value3 => {
                 console.log(JSON.stringify(value3));
                 this.print(value3);
-                this.showPaymentBreakdown(value3);
               }
             );
             this.operatorService.clearShift();
@@ -326,7 +324,6 @@ export class DialogCloseShiftComponent {
                             this.print(value3);
                           }
                           console.log(value3);
-                          this.showPaymentBreakdown(value3);
                         }
                       );
                       this.operatorService.clearShift();
@@ -398,30 +395,6 @@ export class DialogCloseShiftComponent {
     }
     // console.log(hoses);
     return hoses.sort((h1, h2) => h1.id_hose - h2.id_hose);
-  }
-
-  /**
-   * Muestra el desglose de ventas del turno por método de pago (efectivo, tarjetas, transferencia, cheque),
-   * calculado por el backend y devuelto dentro de la respuesta de resumeShift.
-   */
-  async showPaymentBreakdown(resumeShiftResponse: any) {
-    const breakdown: { method: string; total: number }[] = resumeShiftResponse?.body?.data?.Tpago;
-    if (!breakdown || breakdown.length === 0) {
-      return;
-    }
-    const message = breakdown.map(item => `${item.method}: ${Util.formatMoney(item.total)}`).join('<br>');
-    const alert = await this.alertController.create({
-      cssClass: 'alert-cancel-continue',
-      header: 'Desglose por medio de pago',
-      message,
-      buttons: [
-        {
-          text: 'Aceptar',
-          cssClass: 'alert-continue-button'
-        }
-      ]
-    });
-    await alert.present();
   }
 
   async print(data_json){
