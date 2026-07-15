@@ -439,6 +439,7 @@ public void print(PluginCall call) {
             double totalVenta = data.optDouble("Tven", 0);
             double canastilla = data.optDouble("Tcan", 0);
             String islero = data.optString("islero", "");
+            JSONArray tpago = data.optJSONArray("Tpago");
 
             Log.d("ResultActivity", "Lego a impresion de cierre de turno 44444 ");
 
@@ -524,6 +525,18 @@ public void print(PluginCall call) {
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
             valuesToSend.add(TEXT + ",VENTA TOTAL : $" + (int) totalVenta + "," + FONT_BIG + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+
+            if (tpago != null) {
+                valuesToSend.add(TEXT + ",DESGLOSE POR MEDIO DE PAGO," + FONT_NORMAL + "," + ALIGN_CENTER);
+                for (int i = 0; i < tpago.length(); i++) {
+                    JSONObject pago = tpago.getJSONObject(i);
+                    String method = pago.optString("method", "");
+                    int total = pago.optInt("total", 0);
+                    valuesToSend.add(TEXT + "," + method + " : $" + total + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                }
+                valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+            }
+
             valuesToSend.add(TEXT + "," + islero + "," + FONT_NORMAL + "," + ALIGN_CENTER);
             valuesToSend.add(TEXT + ",FIN DE CORTE.," + FONT_NORMAL + "," + ALIGN_CENTER);
 
