@@ -318,11 +318,15 @@ export class TankersComponent implements OnInit {
    * entonces abre el diálogo para ingresar la placa del vehículo y poder autorizar venta
    */
   public isProcessingHoseClick = false;
+  private lastHoseClickTime = 0;
+  private static readonly HOSE_CLICK_COOLDOWN_MS = 1000;
 
   openModalOnClickHose(hose: Hose) {
-    if (this.isProcessingHoseClick) {
+    const now = Date.now();
+    if (this.isProcessingHoseClick || (now - this.lastHoseClickTime) < TankersComponent.HOSE_CLICK_COOLDOWN_MS) {
       return;
     }
+    this.lastHoseClickTime = now;
     this.isProcessingHoseClick = true;
 
     const sales = this.operatorService.readListSalesToPrint();
@@ -374,17 +378,6 @@ export class TankersComponent implements OnInit {
 
   private startLoading() {
     this.preload = true;
-    this.loadingService.presentLoading().then(() => {
-      this.stopLoading();
-    });
-  }
-
-  stopLoading() {
-    const interval = setInterval(() => {
-      if (this.preload === false) {
-        clearInterval(interval);
-        this.loadingService.dismissLoading();
-      }
-    }, 500);
+    this.loadingService.presentLoading();
   }
 }
