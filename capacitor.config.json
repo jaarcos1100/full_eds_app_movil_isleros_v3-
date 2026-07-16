@@ -9,6 +9,7 @@
   ],
   "server": {
     "cleartext": true,
+    "androidScheme": "http",
     "allowNavigation": ["*"]
   },
   "linuxAndroidStudioPath": "/mnt/B0661F0A661ED0C8/Programas Linux/android-studio/bin/studio.sh",
