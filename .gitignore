@@ -34,3 +34,4 @@ npm-debug.log*
 .angular/
 .angular/cache/
 dataphone/node_modules/
+credibanco/node_modules/
