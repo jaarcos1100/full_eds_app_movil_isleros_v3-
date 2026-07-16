@@ -440,6 +440,7 @@ public void print(PluginCall call) {
             double canastilla = data.optDouble("Tcan", 0);
             String islero = data.optString("islero", "");
             JSONArray tpago = data.optJSONArray("Tpago");
+            double totalDescuento = data.optDouble("Tdesc", 0);
 
             Log.d("ResultActivity", "Lego a impresion de cierre de turno 44444 ");
 
@@ -524,6 +525,7 @@ public void print(PluginCall call) {
             valuesToSend.add(TEXT + ",CANASTILLA : $" + (int) canastilla + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
             valuesToSend.add(TEXT + ",VENTA TOTAL : $" + (int) totalVenta + "," + FONT_BIG + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",DESCUENTO APLICADO : $" + (int) totalDescuento + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
 
             if (tpago != null) {
