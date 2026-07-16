@@ -336,6 +336,7 @@ export class TankersComponent implements OnInit {
       this.operatorService.deleteUserRegister();
       this.operatorService.saveIdSaleOnInfoSaleOption(saleInThisHose?._id);
       this.navCtrl.navigateRoot('operator/lobby/info-sale');
+      this.isProcessingHoseClick = false;
     } else {
       this.startLoading();
       const body = {
@@ -347,7 +348,6 @@ export class TankersComponent implements OnInit {
         value => {
           this.preload = false;
           this.loadingService.dismissLoading();
-          this.isProcessingHoseClick = false;
           const sale = value.body?.body?.sale;
           if (sale) {
             this.operatorService.deleteUserRegister();
@@ -360,12 +360,13 @@ export class TankersComponent implements OnInit {
           } else {
             this.openModalAuthorizeSale(hose);
           }
+          this.isProcessingHoseClick = false;
         }, error => {
           this.preload = false;
           this.loadingService.dismissLoading();
-          this.isProcessingHoseClick = false;
           this.toastService.presentToastError('Error consultando ventas en esta manguera');
           this.openModalAuthorizeSale(hose);
+          this.isProcessingHoseClick = false;
         }
       );
     }
