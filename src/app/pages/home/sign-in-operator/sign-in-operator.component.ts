@@ -80,7 +80,6 @@ export class SignInOperatorComponent implements OnInit {
           );
         },
         (error: HttpErrorResponse) => {
-          this.toastService.presentToastError('3' + JSON.stringify(error));
           if (error.status === 400) {
             this.toastService.presentToastError('La cédula no se encuentra registrada o activada en la plataforma');
           } else {
