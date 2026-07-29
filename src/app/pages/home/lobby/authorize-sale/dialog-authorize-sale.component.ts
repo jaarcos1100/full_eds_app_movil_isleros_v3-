@@ -166,11 +166,11 @@ export class DialogAuthorizeSaleComponent implements OnInit {
           },
           error => {
             this.preload = false;
-            this.toastService.presentToastError('Error en la conexión, intente nuevamente');
+            this.toastService.presentToastError(error?.error?.body?.message || 'Error en la conexión, intente nuevamente');
           }
         );
       }
-   
+
   }
 
   next() {
@@ -224,7 +224,7 @@ export class DialogAuthorizeSaleComponent implements OnInit {
         },
         error => {
           this.preload = false;
-          this.toastService.presentToastError('Error en la conexión, intente nuevamente');
+          this.toastService.presentToastError(error?.error?.body?.message || 'Error en la conexión, intente nuevamente');
         }
       );
     } else {
