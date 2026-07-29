@@ -10,3 +10,12 @@ ion-toolbar {
     --background: #277aa2 !important;
     --color: white;
   }
+
+// .center-element centra verticalmente con align-items + height:100%. Cuando el
+// contenido (cédula + surtidores) es más alto que el viewport, esto deja el
+// contenido excedente fuera del área de scroll (bug conocido de flexbox), por
+// lo que el input de cédula queda inalcanzable con muchos surtidores.
+:host ::ng-deep .center-element {
+  height: auto !important;
+  align-items: flex-start !important;
+}

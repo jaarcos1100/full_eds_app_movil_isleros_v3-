@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { OperatorService } from '../../../../services/operator/operator.service';
 import { FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { ModalController, NavController } from '@ionic/angular';
+import { IonContent, ModalController, NavController } from '@ionic/angular';
 import { LoadingService } from '../../../../services/loading/loading.service';
 import { IsleSummary } from '../../../../models/isle-summary/IsleSummary';
 import { LocalStorageIpPortService } from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
@@ -23,6 +23,8 @@ import {DataphoneService} from '../../../../services/dataphone/dataphone.service
   styleUrls: ['./dialog-close-shift.component.scss']
 })
 export class DialogCloseShiftComponent {
+  @ViewChild('content') content: IonContent;
+  @ViewChild('dniSection') dniSection: ElementRef;
   preload = false;
   errorMessageCloseShift: string;
   formControlDNI: FormControl = new FormControl('',
@@ -244,6 +246,7 @@ export class DialogCloseShiftComponent {
       });
     } else {
       this.formControlDNI.markAsTouched();
+      this.scrollToDNIField();
     }
   }
 
@@ -361,7 +364,12 @@ export class DialogCloseShiftComponent {
       });
     } else {
       this.formControlDNI.markAsTouched();
+      this.scrollToDNIField();
     }
+  }
+
+  private scrollToDNIField() {
+    this.dniSection?.nativeElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   /**
