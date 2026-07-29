@@ -14,7 +14,7 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 export class DialogPutVolumenCloseComponent {
 
   formVolume: FormControl = new FormControl('',
-    [Validators.required]
+    [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/), Validators.min(0)]
   );
 
   // formControlDigit: FormControl = new FormControl('',
@@ -39,6 +39,7 @@ export class DialogPutVolumenCloseComponent {
     // this.getInfoOrganization();
     this.data = this.navParams.get('volume');
     this.formVolume.setValue(this.data);
+    this.sanitizeVolumeInput();
   }
 
 
@@ -46,14 +47,36 @@ export class DialogPutVolumenCloseComponent {
   ngOnInit(): void {
   }
 
+  /**
+   * type="number" no bloquea de forma confiable letras en todos los navegadores/dispositivos
+   * (ej. pegar texto o teclados de autocompletado), así que se limpia el valor en cada cambio.
+   */
+  private sanitizeVolumeInput() {
+    this.formVolume.valueChanges.subscribe((value) => {
+      if (value === null || value === undefined) {
+        return;
+      }
+      const sanitized = String(value).replace(/[^0-9.]/g, '');
+      if (sanitized !== value) {
+        this.formVolume.setValue(sanitized, {emitEvent: false});
+      }
+    });
+  }
+
   saveVolumen() {
-    this.modalController.dismiss(this.formVolume.value);
+    if (this.formVolume.valid) {
+      this.modalController.dismiss(this.formVolume.value);
+    } else {
+      this.formVolume.markAsTouched();
+    }
   }
 
   getErrorMessageNumber() {
     return this.formVolume.hasError('required')
       ? 'Este campo es obligatorio'
-      : '';
+      : this.formVolume.hasError('pattern') || this.formVolume.hasError('min')
+        ? 'Ingresa un valor numérico válido'
+        : '';
   }
 
 
