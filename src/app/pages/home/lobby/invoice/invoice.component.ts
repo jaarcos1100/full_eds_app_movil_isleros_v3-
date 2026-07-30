@@ -637,7 +637,7 @@ export class InvoiceComponent {
    * Verifica si la empresa configurado tiene Cupo Libre
    */
   haveFreeQuotaCurrentCompany() {
-    let have_free_quota = this.currentUser > 0 && this.userDataInvoice.companies[this.currentUser].have_open_credit;
+    let have_free_quota = this.currentUser > 0 && this.restriction?.type_sold === 'cupo';
     return have_free_quota;
   }
 
