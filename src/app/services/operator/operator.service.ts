@@ -305,6 +305,27 @@ export class OperatorService {
   }
 
   /**
+   * Valida si el turno (token JWT) ya caducó, sin necesidad de esperar la respuesta del backend.
+   * Se usa para evitar enviar autorizaciones de venta que quedarían atascadas por un token vencido.
+   */
+  isSessionExpired(): boolean {
+    const token: any = JSON.parse(localStorage.getItem('token'));
+    if (!token || !token.access_token) {
+      return true;
+    }
+    try {
+      const payload = token.access_token.split('.')[1];
+      const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+      if (!decoded.exp) {
+        return false;
+      }
+      return Date.now() >= decoded.exp * 1000;
+    } catch (err) {
+      return true;
+    }
+  }
+
+  /**
    * Almacena un boolean para saber su la venta que se está realizando es de Canastilla
    */
   saveIsBasketSale(b: boolean) {

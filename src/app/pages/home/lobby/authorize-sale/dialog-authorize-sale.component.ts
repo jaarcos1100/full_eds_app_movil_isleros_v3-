@@ -179,6 +179,12 @@ export class DialogAuthorizeSaleComponent implements OnInit {
   }
 
   auhtorize(){
+    if (this.operatorService.isSessionExpired()) {
+      this.toastService.presentToastError('Tu turno ha caducado, por favor inicia sesión nuevamente.');
+      this.modalController.dismiss();
+      this.navCtrl.navigateRoot('');
+      return;
+    }
     if(this.is_lite){
       this.nextLite();
     }else{
