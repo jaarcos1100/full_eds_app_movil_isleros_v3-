@@ -281,6 +281,7 @@ export class DialogAuthorizeSaleComponent implements OnInit {
         }
       );
     } else {
+      this.formControlMode.markAsTouched();
       this.formControlPlaque.markAsTouched();
     }
   }

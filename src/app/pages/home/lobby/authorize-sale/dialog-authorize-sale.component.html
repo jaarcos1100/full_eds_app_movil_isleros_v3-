@@ -127,7 +127,7 @@
         </div>
         <div *ngIf="is_lite == false">
           <div class="error-mode">
-            <mat-error *ngIf="formControlMode.errors?.required">{{
+            <mat-error *ngIf="formControlMode.touched && formControlMode.errors?.required">{{
               getErrorMessageMode()
             }}</mat-error>
           </div>
