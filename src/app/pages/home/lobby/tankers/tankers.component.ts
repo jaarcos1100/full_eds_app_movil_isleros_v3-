@@ -35,6 +35,7 @@ export class TankersComponent implements OnInit {
   private readonly maxSaleMinutes = 5;
   private lastSaleId: string;
   private intervalOpenSocket: any;
+  private isOpeningAuthorizeSale = false;
   private intervalHistoricalSales: any;
 
   constructor(
@@ -264,6 +265,10 @@ export class TankersComponent implements OnInit {
   }
 
   async openModalAuthorizeSale(hose) {
+    if (this.isOpeningAuthorizeSale) {
+      return;
+    }
+    this.isOpeningAuthorizeSale = true;
     const modal = await this.modalController.create({
       component: DialogAuthorizeSaleComponent,
       cssClass: 'fullscreen',
@@ -272,11 +277,15 @@ export class TankersComponent implements OnInit {
       }
     });
     modal.onDidDismiss().then(res => {
+      this.isOpeningAuthorizeSale = false;
       if (res.data === 'created') {
         // this.ionViewDidEnter();
       }
-    }).catch();
-    return await modal.present();
+    }).catch(() => {
+      this.isOpeningAuthorizeSale = false;
+    });
+    await modal.present();
+    this.isOpeningAuthorizeSale = false;
   }
 
   /**
