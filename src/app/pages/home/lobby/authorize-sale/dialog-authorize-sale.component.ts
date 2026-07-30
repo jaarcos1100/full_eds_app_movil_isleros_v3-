@@ -7,6 +7,8 @@ import {ToastService} from '../../../../services/toast/toast.service';
 import {ModalController, NavParams, NavController} from '@ionic/angular';
 import {LoadingService} from '../../../../services/loading/loading.service';
 import {LocalStorageIpPortService} from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {DialogClientQuotaComponent} from './dialog-client-quota/dialog-client-quota.component';
 
 
 // const SERVER_URL = 'ws://54.82.57.60:3001/';
@@ -39,6 +41,8 @@ export class DialogAuthorizeSaleComponent implements OnInit {
 
   public is_lite:boolean;
 
+  formControlDocument: FormControl = new FormControl('');
+  public companiesList: any[] = [];
 
   constructor(private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController,
               private navParams: NavParams, private loadingService: LoadingService, public navCtrl: NavController) {
@@ -65,6 +69,49 @@ export class DialogAuthorizeSaleComponent implements OnInit {
     console.log(this.value_product);
     this.changeValueVolumenLite();
     this.changeValueMoneyLite();
+    this.watchDocumentSearch();
+    this.uppercasePlaque();
+  }
+
+  private uppercasePlaque() {
+    this.formControlPlaque.valueChanges.subscribe((value: string) => {
+      if (value && value !== value.toUpperCase()) {
+        this.formControlPlaque.setValue(value.toUpperCase(), { emitEvent: false });
+      }
+    });
+  }
+
+  private watchDocumentSearch() {
+    this.formControlDocument.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe((value: string) => {
+      if (!value || value.trim().length < 3) {
+        this.companiesList = [];
+        return;
+      }
+      this.operatorService.searchCompanyByDocument(value).subscribe(
+        (res: any) => {
+          this.companiesList = res?.body?.companies || [];
+        },
+        () => {
+          this.companiesList = [];
+        }
+      );
+    });
+  }
+
+  async onSelectCompany(company: any) {
+    const modal = await this.modalController.create({
+      component: DialogClientQuotaComponent,
+      cssClass: 'fullscreen',
+      componentProps: { company }
+    });
+    modal.onDidDismiss().then(() => {
+      this.companiesList = [];
+      this.formControlDocument.setValue('', { emitEvent: false });
+    });
+    await modal.present();
   }
 
   /**

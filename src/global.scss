@@ -470,6 +470,13 @@ ion-router-outlet {
   padding: 0 !important;
 }
 
+// El panel de mat-autocomplete se pinta en .cdk-overlay-container, que Angular agrega
+// directamente al <body>. Los ion-modal usan un z-index muy alto, así que sin esto el
+// panel queda oculto detrás del modal cuando el autocomplete se usa dentro de uno.
+.cdk-overlay-container {
+  z-index: 30000 !important;
+}
+
 .color-darkslategrey {
   color: darkslategray !important;
 }

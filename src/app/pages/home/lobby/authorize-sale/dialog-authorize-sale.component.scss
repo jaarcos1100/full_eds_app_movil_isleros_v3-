@@ -1,52 +1,63 @@
-@import '../../../../../global';
-@import '../../operator-page.component';
+@import "../../../../../global";
+@import "../../operator-page.component";
 
 ion-toolbar {
-    --background: #277aa2 !important;
-    --color: white;
+  --background: #277aa2 !important;
+  --color: white;
 }
 
-.background_image{
-    background-image: url("../../../../../assets/background/main_background_tablet.png");
-    --background: none;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  
-.error-mode{
-    padding: 10px 0px;
-    font-size: 14px;
+:host ::ng-deep .center-element {
+  height: auto !important;
+  align-items: flex-start !important;
 }
 
-.plaque-field{
-    width: 200px;
-    font-size: 12px;
+.background_image {
+  background-image: url("../../../../../assets/background/main_background_tablet.png");
+  --background: none;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.value-field{
-    width: 250px;
-    font-size: 12px;
+.error-mode {
+  padding: 10px 0px;
+  font-size: 14px;
 }
 
-.mat-button-toggle-group{
-    border:none;
+.plaque-field {
+  width: 200px;
+  font-size: 12px;
 }
 
-.mat-button-toggle{
-    width: 110px !important;
-    height: 110px !important;
-    margin-left: 5px;
-    margin-right: 5px;
-    border-radius: 3px !important;
+.quota-search-field {
+  width: 320px;
+  max-width: 90%;
+  font-size: 12px;
 }
-.label-option{
-    font-size: 18px;
+
+.value-field {
+  width: 250px;
+  font-size: 12px;
 }
-.money-value{
-    font-size: 26px;
-    color: #fff;
+
+.mat-button-toggle-group {
+  border: none;
 }
-.span-option-full-lite{
-    font-size: 20px;
+
+.mat-button-toggle {
+  width: 110px !important;
+  height: 110px !important;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 3px !important;
+}
+.label-option {
+  font-size: 18px;
+}
+.money-value {
+  font-size: 26px;
+  color: #fff;
+}
+.span-option-full-lite {
+  font-size: 20px;
 }

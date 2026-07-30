@@ -61,6 +61,11 @@ export class OperatorService {
     return this.http.post('vehicle/send_authorization', registerSale);
   }
 
+  searchCompanyByDocument(value: string) {
+    const headers = new HttpHeaders().set('page', '1').set('limit', '10');
+    return this.http.post('company/search', { value }, { headers });
+  }
+
   registerSaleLite(sale: any) {
     return this.http.post('sale/lite/create', sale);
   }

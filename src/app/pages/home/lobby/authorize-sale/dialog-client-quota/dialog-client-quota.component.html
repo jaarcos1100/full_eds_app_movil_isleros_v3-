@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons
+      slot="start"
+      class="button-back"
+      (click)="this.modalController.dismiss()"
+    >
+      <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
+    </ion-buttons>
+    <ion-title class="ion-text-center"> Cupo del cliente </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="background_image">
+  <ion-col class="center-element">
+    <ion-row>
+      <ion-col>
+        <h2 class="ion-text-center color-white">Cupo del cliente</h2>
+        <div class="ion-text-center mt-4">
+          <h3 class="color-white">{{ company.name }}</h3>
+          <p class="color-white">
+            Nit: {{ company.nit
+            }}{{ company.digit_check ? "-" + company.digit_check : "" }}
+          </p>
+          <ng-container *ngIf="!preload">
+            <ng-container *ngIf="hasCupo; else noCupo">
+              <h1 class="color-white">{{ formatCurrency(company.credit) }}</h1>
+              <p class="color-white">Cupo actual</p>
+            </ng-container>
+            <ng-template #noCupo>
+              <div class="no-cupo-message">
+                <ion-icon name="warning-outline"></ion-icon>
+                <span>Cliente no habilitado para cupo</span>
+              </div>
+            </ng-template>
+          </ng-container>
+        </div>
+        <div class="center-horizontal mt-5">
+          <ion-button
+            class="ion-button-width-1-5em main-button"
+            (click)="modalController.dismiss()"
+          >
+            Regresar
+          </ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-content>

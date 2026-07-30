@@ -1,45 +1,85 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start"
-                 class="button-back"
-                 (click)="this.modalController.dismiss();">
+    <ion-buttons
+      slot="start"
+      class="button-back"
+      (click)="this.modalController.dismiss()"
+    >
       <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
     </ion-buttons>
-    <ion-title (click)="this.modalController.dismiss();">
-      Regresar
-    </ion-title>
+    <ion-title (click)="this.modalController.dismiss()"> Carga </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="background_image">
   <ion-col class="center-element">
     <ion-col size="12" class="ion-text-center">
-      <h1 class="color-white">
-        Ingresa la placa del vehículo
-      </h1>
+      <h1 class="color-white">Consultar cupo por documento o nombre</h1>
+      <div class="my-4 div-form">
+        <mat-form-field class="mat-form-field-operator quota-search-field">
+          <input
+            placeholder="Documento o nombre"
+            matInput
+            [formControl]="formControlDocument"
+            [matAutocomplete]="autoCompanyQuota"
+          />
+        </mat-form-field>
+        <mat-autocomplete
+          autoActiveFirstOption
+          #autoCompanyQuota="matAutocomplete"
+        >
+          <mat-option
+            *ngFor="let option of companiesList"
+            (onSelectionChange)="onSelectCompany(option)"
+            [value]="option.nit"
+          >
+            <span
+              >Nit: {{ option.nit
+              }}{{ option.digit_check ? "-" + option.digit_check : "" }} -
+              {{ option.name }}</span
+            >
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <h1 class="color-white">Ingresa la placa del vehículo</h1>
       <div>
         <div class="my-4 div-form">
           <mat-form-field class="mat-form-field-operator plaque-field">
-            <input placeholder="Placa" matInput [formControl]="formControlPlaque">
-            <mat-error>{{getErrorMessagePlate()}}</mat-error>
+            <input
+              placeholder="Placa"
+              matInput
+              maxlength="6"
+              [formControl]="formControlPlaque"
+            />
+            <mat-error>{{ getErrorMessagePlate() }}</mat-error>
           </mat-form-field>
         </div>
 
-        <div *ngIf = "is_lite">
+        <div *ngIf="is_lite">
           <mat-form-field class="value-field">
-            <input placeholder="Cantidad de volumen" matInput [formControl]="formControlQuantityVolumenLite" type="number">
-            <mat-error>{{getErrorMessageQuantityVolumenLite()}}</mat-error>
+            <input
+              placeholder="Cantidad de volumen"
+              matInput
+              [formControl]="formControlQuantityVolumenLite"
+              type="number"
+            />
+            <mat-error>{{ getErrorMessageQuantityVolumenLite() }}</mat-error>
           </mat-form-field>
         </div>
 
-        <div *ngIf = "is_lite">
+        <div *ngIf="is_lite">
           <mat-form-field class="value-field">
-            <input placeholder="Cantidad de dinero" matInput [formControl]="formControlQuantityMoneyLite" type="number">
-            <mat-error>{{getErrorMessageQuantityMoneyLite()}}</mat-error>
+            <input
+              placeholder="Cantidad de dinero"
+              matInput
+              [formControl]="formControlQuantityMoneyLite"
+              type="number"
+            />
+            <mat-error>{{ getErrorMessageQuantityMoneyLite() }}</mat-error>
           </mat-form-field>
         </div>
-        <br>
-        <div *ngIf = "is_lite">
+        <br />
+        <div *ngIf="is_lite">
           <ion-row>
             <ion-col size="4">
               <ion-button (click)="setMoneyOption(10000)">$10.000</ion-button>
@@ -64,7 +104,7 @@
           </ion-row>
         </div>
 
-        <div class="center-horizontal my-4" *ngIf = "is_lite == false">
+        <div class="center-horizontal my-4" *ngIf="is_lite == false">
           <mat-button-toggle-group [formControl]="formControlMode">
             <!--
             <mat-button-toggle value="0">Full</mat-button-toggle>
@@ -84,38 +124,55 @@
               <span for="volumen" class="span-option-full-lite">Volumen</span>
             </mat-button-toggle>
           </mat-button-toggle-group>
-          
         </div>
-        <div *ngIf = "is_lite == false">
+        <div *ngIf="is_lite == false">
           <div class="error-mode">
-            <mat-error *ngIf='formControlMode.errors?.required'>{{getErrorMessageMode()}}</mat-error>
+            <mat-error *ngIf="formControlMode.errors?.required">{{
+              getErrorMessageMode()
+            }}</mat-error>
           </div>
-          <div *ngIf="formControlMode.value ==1">
-            <span class="money-value">{{ formControlQuantityMoney.value | currency : 'COP' : '' : '1.0-0'}}</span>
-          </div> 
-          <br>
-          <div class="mb-2 div-form" *ngIf="formControlMode.value ==1">
+          <div *ngIf="formControlMode.value == 1">
+            <span class="money-value">{{
+              formControlQuantityMoney.value | currency: "COP" : "" : "1.0-0"
+            }}</span>
+          </div>
+          <br />
+          <div class="mb-2 div-form" *ngIf="formControlMode.value == 1">
             <mat-form-field class="value-field">
-              <input placeholder="Cantidad de dinero" matInput [formControl]="formControlQuantityMoney" type="number" value="0">
-              <mat-error>{{getErrorMessageQuantityMoney()}}</mat-error>
+              <input
+                placeholder="Cantidad de dinero"
+                matInput
+                [formControl]="formControlQuantityMoney"
+                type="number"
+                value="0"
+              />
+              <mat-error>{{ getErrorMessageQuantityMoney() }}</mat-error>
             </mat-form-field>
-            
           </div>
-          <br>
-          <div class="div-form" *ngIf="formControlMode.value ==2">
+          <br />
+          <div class="div-form" *ngIf="formControlMode.value == 2">
             <mat-form-field class="value-field">
-              <input placeholder="Cantidad de volumen" matInput [formControl]="formControlQuantityVolumen" type="number">
-              <mat-error>{{getErrorMessageQuantityVolumen()}}</mat-error>
+              <input
+                placeholder="Cantidad de volumen"
+                matInput
+                [formControl]="formControlQuantityVolumen"
+                type="number"
+              />
+              <mat-error>{{ getErrorMessageQuantityVolumen() }}</mat-error>
             </mat-form-field>
           </div>
         </div>
-         <br>
+        <br />
         <div class="center-horizontal">
-          <ion-button class="ion-button-width-1-5em main-button" (click)="auhtorize()">Continuar</ion-button>
+          <ion-button
+            class="ion-button-width-1-5em main-button"
+            (click)="auhtorize()"
+            >Continuar</ion-button
+          >
         </div>
-<!--        <div class="center-horizontal mt-7rem">-->
-<!--          <ion-button [disabled]="preloadIButton" class="ion-button-width-1-8em button-ibutton" (click)="singInIbutton()">Ibutton</ion-button>-->
-<!--        </div>-->
+        <!--        <div class="center-horizontal mt-7rem">-->
+        <!--          <ion-button [disabled]="preloadIButton" class="ion-button-width-1-8em button-ibutton" (click)="singInIbutton()">Ibutton</ion-button>-->
+        <!--        </div>-->
       </div>
     </ion-col>
   </ion-col>
