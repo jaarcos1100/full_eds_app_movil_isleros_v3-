@@ -12,4 +12,8 @@ export class RestrictionsService {
   getRestrictions(company_id) {
     return this.http.get('company/'+company_id+'/restriction/');
   }
+
+  getBlockedPlaques(company_id) {
+    return this.http.get('vehicle/company/'+company_id+'/blocked_plaques');
+  }
 }

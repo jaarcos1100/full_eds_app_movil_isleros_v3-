@@ -12,6 +12,8 @@ export class DialogClientQuotaComponent implements OnInit {
   public company: Company = this.navParams.get('company');
   public preload = true;
   public hasCupo = false;
+  public blockedPlaques: any[] = [];
+  public preloadBlockedPlaques = true;
 
   constructor(
     public modalController: ModalController,
@@ -30,6 +32,17 @@ export class DialogClientQuotaComponent implements OnInit {
       () => {
         this.hasCupo = false;
         this.preload = false;
+      }
+    );
+
+    this.restrictionsService.getBlockedPlaques(this.company._id).subscribe(
+      (res: any) => {
+        this.blockedPlaques = res?.body?.plaques || [];
+        this.preloadBlockedPlaques = false;
+      },
+      () => {
+        this.blockedPlaques = [];
+        this.preloadBlockedPlaques = false;
       }
     );
   }

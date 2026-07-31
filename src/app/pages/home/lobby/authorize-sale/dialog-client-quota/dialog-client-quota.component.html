@@ -35,6 +35,16 @@
             </ng-template>
           </ng-container>
         </div>
+        <div class="ion-text-center mt-4" *ngIf="!preloadBlockedPlaques && blockedPlaques.length > 0">
+          <div class="no-cupo-message blocked-plaques-message">
+            <div class="blocked-plaques-title">
+              <span>Placas bloqueadas para este cliente</span>
+            </div>
+            <div class="blocked-plaques-list">
+              <span *ngFor="let item of blockedPlaques">{{ item.plaque }}</span>
+            </div>
+          </div>
+        </div>
         <div class="center-horizontal mt-5">
           <ion-button
             class="ion-button-width-1-5em main-button"
