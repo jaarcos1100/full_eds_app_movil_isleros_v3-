@@ -1,2 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Necesario para escribir el QR del recibo en /storage/emulated/0/images/qr,
+      ruta que espera el SDK del datáfono. En Android 6-10 el permiso de escritura
+      es en tiempo de ejecución (ver dataphonePlugin.java); en Android 11+ el
+      almacenamiento público con scoped storage ya no aplica, por eso maxSdkVersion.
+    -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+
+    <application android:requestLegacyExternalStorage="true" />
 </manifest>
