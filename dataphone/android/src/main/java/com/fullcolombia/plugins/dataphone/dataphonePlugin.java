@@ -58,8 +58,43 @@ import android.graphics.BitmapFactory;
 
 @CapacitorPlugin(name = "dataphone")
 public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
+    private static final int STORAGE_PERMISSION_REQUEST_CODE = 1001;
     private PluginCall pendingCall;
     private dataphone implementation = new dataphone();
+
+    @Override
+    protected void load() {
+        super.load();
+        requestStoragePermissionIfNeeded();
+    }
+
+    /**
+     * El QR del recibo se escribe en /storage/emulated/0/images/qr (ruta pública
+     * legada que espera el SDK del datáfono). En Android 6-10 ese permiso es en
+     * tiempo de ejecución; se pide aquí al cargar el plugin para que ya esté
+     * concedido cuando se intente imprimir. En Android 11+ (scoped storage) no aplica.
+     */
+    private void requestStoragePermissionIfNeeded() {
+        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q) {
+            return;
+        }
+        android.app.Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        if (androidx.core.content.ContextCompat.checkSelfPermission(
+                activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            androidx.core.app.ActivityCompat.requestPermissions(
+                activity,
+                new String[]{
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                },
+                STORAGE_PERMISSION_REQUEST_CODE
+            );
+        }
+    }
 
     @PluginMethod
     public void echo(PluginCall call) {
