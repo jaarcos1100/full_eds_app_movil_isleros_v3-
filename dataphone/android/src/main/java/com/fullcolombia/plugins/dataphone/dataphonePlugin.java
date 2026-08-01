@@ -314,8 +314,12 @@ public void print(PluginCall call) {
 
         final String URL_TO_ENCODE = json.optString("url", "");
         Log.d("ResultActivity", "URL"+URL_TO_ENCODE);
-        if (copia ==0) {
-            valuesToSend.addAll(generateQrForPrint(URL_TO_ENCODE));
+        if (copia == 0 && !URL_TO_ENCODE.isEmpty()) {
+            try {
+                valuesToSend.addAll(generateQrForPrint(URL_TO_ENCODE));
+            } catch (Exception qrError) {
+                Log.e("ResultActivity", "Error generando QR del recibo original, se imprime sin QR: " + qrError.getMessage());
+            }
         }
 
 

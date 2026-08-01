@@ -1087,7 +1087,12 @@ export class InvoiceComponent {
     console.log("print");
     if (this.is_integrate_print && this.require_print) {
       console.log("si llego a impresora");
-      await this.dataphoneService.startPrint(data_json);
+      try {
+        await this.dataphoneService.startPrint(data_json);
+      } catch (error) {
+        console.error('Error al imprimir el recibo:', error);
+        this.toastService.presentToastError('No se pudo imprimir el recibo. Verifique la impresora del dispositivo.');
+      }
     }
   }
 
