@@ -1088,6 +1088,10 @@ export class InvoiceComponent {
     if (this.is_integrate_print && this.require_print) {
       console.log("si llego a impresora");
       try {
+        if (data_json && (data_json.fullsuit_id || data_json.fulleds_id)) {
+          const id = data_json.fullsuit_id || data_json.fulleds_id;
+          data_json.url = `https://www.fullsuit.co/app/#/f/${id}`;
+        }
         await this.dataphoneService.startPrint(data_json);
       } catch (error) {
         console.error('Error al imprimir el recibo:', error);
