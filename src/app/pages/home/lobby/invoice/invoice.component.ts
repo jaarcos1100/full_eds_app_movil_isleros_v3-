@@ -1088,9 +1088,8 @@ export class InvoiceComponent {
     if (this.is_integrate_print && this.require_print) {
       console.log("si llego a impresora");
       try {
-        if (data_json && (data_json.fullsuit_id || data_json.fulleds_id)) {
-          const id = data_json.fullsuit_id || data_json.fulleds_id;
-          data_json.url = `https://www.fullsuit.co/app/#/f/${id}`;
+        if (data_json && data_json.QR) {
+          data_json.url = `https://www.fullsuit.co/app/#/f/${data_json.QR}`;
         }
         await this.dataphoneService.startPrint(data_json);
       } catch (error) {
