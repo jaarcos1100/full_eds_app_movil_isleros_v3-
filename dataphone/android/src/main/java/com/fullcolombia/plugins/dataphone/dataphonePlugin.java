@@ -56,7 +56,6 @@ import android.graphics.BitmapFactory;
 @CapacitorPlugin(name = "dataphone")
 public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
     private static final int STORAGE_PERMISSION_REQUEST_CODE = 1001;
-    private static final int STORAGE_PERMISSION_REQUEST_CODE = 1001;
     private PluginCall pendingCall;
     private dataphone implementation = new dataphone();
 
