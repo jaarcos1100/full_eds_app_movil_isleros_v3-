@@ -101,7 +101,7 @@ export class InvoiceComponent {
     this.isBasketSale = operatorService.readIsBasketSale() == 'true';
     this.current_step = 1;// empieza en 1, termina en 3
     this.formControlNIT = new FormControl('',
-      [Validators.minLength(3), Validators.maxLength(15), Validators.pattern('[0-9]+')]
+      [Validators.minLength(3), Validators.maxLength(120)]
     );
     this.currentUser = 1;// posicion de usuario actual
     this.currentInvoice = 0;//  posicion de tipo de factura 
@@ -308,10 +308,8 @@ export class InvoiceComponent {
       : this.formControlNIT.hasError('minlength')
         ? 'Longitud mínima de 3 cacteres'
         : this.formControlNIT.hasError('maxlength')
-          ? 'Longitud máxima de 15 cacteres'
-          : this.formControlNIT.hasError('pattern')
-            ? 'Solo se permiten caracteres numéricos'
-            : '';
+          ? 'Longitud máxima de 120 cacteres'
+          : '';
   }
 
   onSelectOption(option: User | Company | any) {
