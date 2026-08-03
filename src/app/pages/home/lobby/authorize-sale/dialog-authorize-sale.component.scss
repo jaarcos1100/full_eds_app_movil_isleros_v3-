@@ -61,3 +61,17 @@ ion-toolbar {
 .span-option-full-lite {
   font-size: 20px;
 }
+
+// Ajuste solo para pantallas grandes (PC/desktop). No aplica en móvil/tablet,
+// donde el layout actual queda intacto.
+@media (min-width: 900px) {
+  :host ::ng-deep .center-element > ion-col {
+    max-width: 520px !important;
+  }
+
+  .money-options {
+    max-width: 420px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}

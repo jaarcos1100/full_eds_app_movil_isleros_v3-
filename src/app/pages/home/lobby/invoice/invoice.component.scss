@@ -187,3 +187,42 @@ ion-content {
   color: #fff;
 }
 
+// Ajuste solo para pantallas grandes (PC/desktop). Todas las reglas de arriba
+// (usadas en móvil/tablet) quedan intactas; esto solo acota y centra el
+// contenido cuando hay mucho ancho de viewport disponible, en vez de dejar
+// que las unidades "vw" estiren todo el contenido de borde a borde.
+@media (min-width: 900px) {
+  .content-main, .step {
+    width: 600px;
+    max-width: 90vw;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .mat-form-field {
+    width: 90%;
+  }
+
+  #search-client, #btns, #btn-finish {
+    width: 100%;
+  }
+
+  .client-selected {
+    width: 93%;
+    margin-left: 3.5%;
+  }
+
+  .btn-next {
+    width: 90%;
+  }
+
+  .btn-option {
+    width: 42%;
+  }
+
+  .restriction {
+    width: 90%;
+    margin-left: 5%;
+  }
+}
+
