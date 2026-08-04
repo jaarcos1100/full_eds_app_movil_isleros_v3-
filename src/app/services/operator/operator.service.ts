@@ -209,6 +209,10 @@ export class OperatorService {
     return this.http.post(`shift/resume_shift`, shiftBody);
   }
 
+  printShift(idShift: string, body: any) {
+    return this.http.post(`shift/print/${idShift}`, body);
+  }
+
   /**
    * Turno abierto en esta Isla
    */

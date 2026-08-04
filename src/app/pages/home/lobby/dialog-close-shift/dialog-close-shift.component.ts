@@ -3,7 +3,7 @@ import { OperatorService } from '../../../../services/operator/operator.service'
 import { FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { IonContent, ModalController, NavController } from '@ionic/angular';
+import { AlertController, IonContent, ModalController, NavController } from '@ionic/angular';
 import { LoadingService } from '../../../../services/loading/loading.service';
 import { IsleSummary } from '../../../../models/isle-summary/IsleSummary';
 import { LocalStorageIpPortService } from '../../../../services/localStorageIpPort/local-storage-ip-port.service';
@@ -40,7 +40,7 @@ export class DialogCloseShiftComponent {
   public is_integrate_print:boolean;
 
 
-  constructor(public navCtrl: NavController, private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController, private loadingService: LoadingService, public dataphoneService:DataphoneService) {
+  constructor(public navCtrl: NavController, private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController, private loadingService: LoadingService, public dataphoneService:DataphoneService, private alertController: AlertController) {
     this.is_lite = LocalStorageIpPortService.getIsFullEDSLite() == true ? true : false;
     this.is_integrate_print =LocalStorageIpPortService.getIsPrint()==true ?  true : false;
 
@@ -224,6 +224,7 @@ export class DialogCloseShiftComponent {
               value3 => {
                 console.log(JSON.stringify(value3));
                 this.print(value3);
+                this.openReprintClosingAlert(value3);
               }
             );
             this.operatorService.clearShift();
@@ -327,6 +328,7 @@ export class DialogCloseShiftComponent {
                             this.print(value3);
                           }
                           console.log(value3);
+                          this.openReprintClosingAlert(value3);
                         }
                       );
                       this.operatorService.clearShift();
@@ -411,6 +413,45 @@ export class DialogCloseShiftComponent {
       console.log("si llego a impresora con print de cierre");
       await this.dataphoneService.startPrintCloseShift(data_json);
     }
+  }
+
+  async reprint(data_json) {
+    if (this.is_integrate_print) {
+      await this.print(data_json);
+      return;
+    }
+    const idShift = data_json?.body?.shift?._id;
+    if (!idShift) {
+      return;
+    }
+    const isle: Isle = this.operatorService.readLocalHostIsland();
+    this.operatorService.printShift(idShift, { isle: isle.id_isle }).subscribe(
+      () => {},
+      () => {
+        this.toastService.presentToastError('No se logró reimprimir el cierre, por favor intente nuevamente');
+      }
+    );
+  }
+
+  async openReprintClosingAlert(data_json) {
+    const alert = await this.alertController.create({
+      header: '¿Desea imprimir nuevamente el cierre?',
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'NO',
+          role: 'cancel'
+        },
+        {
+          text: 'SÍ',
+          handler: () => {
+            this.reprint(data_json);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 
