@@ -59,6 +59,17 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
     private PluginCall pendingCall;
     private dataphone implementation = new dataphone();
 
+    /**
+     * Formato colombiano con separador de miles (.) y 2 decimales (,), ej: 1.234.567,89
+     */
+    private static String formatCOP(double value) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setDecimalSeparator(',');
+        symbols.setGroupingSeparator('.');
+        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
+        return df.format(value);
+    }
+
     @Override
     public void load() {
         super.load();
@@ -251,11 +262,11 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
                     valuesToSend
                             .add(TEXT + ",Producto : " + p.optString("n", "") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                     valuesToSend
-                            .add(TEXT + ",Precio   : " + p.optDouble("p", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            .add(TEXT + ",Precio   : " + formatCOP(p.optDouble("p", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                     valuesToSend
                             .add(TEXT + ",Cantidad : " + p.optDouble("c", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                     valuesToSend
-                            .add(TEXT + ",Venta    : $" + p.optDouble("v", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            .add(TEXT + ",Venta    : $" + formatCOP(p.optDouble("v", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 }
             }
 
@@ -265,12 +276,12 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
                 double descuento = desc.optDouble("d", 0);
                 if (descuento > 0) {
                     valuesToSend.add(TEXT + separador + FONT_NORMAL + "," + ALIGN_CENTER);
-                    valuesToSend.add(TEXT + ",Desc/GAL: $" + (int) desc.optDouble("d", 0) + "," + FONT_NORMAL + ","
+                    valuesToSend.add(TEXT + ",Desc/GAL: $" + formatCOP(desc.optDouble("d", 0)) + "," + FONT_NORMAL + ","
                             + ALIGN_LEFT);
                     valuesToSend.add(
-                            TEXT + ",PPU: $" + (int) desc.optDouble("ppu", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            TEXT + ",PPU: $" + formatCOP(desc.optDouble("ppu", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                     valuesToSend.add(
-                            TEXT + ",Total: $" + (int) desc.optDouble("v", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            TEXT + ",Total: $" + formatCOP(desc.optDouble("v", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 }
             }
 
@@ -281,11 +292,11 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
             }
 
             valuesToSend.add(
-                    TEXT + ",Subtotal : $" + json.optDouble("sub_total", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-            valuesToSend.add(TEXT + ",Impuestos: $" + json.optDouble("imp", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    TEXT + ",Subtotal : $" + formatCOP(json.optDouble("sub_total", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",Impuestos: $" + formatCOP(json.optDouble("imp", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend
-                    .add(TEXT + ",Retención: $" + json.optString("ret", "0.00") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-            valuesToSend.add(TEXT + ",Total    : $" + json.optDouble("total", 0) + "," + FONT_BIG + "," + ALIGN_LEFT);
+                    .add(TEXT + ",Retención: $" + formatCOP(json.optDouble("ret", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",Total    : $" + formatCOP(json.optDouble("total", 0)) + "," + FONT_BIG + "," + ALIGN_LEFT);
 
             if (!"222222222222-7".equals(documento)) {
                 double cupo = cli.optDouble("c", 0);
@@ -299,7 +310,7 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
                 if (anticipateValue > 0) {
                     valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
                     valuesToSend
-                            .add(TEXT + ",Anticipo : $" + (int) anticipateValue + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            .add(TEXT + ",Anticipo : $" + formatCOP(anticipateValue) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 }
             }
 
@@ -545,8 +556,8 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
                                     TEXT + ",Vol. Final   : " + volFinalStr + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                             valuesToSend
                                     .add(TEXT + ",Venta (GAL) : " + ventaGalStr + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-                            valuesToSend.add(TEXT + ",P/G         : $" + precio + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-                            valuesToSend.add(TEXT + ",Venta (Pesos): $" + (int) (ventaGal * precio) + "," + FONT_NORMAL
+                            valuesToSend.add(TEXT + ",P/G         : $" + formatCOP(precio) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            valuesToSend.add(TEXT + ",Venta (Pesos): $" + formatCOP(ventaGal * precio) + "," + FONT_NORMAL
                                     + "," + ALIGN_LEFT);
 
                         }
@@ -557,11 +568,11 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
             Log.d("ResultActivity", "Lego a impresion de cierre de turno 888888 ");
 
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-            valuesToSend.add(TEXT + ",CANASTILLA : $" + (int) canastilla + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",CANASTILLA : $" + formatCOP(canastilla) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-            valuesToSend.add(TEXT + ",VENTA TOTAL : $" + (int) totalVenta + "," + FONT_BIG + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",VENTA TOTAL : $" + formatCOP(totalVenta) + "," + FONT_BIG + "," + ALIGN_LEFT);
             valuesToSend.add(
-                    TEXT + ",DESCUENTO APLICADO : $" + (int) totalDescuento + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    TEXT + ",DESCUENTO APLICADO : $" + formatCOP(totalDescuento) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
 
             if (tpago != null) {
