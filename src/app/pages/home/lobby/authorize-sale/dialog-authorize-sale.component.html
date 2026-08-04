@@ -136,7 +136,6 @@
               formControlQuantityMoney.value | currency: "COP" : "" : "1.0-0"
             }}</span>
           </div>
-          <br />
           <div class="mb-2 div-form" *ngIf="formControlMode.value == 1">
             <mat-form-field class="value-field">
               <input
@@ -149,7 +148,6 @@
               <mat-error>{{ getErrorMessageQuantityMoney() }}</mat-error>
             </mat-form-field>
           </div>
-          <br />
           <div class="div-form" *ngIf="formControlMode.value == 2">
             <mat-form-field class="value-field">
               <input
@@ -162,7 +160,6 @@
             </mat-form-field>
           </div>
         </div>
-        <br />
         <div class="center-horizontal">
           <ion-button
             class="ion-button-width-1-5em main-button"
