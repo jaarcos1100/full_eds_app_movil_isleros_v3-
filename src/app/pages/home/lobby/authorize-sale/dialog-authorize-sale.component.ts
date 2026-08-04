@@ -207,7 +207,7 @@ export class DialogAuthorizeSaleComponent implements OnInit {
         this.operatorService.registerSaleLite(registerSale).subscribe(
           value => {
             this.showSuccessAlert();
-            
+
             let body:any = value;
             console.log("****************");
             console.log(body.body.sale);
@@ -222,6 +222,11 @@ export class DialogAuthorizeSaleComponent implements OnInit {
             this.toastService.presentToastError(error?.error?.body?.message || 'Error en la conexión, intente nuevamente');
           }
         );
+      } else {
+        this.formControlPlaque.markAsTouched();
+        this.formControlQuantityVolumenLite.markAsTouched();
+        this.formControlQuantityMoneyLite.markAsTouched();
+        this.toastService.presentToastError('Debes completar la placa y la cantidad de volumen o dinero.');
       }
 
   }
