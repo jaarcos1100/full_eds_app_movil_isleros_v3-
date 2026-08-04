@@ -91,6 +91,7 @@ export class InvoiceComponent {
 
   public max_ammount_dataphone: number;
   public organizationId: string;
+  public is_lite: boolean;
   constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService: GlobalVarService, public creditService: CreditService, public restrictionsService: RestrictionsService, public dataphoneService: DataphoneService) {
     if (!operatorService.readSaleID()) {
       navCtrl.navigateRoot('operator/lobby/tankers');
@@ -138,8 +139,9 @@ export class InvoiceComponent {
     );
     this.relative_taxes_dataphone_payment = 0;
 
+    this.is_lite = LocalStorageIpPortService.getIsFullEDSLite() == true ? true : false;
     this.mandatory_print = false;
-    this.require_print = true;
+    this.require_print = !this.is_lite;
     this.enableReturnStep2 = true;
     this.data_invoice = {};
     this.payWithCard = false;
@@ -563,7 +565,7 @@ export class InvoiceComponent {
           this.limit_uvt = true;
         }
         this.mandatory_print = false;
-        if (this.globalVar.require_print) {
+        if (this.globalVar.require_print && !this.is_lite) {
           this.mandatory_print = true;
         }
       },
@@ -594,7 +596,10 @@ export class InvoiceComponent {
           }
 
 
-          if (!this.globalVar.require_print) {
+          if (this.is_lite) {
+            this.mandatory_print = false;
+            this.require_print = false;
+          } else if (!this.globalVar.require_print) {
             if (this.restriction.require_print) {
               this.mandatory_print = true;
               this.require_print = true;

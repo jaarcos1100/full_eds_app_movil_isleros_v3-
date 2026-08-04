@@ -299,7 +299,7 @@
 
             <section>
 
-                <div *ngIf="!mandatory_print && countCopies==0" class="container-toggle">
+                <div *ngIf="!mandatory_print && !is_lite && countCopies==0" class="container-toggle">
                     <span for="" class="label-toggle">Imprimir esta venta</span>
                     <ion-toggle [(ngModel)]="require_print"></ion-toggle>
                 </div>
