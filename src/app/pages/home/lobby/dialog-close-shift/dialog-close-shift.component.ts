@@ -435,15 +435,18 @@ export class DialogCloseShiftComponent {
 
   async openReprintClosingAlert(data_json) {
     const alert = await this.alertController.create({
+      cssClass: 'alert-reprint-shift',
       header: '¿Desea imprimir nuevamente el cierre?',
       backdropDismiss: false,
       buttons: [
         {
           text: 'NO',
-          role: 'cancel'
+          role: 'cancel',
+          cssClass: 'alert-reprint-no'
         },
         {
           text: 'SÍ',
+          cssClass: 'alert-reprint-yes',
           handler: () => {
             this.reprint(data_json);
           }
