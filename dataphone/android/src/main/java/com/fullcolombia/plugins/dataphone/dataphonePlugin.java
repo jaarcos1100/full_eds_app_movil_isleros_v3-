@@ -264,7 +264,7 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
                     valuesToSend
                             .add(TEXT + ",Precio   : " + formatCOP(p.optDouble("p", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                     valuesToSend
-                            .add(TEXT + ",Cantidad : " + p.optDouble("c", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            .add(TEXT + ",Cantidad : " + formatCOP(p.optDouble("c", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                     valuesToSend
                             .add(TEXT + ",Venta    : $" + formatCOP(p.optDouble("v", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 }
@@ -398,7 +398,7 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
                 for (int i = 0; i < productos.length(); i++) {
                     JSONObject p = productos.getJSONObject(i);
                     valuesToSend
-                            .add(TEXT + ",Cantidad : " + p.optDouble("c", 0) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                            .add(TEXT + ",Cantidad : " + formatCOP(p.optDouble("c", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 }
 
                 if (json.has("pun")) {
