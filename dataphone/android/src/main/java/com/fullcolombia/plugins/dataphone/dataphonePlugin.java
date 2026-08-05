@@ -60,12 +60,15 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
     private dataphone implementation = new dataphone();
 
     /**
-     * Formato colombiano con separador de miles (.) y 2 decimales (,), ej: 1.234.567,89
+     * Separador de miles (espacio) y 2 decimales fijos (punto), ej: 1 234 567.89.
+     * No se puede usar coma: el SDK del datáfono delega la impresión a otra app vía
+     * Intent y esa app parte cada línea por comas, así que cualquier coma dentro del
+     * contenido corta el texto ahí mismo.
      */
     private static String formatCOP(double value) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setDecimalSeparator(',');
-        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        symbols.setGroupingSeparator(' ');
         DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
         return df.format(value);
     }
