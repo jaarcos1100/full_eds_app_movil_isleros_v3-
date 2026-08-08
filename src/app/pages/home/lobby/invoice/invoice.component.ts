@@ -530,6 +530,14 @@ export class InvoiceComponent {
     this.currentMethodPayment = i;
   }
 
+  /**
+   * En ventas vale el medio de pago no lo elige el operador: viene fijo de
+   * la restricción de la empresa y es el que sale impreso en la factura.
+   */
+  getValePaymentMethodName(): string {
+    return this.listPayment?.find(p => p.code === this.restriction?.vale_payment_method)?.name;
+  }
+
   chooseInvoiceType(i, code) {
     this.currentInvoice = i;
     this.currentInvoiceCode = code;
@@ -575,17 +583,19 @@ export class InvoiceComponent {
     );
   }
 
-  // lista las restricciones de cada empresa
+  // obtiene la restricción efectiva a aplicar (la de la placa sobrescribe la de la empresa)
   getRestriction(company_id) {
-    debugger;
     this.is_cupo = false;
     this.is_vale = false;
-    this.restrictionsService.getRestrictions(company_id).subscribe(
+    this.restrictionsService.getEffectiveRestriction(company_id, this.userDataInvoice?.vehicle_id).subscribe(
       (value: any) => {
-        if (value.body.restrictions.length > 0) {
-          this.restriction = value.body.restrictions[0];
+        if (value.body.restriction) {
+          this.restriction = value.body.restriction;
 
-          if ((this.restriction.type_sold == 'fe' && this.restriction.is_vale == true) || this.restriction.type_sold == 'cupo') {
+          if (this.restriction.type_sold == 'fe' && this.restriction.is_vale == true) {
+            const valeIndex = this.listPayment.findIndex(p => p.code === this.restriction.vale_payment_method);
+            this.currentMethodPayment = valeIndex >= 0 ? valeIndex : 0;
+          } else if (this.restriction.type_sold == 'cupo') {
             this.currentMethodPayment = 0;
           }
 

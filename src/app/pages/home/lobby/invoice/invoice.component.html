@@ -251,7 +251,7 @@
                 </div>
 
             </section>
-            <section>
+            <section *ngIf="!(restriction.type_sold == 'fe' && restriction.is_vale == true)">
                 <ng-container *ngFor="let paymentOption of listPayment; let i = index;">
                     <ion-card class="card-invoice" [style]="{opacity: currentMethodPayment === i ? '100%' : '70%'}"
                         (click)="chooseMethodType(i)">
@@ -269,6 +269,9 @@
                         </ion-card-content>
                     </ion-card>
                 </ng-container>
+            </section>
+            <section class="restriction" *ngIf="restriction.type_sold == 'fe' && restriction.is_vale == true">
+                <h4>Por politicas de admnistracion, el medio de pago de esta venta ya está predefinido: {{getValePaymentMethodName()}}.</h4>
             </section>
             <!--
             <section class="restriction" *ngIf="(restriction.type_sold == 'pos')">
