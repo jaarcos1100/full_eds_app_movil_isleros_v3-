@@ -6,6 +6,7 @@ export interface UserDataInvoice {
   companies: Company[] | any;
   users: User[] | any;
   descuento1: Discount;
+  vehicle_id?: string;
 }
 
 // export interface UserInvoice {
