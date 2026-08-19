@@ -422,12 +422,19 @@ export class DialogCloseShiftComponent {
     }
     const idShift = data_json?.body?.shift?._id;
     if (!idShift) {
+      this.toastService.presentToastError('No se logró reimprimir el cierre, por favor intente nuevamente');
       return;
     }
     const isle: Isle = this.operatorService.readLocalHostIsland();
+    this.preload = true;
+    this.startLoading();
     this.operatorService.printShift(idShift, { isle: isle.id_isle }).subscribe(
-      () => {},
       () => {
+        this.preload = false;
+        this.toastService.presentToastOk('Copia del cierre enviada a la isla');
+      },
+      () => {
+        this.preload = false;
         this.toastService.presentToastError('No se logró reimprimir el cierre, por favor intente nuevamente');
       }
     );
