@@ -417,7 +417,17 @@ export class DialogCloseShiftComponent {
 
   async reprint(data_json) {
     if (this.is_integrate_print) {
-      await this.print(data_json);
+      this.preload = true;
+      this.startLoading();
+      try {
+        await this.print(data_json);
+        this.toastService.presentToastOk('Copia del cierre enviada al datáfono');
+      } catch (error) {
+        console.error('Error reimprimiendo cierre en el datáfono:', error);
+        this.toastService.presentToastError('No se logró reimprimir el cierre en el datáfono, por favor intente nuevamente');
+      } finally {
+        this.preload = false;
+      }
       return;
     }
     const idShift = data_json?.body?.shift?._id;
