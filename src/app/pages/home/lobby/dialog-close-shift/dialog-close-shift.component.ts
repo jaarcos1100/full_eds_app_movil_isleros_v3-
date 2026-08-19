@@ -38,6 +38,7 @@ export class DialogCloseShiftComponent {
   public hose_id_to_put_volumen: number;
   errorMessage: string;
   public is_integrate_print:boolean;
+  private isleForReprint: Isle;
 
 
   constructor(public navCtrl: NavController, private operatorService: OperatorService, private toastService: ToastService, public modalController: ModalController, private loadingService: LoadingService, public dataphoneService:DataphoneService, private alertController: AlertController) {
@@ -296,6 +297,7 @@ export class DialogCloseShiftComponent {
       this.startLoading();
       this.errorMessageCloseShift = undefined;
       const isle = this.operatorService.readLocalHostIsland();
+      this.isleForReprint = isle;
       this.operatorService.findShift(this.operatorService.readIsOpenShift()._id).subscribe((res: any) => {
         console.log(res);
         const shift = res.body?.shift;
@@ -435,7 +437,11 @@ export class DialogCloseShiftComponent {
       this.toastService.presentToastError('No se logró reimprimir el cierre, por favor intente nuevamente');
       return;
     }
-    const isle: Isle = this.operatorService.readLocalHostIsland();
+    const isle: Isle = this.isleForReprint;
+    if (!isle) {
+      this.toastService.presentToastError('No se logró reimprimir el cierre, por favor intente nuevamente');
+      return;
+    }
     this.preload = true;
     this.startLoading();
     this.operatorService.printShift(idShift, { isle: isle.id_isle }).subscribe(
