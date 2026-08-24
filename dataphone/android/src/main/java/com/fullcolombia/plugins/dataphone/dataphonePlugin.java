@@ -571,21 +571,25 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
             Log.d("ResultActivity", "Lego a impresion de cierre de turno 888888 ");
 
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-            valuesToSend.add(TEXT + ",CANASTILLA : $" + formatCOP(canastilla) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",VENTA CANASTILLA : $" + formatCOP(canastilla) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",VENTA COMBUSTIBLE : $" + formatCOP(totalVenta) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-            valuesToSend.add(TEXT + ",VENTA TOTAL : $" + formatCOP(totalVenta) + "," + FONT_BIG + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",VENTA TOTAL : $" + formatCOP(totalVenta + canastilla) + "," + FONT_BIG + "," + ALIGN_LEFT);
             valuesToSend.add(
                     TEXT + ",DESCUENTO APLICADO : $" + formatCOP(totalDescuento) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
 
             if (tpago != null) {
                 valuesToSend.add(TEXT + ",DESGLOSE POR MEDIO DE PAGO," + FONT_NORMAL + "," + ALIGN_CENTER);
+                int totalPaymentMethods = 0;
                 for (int i = 0; i < tpago.length(); i++) {
                     JSONObject pago = tpago.getJSONObject(i);
                     String method = pago.optString("method", "");
                     int total = pago.optInt("total", 0);
+                    totalPaymentMethods += total;
                     valuesToSend.add(TEXT + "," + method + " : $" + total + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 }
+                valuesToSend.add(TEXT + ",TOTAL PAGADO : $" + totalPaymentMethods + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
             }
 
