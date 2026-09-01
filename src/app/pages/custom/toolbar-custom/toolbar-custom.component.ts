@@ -91,7 +91,8 @@ export class ToolbarCustomComponent implements OnInit {
       component: DialogViewRemainingSalesComponent,
       cssClass: 'fullscreen',
       componentProps: {
-        pumps
+        pumps,
+        shift: this.operatorService.readIsOpenShift()
       }
     });
     modal.onDidDismiss().then(res => {

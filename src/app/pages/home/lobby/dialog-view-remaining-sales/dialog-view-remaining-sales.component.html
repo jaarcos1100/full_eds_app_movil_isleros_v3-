@@ -5,11 +5,6 @@
                  (click)="this.modalController.dismiss();">
       <ion-icon name="arrow-back-outline" class="icon-back"></ion-icon>
     </ion-buttons>
-    <ion-title (click)="this.modalController.dismiss();"
-               class="text-back"
-    >
-      Regresar
-    </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -45,6 +40,17 @@
           <ion-button class="ion-button-width-1-5em button-ibutton" (click)="modalController.dismiss();">
             Regresar
           </ion-button>
+        </div>
+        <div *ngIf="isShiftInvalid" class="mt-5">
+          <h3 class="ion-text-center" style="color: #d33;">
+            Este turno ya no es válido (fue cerrado por administración o expiró).
+            Forzar el cierre debe autorizarlo administración.
+          </h3>
+          <div class="center-horizontal mt-3">
+            <ion-button [disabled]="preloadForceClose" color="danger" class="ion-button-width-1-3em" (click)="openForceCloseAlert()">
+              Forzar cierre de turno
+            </ion-button>
+          </div>
         </div>
 <!--        <div class="center-horizontal mt-7rem">-->
 <!--          <ion-button [disabled]="preloadIButton" class="ion-button-width-1-5em next-button" (click)="closeShiftIbutton()">Ibutton</ion-button>-->
