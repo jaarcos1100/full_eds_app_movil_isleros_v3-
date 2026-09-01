@@ -10,7 +10,7 @@ import { OrganizationsService } from '../../../../services/organizations/organiz
 import { GlobalVarService } from '../../../../services/globalVars/global-var-service';
 import { CreditService } from '../../../../services/credits/credit-service.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { ModalController, NavController } from '@ionic/angular';
+import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { DialogRegisterUserComponent } from './register-user/dialog-register-user.component';
 import { Company } from '../../../../models/company/company';
 import { LoadingService } from '../../../../services/loading/loading.service';
@@ -92,7 +92,7 @@ export class InvoiceComponent {
   public max_ammount_dataphone: number;
   public organizationId: string;
   public is_lite: boolean;
-  constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService: GlobalVarService, public creditService: CreditService, public restrictionsService: RestrictionsService, public dataphoneService: DataphoneService) {
+  constructor(private operatorService: OperatorService, private organizationService: OrganizationsService, private toastService: ToastService, private modalController: ModalController, private loadingService: LoadingService, public navCtrl: NavController, public globalVarService: GlobalVarService, public creditService: CreditService, public restrictionsService: RestrictionsService, public dataphoneService: DataphoneService, private alertController: AlertController) {
     if (!operatorService.readSaleID()) {
       navCtrl.navigateRoot('operator/lobby/tankers');
       return;
@@ -772,6 +772,10 @@ export class InvoiceComponent {
 
         this.toastService.presentToastOk('Factura realizada.');
         this.forwardInvoicesAndEmails();
+        const resolutionWarning = this.data_invoice?.body?.resolutionWarning;
+        if (resolutionWarning?.isNearExpiration) {
+          await this.presentResolutionWarningAlert(resolutionWarning);
+        }
         await this.print(this.data_invoice.body.data);
         if (this.countCopies === 2 || (this.require_print == false && this.is_dataphone == false)) {
 
@@ -813,6 +817,29 @@ export class InvoiceComponent {
         // this.errorMessageInvoice = 'Error al facturar, por favor intente neuvamente.';
       }
     );
+  }
+
+  /**
+   * Muestra una alerta al islero cuando la resolución usada para facturar está
+   * cerca de vencer (por fecha o por consumo de consecutivos).
+   */
+  private async presentResolutionWarningAlert(warning: any) {
+    const parts: string[] = [];
+    if (warning.reasons?.includes('DATE')) {
+      parts.push(`vence en ${warning.daysRemaining} día(s)`);
+    }
+    if (warning.reasons?.includes('CONSECUTIVE')) {
+      parts.push(`ha consumido el ${warning.percentConsumed}% del rango de consecutivos`);
+    }
+    const alert = await this.alertController.create({
+      cssClass: 'alert-cancel-continue',
+      header: 'Resolución próxima a vencer',
+      message: `La resolución ${warning.resolutionPrefix} ${warning.resolutionNumber} ${parts.join(' y ')}. Por favor informa a administración para renovarla.`,
+      buttons: [
+        { text: 'Entendido', cssClass: 'alert-continue-button' }
+      ]
+    });
+    await alert.present();
   }
 
   /*
