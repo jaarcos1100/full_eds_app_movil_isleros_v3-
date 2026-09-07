@@ -10,7 +10,11 @@ import {OpenShift, Shift} from '../../models/shift/Shift';
 import {Sale} from '../../models/sale/sale';
 import {Company} from '../../models/company/company';
 import {RecordCopyInvoice} from '../../pages/home/lobby/invoice/invoice.component';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+/** Máximo de horas que un turno puede permanecer abierto antes de considerarse expirado. */
+const MAX_SHIFT_DURATION_HOURS = 24;
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +103,39 @@ export class OperatorService {
 
   findShift(id: string) {
     return this.http.get(`shift/find_by_id/${id}`);
+  }
+
+  /** Fuerza el cierre de un turno (usado cuando el turno ya fue cerrado por administración o expiró y quedó bloqueando la app). */
+  forceCloseShift(idShift: string) {
+    return this.http.get(`shift/force_close/${idShift}`);
+  }
+
+  /**
+   * Consulta el turno actual en el servidor y determina si ya no es válido: fue cerrado
+   * desde administración (final_date/force_close) o lleva abierto más de
+   * MAX_SHIFT_DURATION_HOURS. Debe llamarse antes de autorizar una venta o cerrar turno,
+   * ya que el turno puede haberse cerrado desde el panel admin sin que la app se entere.
+   */
+  isShiftClosedOrExpired(): Observable<boolean> {
+    const shift = this.readIsOpenShift();
+    if (!shift?._id) {
+      return of(false);
+    }
+    return this.findShift(shift._id).pipe(
+      map((res: any) => {
+        const freshShift = res?.body?.shift || res?.shift;
+        if (!freshShift) {
+          return false;
+        }
+        const closedByAdmin = !!freshShift.final_date || !!freshShift.force_close;
+        let expiredByTime = false;
+        if (freshShift.initial_date) {
+          const hoursOpen = (Date.now() - new Date(freshShift.initial_date).getTime()) / (1000 * 60 * 60);
+          expiredByTime = hoursOpen > MAX_SHIFT_DURATION_HOURS;
+        }
+        return closedByAdmin || expiredByTime;
+      })
+    );
   }
 
   getSaleDetailsSummary(idSale: string) {

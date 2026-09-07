@@ -388,42 +388,51 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
             int efp = json.optInt("efp", 0);
             if (efp == 1 && copia == 0) {
 
-                valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-                valuesToSend.add(TEXT + separador + FONT_NORMAL + "," + ALIGN_CENTER);
-
-                valuesToSend.add(TEXT + ",*PLAN FIDELIZACION-BONO*," + FONT_BIG + "," + ALIGN_CENTER);
-                valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-                valuesToSend.add(TEXT + ",Cliente  : " + cli.optString("n", "") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-                valuesToSend.add(TEXT + ",Nit      : " + cli.optString("d", "") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-                valuesToSend.add(
-                        TEXT + ",Fecha    : " + general.optString("fecha", "") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-
-                for (int i = 0; i < productos.length(); i++) {
-                    JSONObject p = productos.getJSONObject(i);
-                    valuesToSend
-                            .add(TEXT + ",Cantidad : " + formatCOP(p.optDouble("c", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                String efpTitle = json.optString("efpTitle", "");
+                String fidelityTitle = !efpTitle.isEmpty() ? efpTitle.toUpperCase() : "PLAN FIDELIZACION-BONO";
+                int efpCopies = json.optInt("efpCopies", 1);
+                if (efpCopies < 1) {
+                    efpCopies = 1;
                 }
 
-                if (json.has("pun")) {
+                for (int copyIndex = 0; copyIndex < efpCopies; copyIndex++) {
+                    valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + separador + FONT_NORMAL + "," + ALIGN_CENTER);
 
-                    JSONObject pun = json.optJSONObject("pun");
-                    double ven = pun.optDouble("ven", 0);
-                    double acu = pun.optDouble("acu", 0);
+                    valuesToSend.add(TEXT + ",*" + fidelityTitle + "*," + FONT_BIG + "," + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + ",Cliente  : " + cli.optString("n", "") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    valuesToSend.add(TEXT + ",Nit      : " + cli.optString("d", "") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    valuesToSend.add(
+                            TEXT + ",Fecha    : " + general.optString("fecha", "") + "," + FONT_NORMAL + "," + ALIGN_LEFT);
 
-                    valuesToSend.add(TEXT + ",Puntos :" + (int) ven + "," + FONT_NORMAL + "," + ALIGN_LEFT);
-                    valuesToSend.add(TEXT + ",Puntos acumulados :" + (int) acu + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    for (int i = 0; i < productos.length(); i++) {
+                        JSONObject p = productos.getJSONObject(i);
+                        valuesToSend
+                                .add(TEXT + ",Cantidad : " + formatCOP(p.optDouble("c", 0)) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    }
+
+                    if (json.has("pun")) {
+
+                        JSONObject pun = json.optJSONObject("pun");
+                        double ven = pun.optDouble("ven", 0);
+                        double acu = pun.optDouble("acu", 0);
+
+                        valuesToSend.add(TEXT + ",Puntos :" + (int) ven + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                        valuesToSend.add(TEXT + ",Puntos acumulados :" + (int) acu + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    }
+                    valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + ",Atendido por: " + json.optString("islero", "") + "," + FONT_NORMAL + ","
+                            + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
+                    valuesToSend.add(TEXT + ",Firma:________________," + FONT_NORMAL + "," + ALIGN_LEFT);
+                    valuesToSend.add(TEXT
+                            + ",*Aplica términos y condiciones acepto el tratamiento de datos e inclusion a programa fidelizacion. www.hotelbriolalibertad.com.co,"
+                            + FONT_NORMAL + "," + ALIGN_LEFT);
+                    valuesToSend.add(TEXT + ",*BONO NO ACUMULABLE*," + FONT_NORMAL + "," + ALIGN_CENTER);
                 }
-                valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-                valuesToSend.add(TEXT + ",Atendido por: " + json.optString("islero", "") + "," + FONT_NORMAL + ","
-                        + ALIGN_CENTER);
-                valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-                valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-                valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-                valuesToSend.add(TEXT + ",Firma:________________," + FONT_NORMAL + "," + ALIGN_LEFT);
-                valuesToSend.add(TEXT
-                        + ",*Aplica términos y condiciones acepto el tratamiento de datos e inclusion a programa fidelizacion. www.hotelbriolalibertad.com.co,"
-                        + FONT_NORMAL + "," + ALIGN_LEFT);
-                valuesToSend.add(TEXT + ",*BONO NO ACUMULABLE*," + FONT_NORMAL + "," + ALIGN_CENTER);
             }
 
             IntegrationPeripherialSDK sdkPeripherals = IntegrationPeripherialSDK.Companion
@@ -571,21 +580,25 @@ public class dataphonePlugin extends Plugin implements ResultIntegrationSDK {
             Log.d("ResultActivity", "Lego a impresion de cierre de turno 888888 ");
 
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-            valuesToSend.add(TEXT + ",CANASTILLA : $" + formatCOP(canastilla) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",VENTA CANASTILLA : $" + formatCOP(canastilla) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",VENTA COMBUSTIBLE : $" + formatCOP(totalVenta) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
-            valuesToSend.add(TEXT + ",VENTA TOTAL : $" + formatCOP(totalVenta) + "," + FONT_BIG + "," + ALIGN_LEFT);
+            valuesToSend.add(TEXT + ",VENTA TOTAL : $" + formatCOP(totalVenta + canastilla) + "," + FONT_BIG + "," + ALIGN_LEFT);
             valuesToSend.add(
                     TEXT + ",DESCUENTO APLICADO : $" + formatCOP(totalDescuento) + "," + FONT_NORMAL + "," + ALIGN_LEFT);
             valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
 
             if (tpago != null) {
                 valuesToSend.add(TEXT + ",DESGLOSE POR MEDIO DE PAGO," + FONT_NORMAL + "," + ALIGN_CENTER);
+                int totalPaymentMethods = 0;
                 for (int i = 0; i < tpago.length(); i++) {
                     JSONObject pago = tpago.getJSONObject(i);
                     String method = pago.optString("method", "");
                     int total = pago.optInt("total", 0);
+                    totalPaymentMethods += total;
                     valuesToSend.add(TEXT + "," + method + " : $" + total + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 }
+                valuesToSend.add(TEXT + ",TOTAL PAGADO : $" + totalPaymentMethods + "," + FONT_NORMAL + "," + ALIGN_LEFT);
                 valuesToSend.add(TEXT + ", ," + FONT_NORMAL + "," + ALIGN_CENTER);
             }
 

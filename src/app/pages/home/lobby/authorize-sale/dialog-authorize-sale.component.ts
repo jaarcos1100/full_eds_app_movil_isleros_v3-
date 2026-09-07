@@ -185,11 +185,19 @@ export class DialogAuthorizeSaleComponent implements OnInit {
       this.navCtrl.navigateRoot('');
       return;
     }
-    if(this.is_lite){
-      this.nextLite();
-    }else{
-      this.next();
-    }
+    this.operatorService.isShiftClosedOrExpired().subscribe(invalid => {
+      if (invalid) {
+        this.toastService.presentToastError('Tu turno ya no es válido (fue cerrado por administración o expiró). No puedes autorizar más ventas.');
+        this.modalController.dismiss();
+        this.navCtrl.navigateRoot('');
+        return;
+      }
+      if(this.is_lite){
+        this.nextLite();
+      }else{
+        this.next();
+      }
+    });
   }
 
   nextLite() {
